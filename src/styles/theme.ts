@@ -5,7 +5,8 @@ export const themes = {
     darkgray: '#26252B',
     gray: '#ADADAE',
     orange: '#FF4E00',
-    white: '#FFFFFF'
+    white: '#FFFFFF',
+    error: '#c53030'
   }
 }
 

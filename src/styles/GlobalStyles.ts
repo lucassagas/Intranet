@@ -31,6 +31,7 @@ body {
 body, input, textarea, button {
   font-family: Montserrat, sans-serif;
   color: var(--white);
+  font-weight: 400;
 }
 
 button {
