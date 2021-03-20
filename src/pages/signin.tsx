@@ -6,6 +6,7 @@ import { Button } from '../components/Button'
 import { Container, Wrapper, DevelopedWrapper } from '../styles/pages/sigin'
 
 import { FaRegUser, BiLockAlt } from '../styles/icons'
+import Head from 'next/head'
 
 function SignIn() {
   const handleSubmit = useCallback(async data => {
@@ -14,6 +15,10 @@ function SignIn() {
 
   return (
     <Container>
+      <Head>
+        <title>Intranet | Login</title>
+      </Head>
+
       <Wrapper>
         <h1>
           Seja Bem-vindo <br /> a nova

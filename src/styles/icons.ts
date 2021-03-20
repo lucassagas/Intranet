@@ -18,3 +18,5 @@ export { RiAdminLine, RiLogoutCircleLine, RiEyeCloseLine } from 'react-icons/ri'
 export { GrMoney } from 'react-icons/gr'
 
 export { FaRegUser } from 'react-icons/fa'
+
+export { HiOutlineUsers } from 'react-icons/hi'
