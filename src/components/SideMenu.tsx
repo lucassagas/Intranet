@@ -70,13 +70,6 @@ export function SideMenu() {
                         Usuários
                       </MenuOption>
                     </Link>
-
-                    <Link href="#">
-                      <MenuOption>
-                        <AiOutlineLaptop size={22} />
-                        Estoque
-                      </MenuOption>
-                    </Link>
                   </SubMenu>
                 )}
               </AnimatePresence>

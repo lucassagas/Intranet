@@ -1,3 +1,4 @@
+import { AnimatePresence } from 'framer-motion'
 import { AppProps } from 'next/app'
 import styled from 'styled-components'
 import { SideMenu } from '../components/SideMenu'
@@ -11,12 +12,15 @@ const Container = styled.div`
   display: flex;
 `
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps, router }: AppProps) {
   return (
     <AppProvider>
       <Container>
         <SideMenu />
-        <Component {...pageProps} />
+
+        <AnimatePresence exitBeforeEnter>
+          <Component {...pageProps} key={router.route} />
+        </AnimatePresence>
 
         <GlobalStyles />
       </Container>

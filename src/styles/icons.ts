@@ -20,3 +20,5 @@ export { GrMoney } from 'react-icons/gr'
 export { FaRegUser } from 'react-icons/fa'
 
 export { HiOutlineUsers } from 'react-icons/hi'
+
+export { MdClose } from 'react-icons/md'

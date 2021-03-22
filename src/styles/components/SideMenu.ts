@@ -7,8 +7,6 @@ export const Container = styled.div`
   width: 100%;
   height: 100vh;
 
-  border-right: 1px solid #fff;
-
   > header {
     width: 100%;
 
@@ -31,10 +29,8 @@ export const Container = styled.div`
 
   > nav {
     width: 100%;
-    max-height: 70vh;
     overflow: auto;
-
-    height: 100%;
+    min-height: 60vh;
 
     > ul {
       list-style: none;
@@ -43,6 +39,8 @@ export const Container = styled.div`
 
   > img {
     margin-left: 1.8rem;
+    position: absolute;
+    bottom: 20px;
   }
 `
 
@@ -59,9 +57,9 @@ export const Li = styled.li<LiProps>`
 
   padding: 0 1.8rem;
 
-  border-left: 4px solid var(--orange);
-
-  > svg {
+  border-left: ${props =>
+      props.isCategory ? '4px solid var(--orange);' : 'none'}
+    > svg {
     color: var(--gray);
   }
 `
