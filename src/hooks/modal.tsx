@@ -1,8 +1,8 @@
 import { createContext, ReactNode, useContext, useState } from 'react'
 
 interface ModalContextData {
-  displayModal: string | undefined
-  setDisplayModal(data: string): void
+  displayModal: string | number | undefined
+  setDisplayModal(data: string | number): void
 }
 
 interface ModalProviderProps {
@@ -12,7 +12,9 @@ interface ModalProviderProps {
 const ModalContext = createContext<ModalContextData>({} as ModalContextData)
 
 function ModalProvider({ children }: ModalProviderProps) {
-  const [displayModal, setDisplayModal] = useState('')
+  const [displayModal, setDisplayModal] = useState<string | number | undefined>(
+    ''
+  )
 
   return (
     <ModalContext.Provider value={{ displayModal, setDisplayModal }}>

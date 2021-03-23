@@ -2,7 +2,15 @@ export { BiHomeAlt, BiLockAlt } from 'react-icons/bi'
 
 export { IoIosArrowDown } from 'react-icons/io'
 
-export { FiHeadphones, FiTrash, FiEdit2, FiAlertCircle } from 'react-icons/fi'
+export {
+  FiHeadphones,
+  FiTrash,
+  FiEdit2,
+  FiCheckCircle,
+  FiAlertCircle,
+  FiInfo,
+  FiXCircle
+} from 'react-icons/fi'
 
 export {
   AiOutlineLaptop,

@@ -62,6 +62,10 @@ export const WrapperFilter = styled.div`
 
   gap: 2rem;
 
+  > table tbody tr td {
+    cursor: pointer;
+  }
+
   > button:last-child {
     max-width: 200px;
     height: 30px;

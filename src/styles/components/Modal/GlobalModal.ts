@@ -36,7 +36,7 @@ export const Modalbox = styled(motion.div)<ModalBoxProps>`
     justify-content: space-between;
     width: 90%;
 
-    padding-top: 2.5rem;
+    padding-top: 1.5rem;
     padding-bottom: 0.5rem;
 
     margin: 0 auto;

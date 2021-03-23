@@ -8,7 +8,7 @@ export const Container = styled.div`
     background: var(--orange);
     padding: 8px;
     border-radius: 4px;
-    font-size: 1.4rem;
+    font-size: 1rem;
     font-weight: 500;
     opacity: 0;
     transition: opacity 0.4s;

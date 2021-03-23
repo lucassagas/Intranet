@@ -1,8 +1,18 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
-export const StyledTable = styled.table`
+interface TableProps {
+  isEditable?: boolean
+}
+
+export const StyledTable = styled.table<TableProps>`
   width: 100%;
   border-collapse: collapse;
+
+  ${props =>
+    props.isEditable &&
+    css`
+      cursor: pointer;
+    `}
 
   th {
     text-align: left;

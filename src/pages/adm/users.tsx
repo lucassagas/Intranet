@@ -5,7 +5,12 @@ import { Button } from '../../components/Button'
 import { Header } from '../../components/Header'
 import { Input } from '../../components/Input'
 import { Table } from '../../components/Table'
-import { GlobalModal } from '../../components/Modal/GlobalModal'
+import { CreatePermission } from '../../components/Modal/Permission/CreatePermission'
+import { CreateGroup } from '../../components/Modal/Group/CreateGroup'
+import { useModal } from '../../hooks/modal'
+import { parseISO, format } from 'date-fns'
+import { useToast } from '../../hooks/toast'
+import { api } from '../../services/api'
 
 import { AiOutlineSearch, BiLockAlt, FaRegUser } from '../../styles/icons'
 
@@ -17,13 +22,32 @@ import {
   WrapperFilter,
   ButtonFilter
 } from '../../styles/pages/adm/user'
-import { useModal } from '../../hooks/modal'
+import { EditGroup } from '../../components/Modal/Group/EditGroup'
+
+export interface PermissionsProps {
+  perm_id: number
+  perm_name: string
+  created_at: string
+  updated_at: string
+}
+
+export interface GroupsProps {
+  group_id: number
+  group_name: string
+  created_at: string
+  updated_at: string
+}
 
 function Users() {
   const [isActiveFilter, setIsActiveFilter] = useState('name')
   const [category, setCategory] = useState('users')
+  const [permissions, setPermissions] = useState<PermissionsProps[]>([])
+
+  const [groups, setGroups] = useState<GroupsProps[]>([])
+  const [selectedItem, setSelectedItem] = useState(0)
 
   const { setDisplayModal } = useModal()
+  const { addToast } = useToast()
 
   const handleSearch = useCallback(data => {
     console.log(data)
@@ -37,11 +61,42 @@ function Users() {
   const handleLoadGroups = useCallback(() => {
     setCategory('groups')
     setIsActiveFilter('name')
+
+    api
+      .get('api/group')
+      .then(response => {
+        setGroups(response.data)
+      })
+      .catch(() => {
+        addToast({
+          type: 'error',
+          title: 'Error',
+          description: 'Erro ao carregar grupos, contate um administrador'
+        })
+      })
   }, [setCategory, setIsActiveFilter])
+
+  const handleSelectGroup = useCallback((group_id: number) => {
+    setSelectedItem(group_id)
+    setDisplayModal(group_id)
+  }, [])
 
   const handleLoadPermissions = useCallback(() => {
     setCategory('permissions')
     setIsActiveFilter('name')
+
+    api
+      .get('api/permission')
+      .then(response => {
+        setPermissions(response.data)
+      })
+      .catch(() => {
+        addToast({
+          type: 'error',
+          title: 'Error',
+          description: 'Erro ao carregar permissões, contate um administrador'
+        })
+      })
   }, [setCategory, setIsActiveFilter])
 
   return (
@@ -135,20 +190,32 @@ function Users() {
         <Content>
           <Wrapper>
             <Table
+              isEditable
               ths={['ID', 'Nome do grupo', 'Criado em', 'Ultima alteração']}
             >
-              <tr>
-                <td>1</td>
-                <td>NOC</td>
-                <td>2020-07-03</td>
-                <td>2020-07-03</td>
-              </tr>
-              <tr>
-                <td>1</td>
-                <td>NOC</td>
-                <td>2020-07-03</td>
-                <td>2020-07-03</td>
-              </tr>
+              {groups.map(group => {
+                const parsedCreatedDate = format(
+                  parseISO(group.created_at),
+                  'dd/MM/yyyy - HH:mm'
+                )
+
+                const parsedUpdatedDate = format(
+                  parseISO(group.updated_at),
+                  'dd/MM/yyyy - HH:mm'
+                )
+
+                return (
+                  <tr
+                    onClick={() => handleSelectGroup(group.group_id)}
+                    key={group.group_id}
+                  >
+                    <td>{group.group_id}</td>
+                    <td>{group.group_name}</td>
+                    <td>{parsedCreatedDate}</td>
+                    <td>{parsedUpdatedDate}</td>
+                  </tr>
+                )
+              })}
             </Table>
           </Wrapper>
           <WrapperFilter>
@@ -171,7 +238,9 @@ function Users() {
               <span>Data adicionado</span>
             </ButtonFilter>
 
-            <Button>Cadastar</Button>
+            <Button onClick={() => setDisplayModal('modalCreateGroup')}>
+              Cadastar
+            </Button>
           </WrapperFilter>
         </Content>
       )}
@@ -180,18 +249,26 @@ function Users() {
         <Content>
           <Wrapper>
             <Table ths={['ID', 'Nome', 'Criado em', 'Ultima alteração']}>
-              <tr>
-                <td>1</td>
-                <td>Noc.edicao</td>
-                <td>2020-07-03</td>
-                <td>2020-07-03</td>
-              </tr>
-              <tr>
-                <td>1</td>
-                <td>Noc.edicao</td>
-                <td>2020-07-03</td>
-                <td>2020-07-03</td>
-              </tr>
+              {permissions.map(permission => {
+                const parsedCreatedDate = format(
+                  parseISO(permission.created_at),
+                  'dd/MM/yyyy - HH:mm'
+                )
+
+                const parsedUpdatedDate = format(
+                  parseISO(permission.updated_at),
+                  'dd/MM/yyyy - HH:mm'
+                )
+
+                return (
+                  <tr key={permission.perm_id}>
+                    <td>{permission.perm_id}</td>
+                    <td>{permission.perm_name}</td>
+                    <td>{parsedCreatedDate}</td>
+                    <td>{parsedUpdatedDate}</td>
+                  </tr>
+                )
+              })}
             </Table>
           </Wrapper>
           <WrapperFilter>
@@ -214,10 +291,26 @@ function Users() {
               <span>Data adicionado</span>
             </ButtonFilter>
 
-            <Button>Cadastar</Button>
+            <Button onClick={() => setDisplayModal('modalCreatePermission')}>
+              Cadastar
+            </Button>
           </WrapperFilter>
         </Content>
       )}
+
+      <CreatePermission
+        permissions={permissions}
+        setPermissions={setPermissions}
+        id="modalCreatePermission"
+      />
+
+      <CreateGroup
+        groups={groups}
+        setGroups={setGroups}
+        id="modalCreateGroup"
+      />
+
+      <EditGroup id={selectedItem} />
     </Container>
   )
 }

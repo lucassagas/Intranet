@@ -5,11 +5,12 @@ import { StyledTable } from '../styles/components/Table'
 interface TableProps {
   ths: Array<string>
   children: ReactNode
+  isEditable?: boolean
 }
 
-export function Table({ ths, children }: TableProps) {
+export function Table({ ths, children, isEditable }: TableProps) {
   return (
-    <StyledTable>
+    <StyledTable isEditable={isEditable}>
       <thead>
         <tr>
           {ths.map(th => {
