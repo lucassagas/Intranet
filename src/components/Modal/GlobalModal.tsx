@@ -10,7 +10,7 @@ interface GlobalModalProps {
   title: string
   children: ReactNode
   size: number
-  id: string | number
+  id?: any
 }
 
 export function GlobalModal({ title, children, size, id }: GlobalModalProps) {

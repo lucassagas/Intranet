@@ -1,4 +1,4 @@
-export { BiHomeAlt, BiLockAlt } from 'react-icons/bi'
+export { BiHomeAlt, BiLockAlt, BiCheck } from 'react-icons/bi'
 
 export { IoIosArrowDown } from 'react-icons/io'
 
