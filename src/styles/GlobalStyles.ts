@@ -8,6 +8,11 @@ export default createGlobalStyle`
   box-sizing: border-box;
 }
 
+#nprogress .bar {
+  background: var(--orange);
+  height: 3px;
+}
+
 html {
   @media(max-width: 1080px) {
     font-size: 93.75%;

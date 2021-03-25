@@ -12,7 +12,12 @@ import { parseISO, format } from 'date-fns'
 import { useToast } from '../../hooks/toast'
 import { api } from '../../services/api'
 
-import { AiOutlineSearch, BiLockAlt, FaRegUser } from '../../styles/icons'
+import {
+  AiOutlineSearch,
+  BiLockAlt,
+  FaRegUser,
+  IoIosArrowDown
+} from '../../styles/icons'
 
 import {
   Container,
@@ -20,7 +25,12 @@ import {
   Content,
   Wrapper,
   WrapperFilter,
-  ButtonFilter
+  ButtonFilter,
+  CategoryList,
+  PageList,
+  PermissionList,
+  Section,
+  TitlePage
 } from '../../styles/pages/adm/user'
 import { EditGroup } from '../../components/Modal/Group/EditGroup'
 
@@ -29,6 +39,16 @@ export interface PermissionsProps {
   perm_name: string
   created_at: string
   updated_at: string
+}
+
+interface pageProps {
+  page_name: string
+  page_permissions: PermissionsProps[]
+}
+
+export interface GroupAndPermissionsProps {
+  page_index: string
+  pages: pageProps[]
 }
 
 export interface GroupsProps {
@@ -40,8 +60,10 @@ export interface GroupsProps {
 
 function Users() {
   const [isActiveFilter, setIsActiveFilter] = useState('name')
+  const [isActiveCategory, setIsActiveCategory] = useState('')
+  const [isActivePage, setIsActivePage] = useState('')
   const [category, setCategory] = useState('users')
-  const [permissions, setPermissions] = useState<PermissionsProps[]>([])
+  const [permissions, setPermissions] = useState<GroupAndPermissionsProps[]>([])
 
   const [groups, setGroups] = useState<GroupsProps[]>([])
   const [selectedItem, setSelectedItem] = useState(0)
@@ -98,6 +120,32 @@ function Users() {
         })
       })
   }, [setCategory, setIsActiveFilter])
+
+  const handleOpenCategory = useCallback(
+    category => {
+      if (isActiveCategory === category) {
+        setIsActiveCategory('')
+
+        return
+      }
+
+      setIsActiveCategory(category)
+    },
+    [isActiveCategory]
+  )
+
+  const handleOpenPage = useCallback(
+    page => {
+      if (isActivePage === page) {
+        setIsActivePage('')
+
+        return
+      }
+
+      setIsActivePage(page)
+    },
+    [isActivePage]
+  )
 
   return (
     <Container>
@@ -245,31 +293,56 @@ function Users() {
         </Content>
       )}
 
+      {console.log(isActiveCategory)}
+
       {category === 'permissions' && (
         <Content>
           <Wrapper>
-            <Table ths={['ID', 'Nome', 'Criado em', 'Ultima alteração']}>
+            <CategoryList>
               {permissions.map(permission => {
-                const parsedCreatedDate = format(
-                  parseISO(permission.created_at),
-                  'dd/MM/yyyy - HH:mm'
-                )
-
-                const parsedUpdatedDate = format(
-                  parseISO(permission.updated_at),
-                  'dd/MM/yyyy - HH:mm'
-                )
-
                 return (
-                  <tr key={permission.perm_id}>
-                    <td>{permission.perm_id}</td>
-                    <td>{permission.perm_name}</td>
-                    <td>{parsedCreatedDate}</td>
-                    <td>{parsedUpdatedDate}</td>
-                  </tr>
+                  <Section
+                    isActiveCategory={
+                      isActiveCategory === permission.page_index
+                    }
+                    key={permission.page_index}
+                  >
+                    <strong
+                      onClick={() => handleOpenCategory(permission.page_index)}
+                    >
+                      {permission.page_index.toUpperCase()}
+                      <IoIosArrowDown size={18} />
+                    </strong>
+                    <PageList
+                      isActiveCategory={
+                        isActiveCategory === permission.page_index
+                      }
+                    >
+                      {permission.pages.map(page => (
+                        <React.Fragment key={page.page_name}>
+                          <TitlePage
+                            isActivePage={isActivePage === page.page_name}
+                            onClick={() => handleOpenPage(page.page_name)}
+                          >
+                            {page.page_name.toUpperCase()}
+                            <IoIosArrowDown size={18} />
+                          </TitlePage>
+                          <PermissionList
+                            isActivePage={isActivePage === page.page_name}
+                          >
+                            {page.page_permissions.map(permission => (
+                              <button key={permission.perm_id} type="button">
+                                {permission.perm_name.toLocaleUpperCase()}
+                              </button>
+                            ))}
+                          </PermissionList>
+                        </React.Fragment>
+                      ))}
+                    </PageList>
+                  </Section>
                 )
               })}
-            </Table>
+            </CategoryList>
           </Wrapper>
           <WrapperFilter>
             <Form onSubmit={handleSearch}>

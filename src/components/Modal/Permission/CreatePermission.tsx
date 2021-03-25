@@ -13,12 +13,12 @@ import { useToast } from '../../../hooks/toast'
 
 import { Container } from '../../../styles/components/Modal/Permission/CreatePermission'
 
-import { PermissionsProps } from '../../../pages/adm/users'
+import { GroupAndPermissionsProps } from '../../../pages/adm/users'
 
 interface CreatePermissionProps {
   id: string
-  setPermissions: (permissions: PermissionsProps[]) => void
-  permissions: PermissionsProps[]
+  setPermissions: (permissions: GroupAndPermissionsProps[]) => void
+  permissions: GroupAndPermissionsProps[]
 }
 
 export function CreatePermission({

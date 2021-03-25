@@ -48,6 +48,162 @@ export const Wrapper = styled.div`
   height: 95%;
 `
 
+export const CategoryList = styled.div`
+  width: 100%;
+  border-radius: 1rem;
+  overflow: hidden;
+`
+
+interface SectionProps {
+  isActiveCategory: boolean
+}
+
+export const Section = styled.section<SectionProps>`
+  width: 100%;
+  display: flex;
+  cursor: pointer;
+  border: solid 1px var(--mediumgray);
+
+  & + section {
+    margin-top: -1px;
+  }
+
+  flex-direction: column;
+  &:first-child {
+    border-radius: 1rem 1rem 0 0;
+  }
+
+  &:last-child {
+    border-radius: 0 0 1rem 1rem;
+  }
+
+  > strong {
+    overflow: hidden;
+    width: 100%;
+    padding: 1rem;
+    transition: all 0.2s;
+    ${props =>
+      props.isActiveCategory
+        ? css`
+            background: var(--orange);
+
+            > svg {
+              transform: rotate(180deg);
+            }
+          `
+        : css`
+            background: transparent;
+
+            > svg {
+              transform: rotate(0deg);
+            }
+          `};
+
+    display: flex;
+    align-items: center;
+
+    > svg {
+      margin-left: 10px;
+      transition: all 0.3s;
+    }
+
+    & + strong {
+      margin-top: -1px;
+    }
+  }
+`
+
+interface PageProps {
+  isActiveCategory: boolean
+}
+
+export const PageList = styled.div<PageProps>`
+  display: flex;
+  flex-direction: column;
+  margin-top: -1px;
+  cursor: pointer;
+  transition: max-height 0.3s;
+  ${props =>
+    props.isActiveCategory
+      ? css`
+          max-height: 600px;
+        `
+      : css`
+          max-height: 0;
+        `};
+  overflow: hidden;
+
+  > strong {
+    width: 100%;
+    padding: 1rem 2rem;
+    border-bottom: solid 1px var(--mediumgray);
+
+    & + strong {
+      margin-top: -1px;
+    }
+  }
+`
+
+interface PermissionList {
+  isActivePage: boolean
+}
+
+export const PermissionList = styled.div<PermissionList>`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-top: -1px;
+
+  transition: max-height 0.3s;
+
+  max-height: ${props => (props.isActivePage ? '600px' : '0')};
+  overflow: hidden;
+
+  > button {
+    padding: 1rem 3rem;
+    background: transparent;
+    border: 0;
+    border-bottom: solid 1px var(--mediumgray);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 0.9rem;
+
+    & + button {
+      margin-top: -1px;
+    }
+  }
+`
+interface TitlePage {
+  isActivePage: boolean
+}
+
+export const TitlePage = styled.strong<TitlePage>`
+  width: 100%;
+  padding: 1rem 2rem;
+
+  display: flex;
+  align-items: center;
+
+  & + strong {
+    margin-top: -1px;
+  }
+
+  > svg {
+    margin-left: 10px;
+    transition: all 0.3s;
+
+    ${props =>
+      props.isActivePage
+        ? css`
+            transform: rotate(180deg);
+          `
+        : css`
+            transform: rotate(0);
+          `}
+  }
+`
+
 export const WrapperFilter = styled.div`
   position: absolute;
   bottom: 10px;
