@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, MouseEvent } from 'react'
 import { Form } from '@unform/web'
 import { Button } from '../../components/Button'
 import { Header } from '../../components/Header'
@@ -30,9 +30,12 @@ import {
   PageList,
   PermissionList,
   Section,
-  TitlePage
+  TitlePage,
+  DeleteButton
 } from '../../styles/pages/adm/user'
 import { EditGroup } from '../../components/Modal/Group/EditGroup'
+import { DeletePermission } from '../../components/Modal/Permission/DeletePermission'
+import { DeleteGroup } from '../../components/Modal/Group/DeleteGroup'
 
 export interface PermissionsProps {
   perm_id: number
@@ -58,11 +61,27 @@ export interface GroupsProps {
   updated_at: string
 }
 
+export interface SelectedPermission {
+  permissionName: string
+  id: number
+}
+
+export interface SelectedGroup {
+  groupName: string
+  id: number
+}
+
 function Users() {
   const [isActiveFilter, setIsActiveFilter] = useState('name')
   const [isActiveCategory, setIsActiveCategory] = useState('')
   const [isActivePage, setIsActivePage] = useState('')
   const [category, setCategory] = useState('users')
+  const [
+    selectedPermissionName,
+    setSelectedPermissionName
+  ] = useState<SelectedPermission>()
+
+  const [selectedGroupName, setSelectedGroupName] = useState<SelectedGroup>()
   const [permissions, setPermissions] = useState<GroupAndPermissionsProps[]>([])
 
   const [groups, setGroups] = useState<GroupsProps[]>([])
@@ -261,6 +280,21 @@ function Users() {
                     <td>{group.group_name}</td>
                     <td>{parsedCreatedDate}</td>
                     <td>{parsedUpdatedDate}</td>
+                    {/* <td>
+                      <DeleteButton
+                        onClick={(event: MouseEvent) => {
+                          setDisplayModal('modalDeleteGroup')
+                          event.stopPropagation()
+                          setSelectedGroupName({
+                            groupName: group.group_name,
+                            id: group.group_id
+                          })
+                        }}
+                        type="button"
+                      >
+                        Deletar
+                      </DeleteButton>
+                    </td> */}
                   </tr>
                 )
               })}
@@ -292,8 +326,6 @@ function Users() {
           </WrapperFilter>
         </Content>
       )}
-
-      {console.log(isActiveCategory)}
 
       {category === 'permissions' && (
         <Content>
@@ -331,9 +363,22 @@ function Users() {
                             isActivePage={isActivePage === page.page_name}
                           >
                             {page.page_permissions.map(permission => (
-                              <button key={permission.perm_id} type="button">
+                              <strong key={permission.perm_id}>
                                 {permission.perm_name.toLocaleUpperCase()}
-                              </button>
+
+                                <button
+                                  onClick={() => {
+                                    setDisplayModal('modalDeletePermission')
+                                    setSelectedPermissionName({
+                                      permissionName: permission.perm_name,
+                                      id: permission.perm_id
+                                    })
+                                  }}
+                                  type="button"
+                                >
+                                  Deletar
+                                </button>
+                              </strong>
                             ))}
                           </PermissionList>
                         </React.Fragment>
@@ -344,37 +389,18 @@ function Users() {
               })}
             </CategoryList>
           </Wrapper>
-          <WrapperFilter>
-            <Form onSubmit={handleSearch}>
-              <Input name="filter" placeholder="Buscar" />
-              <AiOutlineSearch size={20} />
-            </Form>
-
-            <ButtonFilter
-              onClick={() => setIsActiveFilter('name')}
-              isActive={isActiveFilter === 'name'}
-            >
-              <span>Nome</span>
-            </ButtonFilter>
-
-            <ButtonFilter
-              onClick={() => setIsActiveFilter('date')}
-              isActive={isActiveFilter === 'date'}
-            >
-              <span>Data adicionado</span>
-            </ButtonFilter>
-
-            <Button onClick={() => setDisplayModal('modalCreatePermission')}>
-              Cadastar
-            </Button>
-          </WrapperFilter>
         </Content>
       )}
 
       <CreatePermission
-        permissions={permissions}
-        setPermissions={setPermissions}
+        reloadFunction={handleLoadPermissions}
         id="modalCreatePermission"
+      />
+
+      <DeletePermission
+        reloadFunction={handleLoadPermissions}
+        id="modalDeletePermission"
+        permission={selectedPermissionName}
       />
 
       <CreateGroup
@@ -384,6 +410,12 @@ function Users() {
       />
 
       <EditGroup id={selectedItem} />
+
+      <DeleteGroup
+        reloadFunction={handleLoadGroups}
+        id="modalDeleteGroup"
+        group={selectedGroupName}
+      />
     </Container>
   )
 }

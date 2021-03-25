@@ -68,7 +68,7 @@ interface MenuOptionsProps {
   isActive?: boolean
 }
 
-export const MenuOption = styled.a<MenuOptionsProps>`
+export const MenuOption = styled.p<MenuOptionsProps>`
   text-decoration: none;
   margin: 0.3rem 0;
 

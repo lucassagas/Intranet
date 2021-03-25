@@ -13,66 +13,59 @@ import { useToast } from '../../../hooks/toast'
 
 import { Container } from '../../../styles/components/Modal/Permission/CreatePermission'
 
-import { GroupAndPermissionsProps } from '../../../pages/adm/users'
-
 interface CreatePermissionProps {
   id: string
-  setPermissions: (permissions: GroupAndPermissionsProps[]) => void
-  permissions: GroupAndPermissionsProps[]
+  reloadFunction: () => void
 }
 
 export function CreatePermission({
   id,
-  setPermissions,
-  permissions
+  reloadFunction
 }: CreatePermissionProps) {
   const formRef = useRef<FormHandles>(null)
   const { setDisplayModal } = useModal()
   const { addToast } = useToast()
 
-  const handleSubmit = useCallback(
-    async (data, { reset }) => {
-      try {
-        formRef.current.setErrors({})
+  const handleSubmit = useCallback(async (data, { reset }) => {
+    try {
+      formRef.current.setErrors({})
 
-        const schema = Yup.object().shape({
-          name: Yup.string().required('Preenchimento obrigatório')
-        })
+      const schema = Yup.object().shape({
+        name: Yup.string().required('Preenchimento obrigatório')
+      })
 
-        await schema.validate(data, {
-          abortEarly: false
-        })
+      await schema.validate(data, {
+        abortEarly: false
+      })
 
-        const response = await api.post('api/permission', data)
+      const response = await api.post('api/permission', data)
 
-        setDisplayModal('')
-        reset()
-        setPermissions([...permissions, response.data.permission])
+      reloadFunction()
+      setDisplayModal('')
+      reset()
 
-        addToast({
-          type: 'success',
-          title: 'Sucesso!',
-          description: response.data.message
-        })
-      } catch (err) {
-        if (err instanceof Yup.ValidationError) {
-          const errors = getValidationErrors(err)
+      addToast({
+        type: 'success',
+        title: 'Sucesso!',
+        description: response.data.message
+      })
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(err)
 
-          formRef.current.setErrors(errors)
+        formRef.current.setErrors(errors)
 
-          return
-        }
-
-        addToast({
-          type: 'error',
-          title: 'Error',
-          description:
-            'Ocorreu um erro ao criar a permissão, contate um administrador'
-        })
+        return
       }
-    },
-    [permissions]
-  )
+
+      addToast({
+        type: 'error',
+        title: 'Error',
+        description:
+          'Ocorreu um erro ao criar a permissão, contate um administrador'
+      })
+    }
+  }, [])
 
   return (
     <GlobalModal size={400} title="Criar Permissão" id={id}>

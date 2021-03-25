@@ -203,19 +203,19 @@ export function EditGroup({ id }: EditGroupProps) {
                       let deletar: number
 
                       page.page_permissions.map(p => {
-                        if (p.perm_name.includes('.criar')) {
+                        if (p.perm_name.includes('.CRIAR')) {
                           criar = p.perm_id
                         }
 
-                        if (p.perm_name.includes('.visualizar')) {
+                        if (p.perm_name.includes('.VISUALIZAR')) {
                           visualizar = p.perm_id
                         }
 
-                        if (p.perm_name.includes('.editar')) {
+                        if (p.perm_name.includes('.EDITAR')) {
                           editar = p.perm_id
                         }
 
-                        if (p.perm_name.includes('.deletar')) {
+                        if (p.perm_name.includes('.DELETAR')) {
                           deletar = p.perm_id
                         }
                       })

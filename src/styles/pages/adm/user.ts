@@ -159,8 +159,10 @@ export const PermissionList = styled.div<PermissionList>`
   max-height: ${props => (props.isActivePage ? '600px' : '0')};
   overflow: hidden;
 
-  > button {
-    padding: 1rem 3rem;
+  > strong {
+    padding-left: 3rem;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
     background: transparent;
     border: 0;
     border-bottom: solid 1px var(--mediumgray);
@@ -169,7 +171,21 @@ export const PermissionList = styled.div<PermissionList>`
     justify-content: flex-start;
     font-size: 0.9rem;
 
-    & + button {
+    &:hover {
+      background: var(--darkgrayhover);
+    }
+
+    > button {
+      background: var(--danger);
+      border: 0;
+      padding: 0.6rem;
+      width: 150px;
+      margin-left: auto;
+      margin-right: 20px;
+      border-radius: 2px;
+    }
+
+    & + strong {
       margin-top: -1px;
     }
   }
@@ -287,4 +303,13 @@ export const ButtonFilter = styled.button<ButtonFilterProps>`
 
     left: -1rem;
   }
+`
+
+export const DeleteButton = styled.button`
+  width: 150px;
+  border: 0;
+  background: var(--danger);
+  padding: 0.6rem;
+
+  border-radius: 2px;
 `

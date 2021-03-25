@@ -11,7 +11,9 @@ export const themes = {
     mediumgray: '#525255',
     orange: '#FF4E00',
     white: '#FFFFFF',
-    error: '#c53030'
+    error: '#c53030',
+    danger: '#f93e3e',
+    dangerhover: lighten(0.1, '#f93e3e')
   }
 }
 
