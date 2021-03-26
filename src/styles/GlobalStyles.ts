@@ -7,10 +7,14 @@ export default createGlobalStyle`
   outline: 0;
   box-sizing: border-box;
 }
+#nprogress .peg {
+  display: none !important;
+}
 
 #nprogress .bar {
   background: var(--orange);
   height: 3px;
+  box-shadow: none;
 }
 
 html {

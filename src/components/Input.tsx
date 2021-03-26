@@ -60,6 +60,7 @@ export function Input({
 
   return (
     <>
+      {label && <Label>{label}</Label>}
       <Container
         id="defaultInput"
         width={width}

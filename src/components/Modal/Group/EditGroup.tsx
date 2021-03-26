@@ -61,11 +61,11 @@ export function EditGroup({ id }: EditGroupProps) {
 
         setDisplayModal('')
       })
-      .catch(() => {
+      .catch(err => {
         addToast({
           type: 'error',
           title: 'Erro',
-          description: 'Erro ao atualizar grupo, contato um administrador'
+          description: err.response.data.message
         })
       })
   }, [permissionsId, id])
@@ -78,7 +78,7 @@ export function EditGroup({ id }: EditGroupProps) {
       .then(response => {
         setGroupsAndPermissions(response.data)
       })
-      .catch(() => {
+      .catch(err => {
         addToast({
           type: 'error',
           title: 'Erro',
@@ -100,11 +100,11 @@ export function EditGroup({ id }: EditGroupProps) {
             })
           })
         })
-        .catch(() => {
+        .catch(err => {
           addToast({
             type: 'error',
             title: 'Erro',
-            description: 'Erro ao carregar permissões do grupo'
+            description: err.response.data.message
           })
         })
 
@@ -149,9 +149,6 @@ export function EditGroup({ id }: EditGroupProps) {
     [openGroup]
   )
 
-  if (!groupsAndPermissions) {
-    return <h1>loading</h1>
-  }
   return (
     <GlobalModal title="Vincular Permissões" id={id} size={600}>
       <Container>
@@ -159,133 +156,134 @@ export function EditGroup({ id }: EditGroupProps) {
           <div>
             <Input value={groupName.toUpperCase()} name="name" readOnly />
 
-            {groupsAndPermissions.map(group => {
-              return (
-                <WrapperOptions
-                  key={group.page_index}
-                  onClick={() => {
-                    handleOpenGroup(group.page_index)
-                  }}
-                  openedGroup={openGroup === group.page_index}
-                  isActive={isActiveGroup.includes(group.page_index)}
-                >
-                  <div>
-                    <span>
-                      <MainButton
-                        isActive={isActiveGroup.includes(group.page_index)}
-                        type="button"
-                        onClick={(e: MouseEvent) => {
-                          handleSelectGroup(group.page_index)
-                          e.stopPropagation()
-                        }}
-                      >
-                        {isActiveGroup.includes(group.page_index) && (
-                          <BiCheck size={18} />
-                        )}
-                      </MainButton>
-                      {group.page_index}
-                      <IoIosArrowDown size={18} />
-                    </span>
-                    <span>Criar</span>
-                    <span>Visualizar</span>
-                    <span>Editar</span>
-                    <span>Deletar</span>
-                  </div>
-
-                  <SubGroups
-                    onClick={(event: MouseEvent) => event.stopPropagation()}
+            {groupsAndPermissions &&
+              groupsAndPermissions.map(group => {
+                return (
+                  <WrapperOptions
+                    key={group.page_index}
+                    onClick={() => {
+                      handleOpenGroup(group.page_index)
+                    }}
                     openedGroup={openGroup === group.page_index}
+                    isActive={isActiveGroup.includes(group.page_index)}
                   >
-                    {group.pages.map(page => {
-                      let criar: number
-                      let visualizar: number
-                      let editar: number
-                      let deletar: number
+                    <div>
+                      <span>
+                        <MainButton
+                          isActive={isActiveGroup.includes(group.page_index)}
+                          type="button"
+                          onClick={(e: MouseEvent) => {
+                            handleSelectGroup(group.page_index)
+                            e.stopPropagation()
+                          }}
+                        >
+                          {isActiveGroup.includes(group.page_index) && (
+                            <BiCheck size={18} />
+                          )}
+                        </MainButton>
+                        {group.page_index}
+                        <IoIosArrowDown size={18} />
+                      </span>
+                      <span>Criar</span>
+                      <span>Visualizar</span>
+                      <span>Editar</span>
+                      <span>Deletar</span>
+                    </div>
 
-                      page.page_permissions.map(p => {
-                        if (p.perm_name.includes('.CRIAR')) {
-                          criar = p.perm_id
-                        }
+                    <SubGroups
+                      onClick={(event: MouseEvent) => event.stopPropagation()}
+                      openedGroup={openGroup === group.page_index}
+                    >
+                      {group.pages.map(page => {
+                        let criar: number
+                        let visualizar: number
+                        let editar: number
+                        let deletar: number
 
-                        if (p.perm_name.includes('.VISUALIZAR')) {
-                          visualizar = p.perm_id
-                        }
+                        page.page_permissions.map(p => {
+                          if (p.perm_name.includes('.CRIAR')) {
+                            criar = p.perm_id
+                          }
 
-                        if (p.perm_name.includes('.EDITAR')) {
-                          editar = p.perm_id
-                        }
+                          if (p.perm_name.includes('.VISUALIZAR')) {
+                            visualizar = p.perm_id
+                          }
 
-                        if (p.perm_name.includes('.DELETAR')) {
-                          deletar = p.perm_id
-                        }
-                      })
+                          if (p.perm_name.includes('.EDITAR')) {
+                            editar = p.perm_id
+                          }
 
-                      return (
-                        <div key={page.page_name}>
-                          <span>{page.page_name}</span>
-                          <span>
-                            <StyledOption
-                              isActive={permissionsId.includes(criar)}
-                              onClick={(event: MouseEvent) => {
-                                handleSelectPermissions(criar)
-                                event.stopPropagation()
-                              }}
-                              type="button"
-                            >
-                              {permissionsId.includes(criar) && (
-                                <FiCheck size={18} />
-                              )}
-                            </StyledOption>
-                          </span>
-                          <span>
-                            <StyledOption
-                              isActive={permissionsId.includes(visualizar)}
-                              onClick={(event: MouseEvent) => {
-                                handleSelectPermissions(visualizar)
-                                event.stopPropagation()
-                              }}
-                              type="button"
-                            >
-                              {permissionsId.includes(visualizar) && (
-                                <FiCheck size={18} />
-                              )}
-                            </StyledOption>
-                          </span>
-                          <span>
-                            <StyledOption
-                              isActive={permissionsId.includes(editar)}
-                              onClick={(event: MouseEvent) => {
-                                handleSelectPermissions(editar)
-                                event.stopPropagation()
-                              }}
-                              type="button"
-                            >
-                              {permissionsId.includes(editar) && (
-                                <FiCheck size={18} />
-                              )}
-                            </StyledOption>
-                          </span>
-                          <span>
-                            <StyledOption
-                              isActive={permissionsId.includes(deletar)}
-                              onClick={(event: MouseEvent) => {
-                                handleSelectPermissions(deletar)
-                                event.stopPropagation()
-                              }}
-                              type="button"
-                            >
-                              {permissionsId.includes(deletar) && (
-                                <FiCheck size={18} />
-                              )}
-                            </StyledOption>
-                          </span>
-                        </div>
-                      )
-                    })}
-                  </SubGroups>
-                </WrapperOptions>
-              )
-            })}
+                          if (p.perm_name.includes('.DELETAR')) {
+                            deletar = p.perm_id
+                          }
+                        })
+
+                        return (
+                          <div key={page.page_name}>
+                            <span>{page.page_name}</span>
+                            <span>
+                              <StyledOption
+                                isActive={permissionsId.includes(criar)}
+                                onClick={(event: MouseEvent) => {
+                                  handleSelectPermissions(criar)
+                                  event.stopPropagation()
+                                }}
+                                type="button"
+                              >
+                                {permissionsId.includes(criar) && (
+                                  <FiCheck size={18} />
+                                )}
+                              </StyledOption>
+                            </span>
+                            <span>
+                              <StyledOption
+                                isActive={permissionsId.includes(visualizar)}
+                                onClick={(event: MouseEvent) => {
+                                  handleSelectPermissions(visualizar)
+                                  event.stopPropagation()
+                                }}
+                                type="button"
+                              >
+                                {permissionsId.includes(visualizar) && (
+                                  <FiCheck size={18} />
+                                )}
+                              </StyledOption>
+                            </span>
+                            <span>
+                              <StyledOption
+                                isActive={permissionsId.includes(editar)}
+                                onClick={(event: MouseEvent) => {
+                                  handleSelectPermissions(editar)
+                                  event.stopPropagation()
+                                }}
+                                type="button"
+                              >
+                                {permissionsId.includes(editar) && (
+                                  <FiCheck size={18} />
+                                )}
+                              </StyledOption>
+                            </span>
+                            <span>
+                              <StyledOption
+                                isActive={permissionsId.includes(deletar)}
+                                onClick={(event: MouseEvent) => {
+                                  handleSelectPermissions(deletar)
+                                  event.stopPropagation()
+                                }}
+                                type="button"
+                              >
+                                {permissionsId.includes(deletar) && (
+                                  <FiCheck size={18} />
+                                )}
+                              </StyledOption>
+                            </span>
+                          </div>
+                        )
+                      })}
+                    </SubGroups>
+                  </WrapperOptions>
+                )
+              })}
           </div>
           <Button type="submit">Salvar</Button>
         </Form>

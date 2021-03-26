@@ -13,12 +13,9 @@ interface ContainerProps {
 export const Label = styled.span`
   color: var(--white);
   font-weight: 400;
-  position: static;
-  margin-bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-self: flex-end;
-  gap: 10px;
+  font-size: 0.8rem;
+  display: block;
+  padding-bottom: 3px;
 `
 
 export const Container = styled.div<ContainerProps>`

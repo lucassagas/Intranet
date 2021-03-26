@@ -13,47 +13,41 @@ import { useModal } from '../../../hooks/modal'
 interface DeleteGroupProps {
   id: string
   reloadFunction: () => void
-  group: {
-    groupName?: string
-    id: number
-  }
 }
 
-export function DeleteGroup({ id, group, reloadFunction }: DeleteGroupProps) {
+export function DeleteGroup({ id, reloadFunction }: DeleteGroupProps) {
   const { addToast } = useToast()
   const { setDisplayModal } = useModal()
 
-  const handleDeleteGroup = useCallback(() => {
-    api
-      .delete(`api/group/${group.id}`)
-      .then(response => {
-        console.log(response)
-        addToast({
-          type: 'success',
-          title: 'Sucesso',
-          description: response.data.message
-        })
-        reloadFunction()
-        setDisplayModal('')
-      })
-      .catch(() => {
-        addToast({
-          type: 'error',
-          title: 'Error',
-          description: 'Erro ao deletar grupo, contato um administrador'
-        })
-      })
-  }, [addToast, group])
+  // const handleDeleteGroup = useCallback(() => {
+  //   api
+  //     .delete(`api/group/${group.id}`)
+  //     .then(response => {
+  //       console.log(response)
+  //       addToast({
+  //         type: 'success',
+  //         title: 'Sucesso',
+  //         description: response.data.message
+  //       })
+  //       reloadFunction()
+  //       setDisplayModal('')
+  //     })
+  //     .catch(err => {
+  //       addToast({
+  //         type: 'error',
+  //         title: 'Error',
+  //         description: err.response.data.message
+  //       })
+  //     })
+  // }, [addToast, group])
   return (
     <GlobalModal id={id} size={400} title="Deletar grupo">
       <Container>
         <Wrapper>
           <strong>Deseja realmente deletar este grupo? </strong>
-          <p>{group && group.groupName}</p>
+          {/* <p>{group && group.groupName}</p> */}
         </Wrapper>
-        <Button onClick={handleDeleteGroup} type="button">
-          Confirmar
-        </Button>
+        <Button type="button">Confirmar</Button>
       </Container>
     </GlobalModal>
   )

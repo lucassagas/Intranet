@@ -41,7 +41,7 @@ export function SideMenu() {
       <nav>
         <ul>
           <Li>
-            <Link href="/signin">
+            <Link href="/">
               <MenuOption>
                 <BiHomeAlt size={22} />
                 Início

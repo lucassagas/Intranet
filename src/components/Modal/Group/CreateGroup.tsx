@@ -62,8 +62,7 @@ export function CreateGroup({ id, setGroups, groups }: CreateGroupsProps) {
         addToast({
           type: 'error',
           title: 'Error',
-          description:
-            'Ocorreu um erro ao criar o grupo, contate um administrador'
+          description: err.response.data.message
         })
       }
     },

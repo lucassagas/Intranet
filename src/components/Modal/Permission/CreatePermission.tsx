@@ -61,8 +61,7 @@ export function CreatePermission({
       addToast({
         type: 'error',
         title: 'Error',
-        description:
-          'Ocorreu um erro ao criar a permissão, contate um administrador'
+        description: err.response.data.message
       })
     }
   }, [])
