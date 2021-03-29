@@ -160,7 +160,7 @@ export function Groups() {
         id="modalCreateGroup"
       />
 
-      <EditGroup id={selectedItem} />
+      {selectedItem && <EditGroup id={selectedItem} />}
 
       <DeleteGroup reloadFunction={handleLoadGroups} id="modalDeleteGroup" />
     </Content>

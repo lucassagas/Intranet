@@ -35,6 +35,9 @@ interface pageProps {
 interface GroupsProps {
   page_index: string
   pages: pageProps[]
+  page_index_permission: {
+    perm_id: number
+  }
 }
 
 export function EditGroup({ id }: EditGroupProps) {
@@ -47,11 +50,56 @@ export function EditGroup({ id }: EditGroupProps) {
   >([])
 
   const { addToast } = useToast()
-  const { setDisplayModal } = useModal()
+  const { setDisplayModal, displayModal } = useModal()
+
+  console.log(permissionsId)
+
+  useEffect(() => {
+    api
+      .get('api/permission')
+      .then(response => {
+        setGroupsAndPermissions(response.data)
+      })
+      .catch(() => {
+        addToast({
+          type: 'error',
+          title: 'Erro',
+          description: 'Erro ao carregar permissões'
+        })
+      })
+
+    if (id !== 0) {
+      let permissions_id = []
+      api
+        .get(`api/group/${id}`)
+        .then(response => {
+          setGroupName(response.data.group_name)
+          response.data.permissions.map((permission: GroupsProps) => {
+            permissions_id.push(permission.page_index_permission.perm_id)
+            permission.pages.map(page => {
+              page.page_permissions.map(p => {
+                permissions_id.push(p.perm_id)
+              })
+            })
+          })
+        })
+        .catch(err => {
+          addToast({
+            type: 'error',
+            title: 'Erro',
+            description: err.response.data.message
+          })
+        })
+
+      setPermissionsId(permissions_id)
+    }
+  }, [id, displayModal])
 
   const handleSubmit = useCallback(() => {
     api
-      .put(`api/group/${id}`, { permissions: permissionsId })
+      .put(`api/group/${id}`, {
+        permissions: [...permissionsId, ...isActiveGroup]
+      })
       .then(response => {
         addToast({
           type: 'success',
@@ -70,50 +118,8 @@ export function EditGroup({ id }: EditGroupProps) {
       })
   }, [permissionsId, id])
 
-  useEffect(() => {
-    setOpenGroup('')
-    setPermissionsId([])
-    api
-      .get('api/permission')
-      .then(response => {
-        setGroupsAndPermissions(response.data)
-      })
-      .catch(err => {
-        addToast({
-          type: 'error',
-          title: 'Erro',
-          description: 'Erro ao carregar permissões'
-        })
-      })
-
-    if (id !== 0) {
-      let permissions_id = []
-      api
-        .get(`api/group/${id}`)
-        .then(response => {
-          setGroupName(response.data.group_name)
-          response.data.permissions.map(permission => {
-            permission.pages.map(page => {
-              page.page_permissions.map(p => {
-                permissions_id.push(p.perm_id)
-              })
-            })
-          })
-        })
-        .catch(err => {
-          addToast({
-            type: 'error',
-            title: 'Erro',
-            description: err.response.data.message
-          })
-        })
-
-      setPermissionsId(permissions_id)
-    }
-  }, [id])
-
   const handleSelectGroup = useCallback(
-    (group: string) => {
+    (group: number) => {
       if (isActiveGroup.includes(group)) {
         const groups = isActiveGroup.filter(isActive => isActive !== group)
         setIsActiveGroup(groups)
@@ -170,22 +176,26 @@ export function EditGroup({ id }: EditGroupProps) {
                     <div>
                       <span>
                         <MainButton
-                          isActive={isActiveGroup.includes(group.page_index)}
+                          isActive={permissionsId.includes(
+                            group.page_index_permission.perm_id
+                          )}
                           type="button"
                           onClick={(e: MouseEvent) => {
-                            handleSelectGroup(group.page_index)
+                            handleSelectGroup(
+                              group.page_index_permission.perm_id
+                            )
                             e.stopPropagation()
                           }}
                         >
-                          {isActiveGroup.includes(group.page_index) && (
-                            <BiCheck size={18} />
-                          )}
+                          {permissionsId.includes(
+                            group.page_index_permission.perm_id
+                          ) && <BiCheck size={18} />}
                         </MainButton>
                         {group.page_index}
                         <IoIosArrowDown size={18} />
                       </span>
-                      <span>Criar</span>
                       <span>Visualizar</span>
+                      <span>Criar</span>
                       <span>Editar</span>
                       <span>Deletar</span>
                     </div>
@@ -195,18 +205,17 @@ export function EditGroup({ id }: EditGroupProps) {
                       openedGroup={openGroup === group.page_index}
                     >
                       {group.pages.map(page => {
-                        let criar: number
                         let visualizar: number
+                        let criar: number
                         let editar: number
                         let deletar: number
 
                         page.page_permissions.map(p => {
-                          if (p.perm_name.includes('.CRIAR')) {
-                            criar = p.perm_id
-                          }
-
                           if (p.perm_name.includes('.VISUALIZAR')) {
                             visualizar = p.perm_id
+                          }
+                          if (p.perm_name.includes('.CRIAR')) {
+                            criar = p.perm_id
                           }
 
                           if (p.perm_name.includes('.EDITAR')) {
