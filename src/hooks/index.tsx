@@ -2,6 +2,7 @@ import { ReactNode, useState } from 'react'
 import { ThemeProvider } from 'styled-components'
 import { ThemeName, themes } from '../styles/theme'
 import { AuthProvider } from './auth'
+import { LoadingProvider } from './loading'
 import { ModalProvider } from './modal'
 import { ToastProvider } from './toast'
 
@@ -14,11 +15,13 @@ export function AppProvider({ children }: AppProviderProps) {
   const currentTheme = themes[themeName]
   return (
     <ToastProvider>
-      <AuthProvider>
-        <ThemeProvider theme={currentTheme}>
-          <ModalProvider>{children}</ModalProvider>
-        </ThemeProvider>
-      </AuthProvider>
+      <LoadingProvider>
+        <AuthProvider>
+          <ThemeProvider theme={currentTheme}>
+            <ModalProvider>{children}</ModalProvider>
+          </ThemeProvider>
+        </AuthProvider>
+      </LoadingProvider>
     </ToastProvider>
   )
 }

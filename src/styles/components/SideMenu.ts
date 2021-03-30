@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { motion } from 'framer-motion'
 
 export const Container = styled.div`
-  max-width: 294px;
+  max-width: 200px;
   width: 100%;
   height: 100vh;
 
@@ -16,13 +16,13 @@ export const Container = styled.div`
     flex-direction: column;
 
     > strong {
-      margin-top: 0.46rem;
+      margin-top: 0.5rem;
     }
 
     padding: 3.5rem 0;
     > img {
-      width: 80px;
-      height: 80px;
+      width: 70px;
+      height: 70px;
       border-radius: 50%;
     }
   }
@@ -38,9 +38,11 @@ export const Container = styled.div`
   }
 
   > img {
-    margin-left: 1.8rem;
+    margin-left: 1.5rem;
     position: absolute;
     bottom: 20px;
+
+    width: 150px;
   }
 `
 
@@ -55,10 +57,11 @@ export const Li = styled.li<LiProps>`
 
   margin-bottom: 0.6rem;
 
-  padding: 0 1.8rem;
+  padding: 0 0.5rem;
+  border-left: solid 4px transparent;
 
   border-left: ${props =>
-      props.isCategory ? '4px solid var(--orange);' : 'none'}
+      props.isCategory ? '3px solid var(--orange);' : 'none'}
     > svg {
     color: var(--gray);
   }
@@ -68,9 +71,8 @@ interface MenuOptionsProps {
   isActive?: boolean
 }
 
-export const MenuOption = styled.p<MenuOptionsProps>`
+export const MenuOption = styled.a<MenuOptionsProps>`
   text-decoration: none;
-  margin: 0.3rem 0;
 
   position: relative;
 
@@ -78,7 +80,7 @@ export const MenuOption = styled.p<MenuOptionsProps>`
 
   padding: 0.6rem 0.6rem;
 
-  font-size: 1.2rem;
+  font-size: 1rem;
 
   width: 100%;
   font-weight: 600;
@@ -119,4 +121,48 @@ export const SubMenu = styled(motion.div)`
   border-radius: 0 0 0.4rem 0.4rem;
 
   z-index: 1;
+`
+
+interface SubMenuOptionsProps {
+  isActive?: boolean
+}
+
+export const SubMenuOption = styled.span<SubMenuOptionsProps>`
+  margin: 0.3rem 0;
+
+  position: relative;
+
+  color: var(--gray);
+
+  padding: 0.6rem 0.6rem;
+
+  font-size: 1rem;
+
+  width: 100%;
+  font-weight: 600;
+
+  display: flex;
+  align-items: flex-end;
+
+  border-radius: 0.4rem;
+
+  cursor: pointer;
+
+  background: ${props => (props.isActive ? 'var(--darkgray)' : 'transparent')};
+
+  svg:first-child {
+    margin-right: 1.4rem;
+  }
+
+  svg + svg {
+    margin-left: auto;
+
+    transition: transform 0.2s;
+
+    transform: ${props => (props.isActive ? 'rotate(180deg)' : 'rotate(0deg)')};
+  }
+
+  &:hover {
+    background: var(--darkgray);
+  }
 `

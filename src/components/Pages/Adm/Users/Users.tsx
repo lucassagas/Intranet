@@ -55,9 +55,7 @@ export function Users() {
     })
   }, [])
 
-  const handleSearch = useCallback(data => {
-    console.log(data)
-  }, [])
+  const handleSearch = useCallback(data => {}, [])
 
   return (
     <Content>

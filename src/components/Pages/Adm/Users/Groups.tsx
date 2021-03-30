@@ -61,9 +61,7 @@ export function Groups() {
     setDisplayModal(group_id)
   }, [])
 
-  const handleSearch = useCallback(data => {
-    console.log(data)
-  }, [])
+  const handleSearch = useCallback(data => {}, [])
 
   const handleLoadGroups = useCallback(() => {
     setIsActiveFilter('name')

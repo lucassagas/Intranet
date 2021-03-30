@@ -12,6 +12,10 @@ export const Container = styled.button`
   margin-top: 16px;
   transition: opacity 0.2s;
 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   &:hover {
     filter: brightness(0.9);
   }

@@ -13,7 +13,10 @@ export const themes = {
     white: '#FFFFFF',
     error: '#c53030',
     danger: '#f93e3e',
-    dangerhover: lighten(0.1, '#f93e3e')
+    dangerhover: lighten(0.1, '#f93e3e'),
+    purple: '#9C2EF0',
+    green: '#33B650',
+    yellow: '#F0D62E'
   }
 }
 

@@ -4,7 +4,7 @@ export const Container = styled.div`
   display: flex;
   align-items: center;
 
-  height: 70px;
+  height: 50px;
   background: var(--background);
 
   padding: 0 50px 0 17px;
@@ -15,6 +15,7 @@ export const Container = styled.div`
 
     > h1 {
       color: var(--gray);
+      font-size: 1.5rem;
     }
 
     > h2 {

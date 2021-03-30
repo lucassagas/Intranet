@@ -1,11 +1,17 @@
 import logoImg from '../assets/logo.png'
 import Link from 'next/link'
 
+import { useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
+import { useRouter } from 'next/router'
+import { useAuth } from '../hooks/auth'
+
 import {
   Container,
   Li,
   MenuOption,
-  SubMenu
+  SubMenu,
+  SubMenuOption
 } from '../styles/components/SideMenu'
 
 import {
@@ -13,16 +19,14 @@ import {
   RiAdminLine,
   IoIosArrowDown,
   HiOutlineUsers,
-  AiOutlineLaptop
+  RiLogoutCircleLine
 } from '../styles/icons'
-import { useState } from 'react'
-import { AnimatePresence } from 'framer-motion'
-import { useRouter } from 'next/router'
 
 export function SideMenu() {
   const [displaySubMenu, setDisplaySubMenu] = useState('')
 
   const router = useRouter()
+  const { handleSignOut } = useAuth()
 
   function toggleMenu(category: string | undefined) {
     displaySubMenu === category
@@ -38,9 +42,10 @@ export function SideMenu() {
         />
         <strong>Lucas Sagás</strong>
       </header>
+
       <nav>
         <ul>
-          <Li>
+          <Li isCategory={router.pathname === '/'}>
             <Link href="/">
               <MenuOption>
                 <BiHomeAlt size={22} />
@@ -54,21 +59,22 @@ export function SideMenu() {
               isActive={displaySubMenu === 'Adm'}
               onClick={() => toggleMenu('Adm')}
             >
-              <RiAdminLine size={22} />
+              <RiAdminLine size={20} />
               Adm
               <IoIosArrowDown size={18} />
               <AnimatePresence exitBeforeEnter>
                 {displaySubMenu === 'Adm' && (
                   <SubMenu
+                    key="adm/users"
                     initial={{ y: -25, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ opacity: 0 }}
                   >
                     <Link href="/adm/users">
-                      <MenuOption>
-                        <HiOutlineUsers size={22} />
+                      <SubMenuOption>
+                        <HiOutlineUsers size={20} />
                         Usuários
-                      </MenuOption>
+                      </SubMenuOption>
                     </Link>
                   </SubMenu>
                 )}
@@ -76,13 +82,11 @@ export function SideMenu() {
             </MenuOption>
           </Li>
 
-          <Li>
-            <Link href="/signin">
-              <MenuOption>
-                <BiHomeAlt size={22} />
-                Início
-              </MenuOption>
-            </Link>
+          <Li onClick={handleSignOut}>
+            <MenuOption>
+              <RiLogoutCircleLine size={20} />
+              Logout
+            </MenuOption>
           </Li>
         </ul>
       </nav>

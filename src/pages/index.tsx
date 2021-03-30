@@ -1,9 +1,14 @@
 import Head from 'next/head'
 import { Header } from '../components/Header'
+import { Calendar } from '../components/Pages/Dashboard/Calendar'
+import { Redirects } from '../components/Pages/Dashboard/Redirects'
+import { Mural } from '../components/Pages/Dashboard/Mural'
+import { Warnings } from '../components/Pages/Dashboard/Warnings'
 
 import { Container, Content } from '../styles/pages/home'
+import withAuth from '../utils/withAuth'
 
-export default function Home() {
+function Home() {
   return (
     <Container>
       <Head>
@@ -12,7 +17,14 @@ export default function Home() {
       </Head>
 
       <Header category="Home" route="Dashboard" />
-      <Content />
+      <Content>
+        <Mural />
+        <Calendar />
+        <Warnings />
+        <Redirects />
+      </Content>
     </Container>
   )
 }
+
+export default withAuth(Home)

@@ -52,8 +52,6 @@ export function EditGroup({ id }: EditGroupProps) {
   const { addToast } = useToast()
   const { setDisplayModal, displayModal } = useModal()
 
-  console.log(permissionsId)
-
   useEffect(() => {
     api
       .get('api/permission')

@@ -10,6 +10,7 @@ import { Users } from '../../components/Pages/Adm/Users/Users'
 import { BiLockAlt, FaRegUser } from '../../styles/icons'
 
 import { Container, ButtonCategory } from '../../styles/pages/adm/user'
+import withAuth from '../../utils/withAuth'
 
 function UsersPage() {
   const [category, setCategory] = useState('users')
@@ -49,4 +50,4 @@ function UsersPage() {
   )
 }
 
-export default UsersPage
+export default withAuth(UsersPage)

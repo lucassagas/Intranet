@@ -15,7 +15,7 @@ import { useToast } from '../../../hooks/toast'
 import { getValidationErrors } from '../../../utils/getValidationErrors'
 import { api } from '../../../services/api'
 
-import { GroupsProps } from '../../../pages/adm/users'
+import { GroupsProps } from '../../../components/Pages/Adm/Users/Groups'
 
 interface CreateUserProps {
   id: string
@@ -80,8 +80,6 @@ export function CreateUser({ id, reloadFunction }: CreateUserProps) {
         formRef.current.setErrors(errors)
         return
       }
-
-      console.log(err.response.data.message)
 
       addToast({
         type: 'error',

@@ -23,7 +23,6 @@ export function DeleteGroup({ id, reloadFunction }: DeleteGroupProps) {
   //   api
   //     .delete(`api/group/${group.id}`)
   //     .then(response => {
-  //       console.log(response)
   //       addToast({
   //         type: 'success',
   //         title: 'Sucesso',

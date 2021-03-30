@@ -1,6 +1,10 @@
 export { BiHomeAlt, BiLockAlt, BiCheck } from 'react-icons/bi'
 
-export { IoIosArrowDown } from 'react-icons/io'
+export {
+  IoIosArrowDown,
+  IoIosArrowBack,
+  IoIosArrowForward
+} from 'react-icons/io'
 
 export {
   FiHeadphones,
@@ -9,14 +13,16 @@ export {
   FiCheckCircle,
   FiAlertCircle,
   FiInfo,
-  FiXCircle
+  FiXCircle,
+  FiClipboard
 } from 'react-icons/fi'
 
 export {
   AiOutlineLaptop,
   AiOutlineSearch,
   AiOutlineEye,
-  AiOutlineQuestionCircle
+  AiOutlineQuestionCircle,
+  AiOutlineWarning
 } from 'react-icons/ai'
 
 export { SiWikipedia } from 'react-icons/si'
