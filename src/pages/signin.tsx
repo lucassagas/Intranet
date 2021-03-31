@@ -11,17 +11,13 @@ import Head from 'next/head'
 import { useAuth } from '../hooks/auth'
 import { getValidationErrors } from '../utils/getValidationErrors'
 import { FormHandles } from '@unform/core'
-import { useLoading } from '../hooks/loading'
 
 function SignIn() {
   const { handleSignIn } = useAuth()
   const formRef = useRef<FormHandles>(null)
 
-  const { setLoadingButton } = useLoading()
-
   const handleSubmit = useCallback(async data => {
     try {
-      setLoadingButton(true)
       formRef.current.setErrors({})
 
       const schema = Yup.object().shape({
@@ -44,8 +40,6 @@ function SignIn() {
 
         return
       }
-    } finally {
-      setLoadingButton(false)
     }
   }, [])
 

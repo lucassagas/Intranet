@@ -118,14 +118,14 @@ export function EditGroup({ id }: EditGroupProps) {
 
   const handleSelectGroup = useCallback(
     (group: number) => {
-      if (isActiveGroup.includes(group)) {
-        const groups = isActiveGroup.filter(isActive => isActive !== group)
+      if (permissionsId.includes(group)) {
+        const groups = permissionsId.filter(isActive => isActive !== group)
         setIsActiveGroup(groups)
 
         return
       }
 
-      setIsActiveGroup([...isActiveGroup, group])
+      setIsActiveGroup([...permissionsId, group])
     },
     [isActiveGroup]
   )
@@ -192,8 +192,8 @@ export function EditGroup({ id }: EditGroupProps) {
                         {group.page_index}
                         <IoIosArrowDown size={18} />
                       </span>
-                      <span>Visualizar</span>
                       <span>Criar</span>
+                      <span>Visualizar</span>
                       <span>Editar</span>
                       <span>Deletar</span>
                     </div>
@@ -203,17 +203,18 @@ export function EditGroup({ id }: EditGroupProps) {
                       openedGroup={openGroup === group.page_index}
                     >
                       {group.pages.map(page => {
-                        let visualizar: number
                         let criar: number
+                        let visualizar: number
                         let editar: number
                         let deletar: number
 
                         page.page_permissions.map(p => {
-                          if (p.perm_name.includes('.VISUALIZAR')) {
-                            visualizar = p.perm_id
-                          }
                           if (p.perm_name.includes('.CRIAR')) {
                             criar = p.perm_id
+                          }
+
+                          if (p.perm_name.includes('.VISUALIZAR')) {
+                            visualizar = p.perm_id
                           }
 
                           if (p.perm_name.includes('.EDITAR')) {

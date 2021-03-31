@@ -13,7 +13,7 @@ import { useToast } from '../../../hooks/toast'
 
 import { Container } from '../../../styles/components/Modal/Group/CreateGroup'
 
-import { GroupsProps } from '../../../pages/adm/users'
+import { GroupsProps } from '../../../components/Pages/Adm/Users/Groups'
 
 interface CreateGroupsProps {
   id: string

@@ -46,7 +46,7 @@ export interface GroupsProps {
 
 export function Groups() {
   const [groups, setGroups] = useState<GroupsProps[]>([])
-  const [selectedItem, setSelectedItem] = useState(0)
+  const [selectedItem, setSelectedItem] = useState<number>()
   const [isActiveFilter, setIsActiveFilter] = useState('name')
 
   const { setDisplayModal } = useModal()
@@ -137,6 +137,7 @@ export function Groups() {
           onClick={() => setIsActiveFilter('name')}
           isActive={isActiveFilter === 'name'}
         >
+          <div />
           <span>Nome</span>
         </ButtonFilter>
 
@@ -144,6 +145,7 @@ export function Groups() {
           onClick={() => setIsActiveFilter('date')}
           isActive={isActiveFilter === 'date'}
         >
+          <div />
           <span>Data adicionado</span>
         </ButtonFilter>
 

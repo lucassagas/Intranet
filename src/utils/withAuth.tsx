@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { ElementType, useEffect, useState } from 'react'
+import { ElementType, useEffect } from 'react'
 
 import Cookie from 'js-cookie'
 import { useToast } from '../hooks/toast'
@@ -11,14 +11,13 @@ export default function withAuth(WrappedComponent: ElementType) {
 
     useEffect(() => {
       const token = Cookie.get('intranet-token')
-
       if (!token) {
         router.replace('/signin')
-
         addToast({
           type: 'info',
           title: 'Sessão expirada',
-          description: 'Sua sessão expirada, por favor faça o login novamente.'
+          description:
+            'Sua sessão foi expirada, por favor faça o login novamente.'
         })
       }
     }, [])

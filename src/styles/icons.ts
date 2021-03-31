@@ -1,4 +1,4 @@
-export { BiHomeAlt, BiLockAlt, BiCheck } from 'react-icons/bi'
+export { BiHomeAlt, BiLockAlt, BiCheck, BiGroup } from 'react-icons/bi'
 
 export {
   IoIosArrowDown,
@@ -14,7 +14,8 @@ export {
   FiAlertCircle,
   FiInfo,
   FiXCircle,
-  FiClipboard
+  FiClipboard,
+  FiPhone
 } from 'react-icons/fi'
 
 export {
@@ -27,12 +28,17 @@ export {
 
 export { SiWikipedia } from 'react-icons/si'
 
-export { RiAdminLine, RiLogoutCircleLine, RiEyeCloseLine } from 'react-icons/ri'
+export {
+  RiAdminLine,
+  RiLogoutCircleLine,
+  RiEyeCloseLine,
+  RiFirstAidKitLine
+} from 'react-icons/ri'
 
 export { GrMoney } from 'react-icons/gr'
 
 export { FaRegUser } from 'react-icons/fa'
 
-export { HiOutlineUsers } from 'react-icons/hi'
+export { HiOutlineUsers, HiOutlineUserGroup } from 'react-icons/hi'
 
 export { MdClose } from 'react-icons/md'

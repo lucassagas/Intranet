@@ -40,7 +40,6 @@ export const WrapperFilter = styled.div`
     max-width: 200px;
     height: 30px;
     margin-top: -1px;
-    margin-left: -20px;
   }
 
   > form {
@@ -74,31 +73,31 @@ export const ButtonFilter = styled.button<ButtonFilterProps>`
   background: transparent;
   position: relative;
 
-  &:last-child {
-    margin-right: -1rem;
-    background: red;
-  }
+  display: flex;
+  align-items: center;
 
-  &:after {
-    content: '';
-
+  > div {
     width: 12px;
     height: 12px;
+    border-radius: 2px;
+
+    margin-right: 10px;
+
+    transition: all 0.3s;
+
     ${props =>
       props.isActive
         ? css`
-            border: solid 1px var(--orange);
             background: var(--orange);
+            border: 0;
           `
         : css`
-            border: solid 1px var(--white);
             background: transparent;
+            border: 1px solid var(--gray);
           `}
-    border-radius: 0.2rem;
 
-    position: absolute;
-    transition: all 0.2s;
-
-    left: -1rem;
+    &:first-child {
+      margin-right: 10px;
+    }
   }
 `

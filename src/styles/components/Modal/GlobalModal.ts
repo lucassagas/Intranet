@@ -28,7 +28,7 @@ export const Modalbox = styled(motion.div)<ModalBoxProps>`
   max-width: ${props => props.size}px;
   width: 100%;
 
-  border-radius: 0.4rem;
+  border-radius: 0 0 0.4rem 0.4rem;
 
   > header {
     display: flex;

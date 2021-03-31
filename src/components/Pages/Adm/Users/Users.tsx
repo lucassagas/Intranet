@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { GetServerSideProps } from 'next'
 import { useModal } from '../../../../hooks/modal'
 import { api } from '../../../../services/api'
 import { parseISO, format } from 'date-fns'
@@ -95,18 +94,21 @@ export function Users() {
           onClick={() => setIsActiveFilter('name')}
           isActive={isActiveFilter === 'name'}
         >
+          <div />
           <span>Nome</span>
         </ButtonFilter>
         <ButtonFilter
           onClick={() => setIsActiveFilter('email')}
           isActive={isActiveFilter === 'email'}
         >
+          <div />
           <span>E-mail</span>
         </ButtonFilter>
         <ButtonFilter
           onClick={() => setIsActiveFilter('date')}
           isActive={isActiveFilter === 'date'}
         >
+          <div />
           <span>Data adicionado</span>
         </ButtonFilter>
 
@@ -114,6 +116,7 @@ export function Users() {
           onClick={() => setIsActiveFilter('group')}
           isActive={isActiveFilter === 'group'}
         >
+          <div />
           <span>Grupo</span>
         </ButtonFilter>
 

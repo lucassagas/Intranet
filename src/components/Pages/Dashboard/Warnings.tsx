@@ -80,6 +80,7 @@ export function Warnings() {
           </WrapperMessage>
         </Scroll>
       </Wrapper>
+      <footer />
     </Container>
   )
 }

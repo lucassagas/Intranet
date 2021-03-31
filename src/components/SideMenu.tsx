@@ -19,7 +19,11 @@ import {
   RiAdminLine,
   IoIosArrowDown,
   HiOutlineUsers,
-  RiLogoutCircleLine
+  RiLogoutCircleLine,
+  HiOutlineUserGroup,
+  BiGroup,
+  RiFirstAidKitLine,
+  FiPhone
 } from '../styles/icons'
 
 export function SideMenu() {
@@ -27,6 +31,7 @@ export function SideMenu() {
 
   const router = useRouter()
   const { handleSignOut } = useAuth()
+  const { permissions, user } = useAuth()
 
   function toggleMenu(category: string | undefined) {
     displaySubMenu === category
@@ -40,7 +45,7 @@ export function SideMenu() {
           src="https://avatars.githubusercontent.com/u/41124763?v=4"
           alt="Profile"
         />
-        <strong>Lucas Sagás</strong>
+        <strong>{user && user.user_name.toLowerCase()}</strong>
       </header>
 
       <nav>
@@ -52,6 +57,56 @@ export function SideMenu() {
                 Início
               </MenuOption>
             </Link>
+          </Li>
+
+          <Li isCategory={router.pathname.includes('/rh/')}>
+            <MenuOption
+              isActive={displaySubMenu === 'Rh'}
+              onClick={() => toggleMenu('Rh')}
+            >
+              <HiOutlineUserGroup size={20} />
+              Rh
+              <IoIosArrowDown size={18} />
+              <AnimatePresence exitBeforeEnter>
+                {displaySubMenu === 'Rh' && (
+                  <>
+                    <SubMenu
+                      key="Rh/cola"
+                      initial={{ y: -25, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                    >
+                      {permissions.includes('RH.COLABORADORES.VISUALIZAR') && (
+                        <Link href="/rh/contributors">
+                          <SubMenuOption>
+                            <BiGroup size={22} />
+                            Colaboradores
+                          </SubMenuOption>
+                        </Link>
+                      )}
+
+                      {permissions.includes('RH.EXAMES.VISUALIZAR') && (
+                        <Link href="/rh/exams">
+                          <SubMenuOption>
+                            <RiFirstAidKitLine size={20} />
+                            Exames
+                          </SubMenuOption>
+                        </Link>
+                      )}
+
+                      {permissions.includes('RH.RAMAIS.VISUALIZAR') && (
+                        <Link href="/rh/branches">
+                          <SubMenuOption>
+                            <FiPhone size={20} />
+                            Ramais
+                          </SubMenuOption>
+                        </Link>
+                      )}
+                    </SubMenu>
+                  </>
+                )}
+              </AnimatePresence>
+            </MenuOption>
           </Li>
 
           <Li isCategory={router.pathname.includes('/adm/')}>

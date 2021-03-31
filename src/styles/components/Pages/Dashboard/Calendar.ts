@@ -26,6 +26,10 @@ export const Container = styled.div`
     border-collapse: separate;
     border-spacing: 3px 15px;
     margin: 16px;
+
+    @media (max-width: 1440px) {
+      border-spacing: 3px;
+    }
   }
 
   .DayPicker-Day {

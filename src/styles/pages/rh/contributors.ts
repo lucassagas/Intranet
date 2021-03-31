@@ -1,8 +1,15 @@
 import styled, { css } from 'styled-components'
 
+export const Container = styled.div`
+  display: relative;
+
+  width: 100%;
+`
+
 export const Content = styled.div`
   margin-right: 20px;
-  height: 90%;
+  max-height: calc(100vh - 90px);
+  height: 100%;
 
   border-radius: 1rem;
 
@@ -11,12 +18,8 @@ export const Content = styled.div`
   background: var(--darkgray);
 
   position: relative;
-  box-sizing: border-box;
 `
 
-export const Wrapper = styled.div`
-  height: 95%;
-`
 export const WrapperFilter = styled.div`
   position: absolute;
   bottom: 10px;
@@ -31,10 +34,6 @@ export const WrapperFilter = styled.div`
 
   gap: 2rem;
 
-  > table tbody tr td {
-    cursor: pointer;
-  }
-
   > button:last-child {
     max-width: 200px;
     height: 30px;
@@ -46,7 +45,7 @@ export const WrapperFilter = styled.div`
     flex: 1;
     > div {
       height: 30px;
-      width: 100%;
+      flex: 1;
     }
 
     > svg {

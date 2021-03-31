@@ -12,8 +12,7 @@ function Home() {
   return (
     <Container>
       <Head>
-        <title>Intranet - DashBoard</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Intranet - Dashboard</title>
       </Head>
 
       <Header category="Home" route="Dashboard" />

@@ -4,6 +4,19 @@ export const Container = styled.div`
   display: grid;
   grid-area: W;
   position: relative;
+  overflow: hidden;
+
+  > footer {
+    width: 100%;
+    background: var(--background);
+    height: 23px;
+    position: absolute;
+
+    z-index: 10;
+    bottom: 0;
+
+    border-radius: 0 0 0.4rem 0.4rem;
+  }
 `
 
 export const Wrapper = styled.div`

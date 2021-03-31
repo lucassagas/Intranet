@@ -17,6 +17,7 @@ export const Container = styled.div`
 
     > strong {
       margin-top: 0.5rem;
+      text-transform: capitalize;
     }
 
     padding: 3.5rem 0;

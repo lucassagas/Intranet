@@ -73,6 +73,10 @@ export const Container = styled.div<ContainerProps>`
     width: 100%;
     flex: 1;
 
+    ::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
+
     &::placeholder {
       color: var(--gray);
     }
