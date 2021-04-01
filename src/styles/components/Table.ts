@@ -7,6 +7,7 @@ interface TableProps {
 export const StyledTable = styled.table<TableProps>`
   width: 100%;
   border-collapse: collapse;
+  background: var(--darkgray);
 
   ${props =>
     props.isEditable &&
@@ -17,6 +18,9 @@ export const StyledTable = styled.table<TableProps>`
   th {
     text-align: left;
     padding-bottom: 10px;
+    position: sticky;
+    top: 0;
+    background: var(--darkgray);
     &:first-child {
       padding-left: 5px;
     }

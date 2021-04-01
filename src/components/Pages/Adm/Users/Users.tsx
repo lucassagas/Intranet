@@ -16,7 +16,7 @@ import {
   ButtonFilter
 } from '../../../../styles/components/Pages/Adm/Users/Users'
 import { CreateUser } from '../../../Modal/User/CreateUser'
-import { EditUser } from '../../../Modal/User/EditUser'
+import { EditUser } from '../../../Modal/User/UpdateUser'
 
 interface userProps {
   user_id: number

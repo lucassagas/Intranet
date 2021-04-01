@@ -15,7 +15,7 @@ import {
   ButtonFilter
 } from '../../../../styles/components/Pages/Adm/Users/Group'
 import { CreateGroup } from '../../../Modal/Group/CreateGroup'
-import { EditGroup } from '../../../Modal/Group/EditGroup'
+import { EditGroup } from '../../../Modal/Group/UpdateGroup'
 import { DeleteGroup } from '../../../Modal/Group/DeleteGroup'
 import { api } from '../../../../services/api'
 import { useToast } from '../../../../hooks/toast'

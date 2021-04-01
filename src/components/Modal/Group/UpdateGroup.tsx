@@ -11,7 +11,7 @@ import {
   StyledOption,
   SubGroups,
   MainButton
-} from '../../../styles/components/Modal/Group/EditGroup'
+} from '../../../styles/components/Modal/Group/UpdateGroup'
 import { Form } from '@unform/web'
 import { api } from '../../../services/api'
 import { useToast } from '../../../hooks/toast'

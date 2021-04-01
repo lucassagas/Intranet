@@ -20,6 +20,30 @@ export const Content = styled.div`
   position: relative;
 `
 
+export const Scroll = styled.div`
+  max-height: calc(100% - 40px);
+  overflow: auto;
+  background: var(--darkgray);
+
+  > table thead tr th:last-child {
+    text-align: center;
+  }
+
+  ::-webkit-scrollbar {
+    width: 5px;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--background);
+    border-radius: 6px;
+  }
+`
+
 export const WrapperFilter = styled.div`
   position: absolute;
   bottom: 10px;
@@ -31,6 +55,7 @@ export const WrapperFilter = styled.div`
 
   align-items: center;
   justify-content: flex-start;
+  background: var(--darkgray);
 
   gap: 2rem;
 

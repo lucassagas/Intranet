@@ -11,32 +11,47 @@ import { Button } from '../../components/Button'
 import { Table } from '../../components/Table'
 import { useModal } from '../../hooks/modal'
 import { CreateContributors } from '../../components/Modal/Contributors/CreateContributors'
+import { UpdateContributors } from '../../components/Modal/Contributors/UpdateContributors'
+import { format } from 'date-fns'
+import { GetServerSideProps } from 'next'
+import { api } from '../../services/api'
 
 import {
   Container,
   Content,
   WrapperFilter,
-  ButtonFilter
+  ButtonFilter,
+  Scroll
 } from '../../styles/pages/rh/contributors'
-import { GetServerSideProps } from 'next'
-import { api } from '../../services/api'
-import Cookies from 'js-cookie'
 
-interface ContributorsProps {
+export interface ContributorsProps {
   contri_id: number
   contri_name: string
   contri_document: string
   contri_type_document: string
-  contri_date_expiration
+  contri_date_expiration: string
+  contri_date_birth: string
 }
 
-function Contributors() {
+export interface ContributorsStateProps {
+  contributorsProps: ContributorsProps[]
+}
+
+function Contributors(contributorsProps: ContributorsStateProps) {
   const [isActiveFilter, setIsActiveFilter] = useState('name')
-  const [contributors, setContributors] = useState<ContributorsProps[]>([])
+  const [
+    selectedContributor,
+    setSelectedContributor
+  ] = useState<ContributorsProps>()
+
+  const [contributors, setContributors] = useState<ContributorsStateProps>(
+    contributorsProps
+  )
 
   const { setDisplayModal } = useModal()
 
   const handleSearch = useCallback(data => {}, [])
+
   return (
     <Container>
       <Head>
@@ -46,17 +61,35 @@ function Contributors() {
       <Header category="RH" route="Colaboradores" />
 
       <Content>
-        <Table
-          ths={['Nome', 'Documento', 'Numero', 'Data de Validade']}
-          isEditable
-        >
-          <tr>
-            <td>Lucas Sagás</td>
-            <td>CPF</td>
-            <td>108.119.369-70</td>
-            <td>27/03/2026</td>
-          </tr>
-        </Table>
+        <Scroll>
+          <Table
+            ths={['Nome', 'Documento', 'Numero', 'Data de Validade']}
+            isEditable
+          >
+            {contributors &&
+              contributors.contributorsProps.map(contributor => {
+                return (
+                  <tr
+                    onClick={() => {
+                      setDisplayModal('modalUpdateContributor')
+                      setSelectedContributor(contributor)
+                    }}
+                    key={contributor.contri_id}
+                  >
+                    <td>{contributor.contri_name}</td>
+                    <td>{contributor.contri_type_document}</td>
+                    <td>{contributor.contri_document}</td>
+                    <td style={{ textAlign: 'center' }}>
+                      {format(
+                        new Date(contributor.contri_date_expiration),
+                        'dd/MM/yyyy'
+                      )}
+                    </td>
+                  </tr>
+                )
+              })}
+          </Table>
+        </Scroll>
 
         <WrapperFilter>
           <Form onSubmit={handleSearch}>
@@ -92,7 +125,18 @@ function Contributors() {
         </WrapperFilter>
       </Content>
 
-      <CreateContributors id="modalCreateContributors" />
+      <UpdateContributors
+        contributors={contributors}
+        setContributors={setContributors}
+        selectedContributor={selectedContributor}
+        id="modalUpdateContributor"
+      />
+
+      <CreateContributors
+        id="modalCreateContributors"
+        contributors={contributors}
+        setContributors={setContributors}
+      />
     </Container>
   )
 }
@@ -100,14 +144,15 @@ function Contributors() {
 export default withAuth(Contributors)
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const token = Cookies.get('intranet-token')
+  const response = await api.get(`api/contributor`, {
+    headers: {
+      tokenaccess: req.cookies['intranet-token']
+    }
+  })
 
-  console.log(req.cookies)
-
-  console.log(token)
-  // const response = await api.get(`api/contributor`)
+  const contributorsProps = response.data
 
   return {
-    props: {}
+    props: { contributorsProps }
   }
 }

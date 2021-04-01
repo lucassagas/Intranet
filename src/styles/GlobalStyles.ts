@@ -35,12 +35,15 @@ body {
   background: var(--background);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+
 }
 
 body, input, textarea, button {
   font-family: Montserrat, sans-serif;
   color: var(--white);
   font-weight: 400;
+  font-size: 0.9rem;
+
 }
 
 button {

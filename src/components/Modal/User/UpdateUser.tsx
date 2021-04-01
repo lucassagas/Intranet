@@ -6,7 +6,7 @@ import { GlobalModal } from '../GlobalModal'
 import {
   Container,
   InputWrapper
-} from '../../../styles/components/Modal/User/EditUser'
+} from '../../../styles/components/Modal/User/UpdateUser'
 import { useToast } from '../../../hooks/toast'
 import { useModal } from '../../../hooks/modal'
 import { api } from '../../../services/api'

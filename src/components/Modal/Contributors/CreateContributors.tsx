@@ -13,47 +13,81 @@ import {
 } from '../../../styles/components/Modal/Contributors/CreateContributors'
 import { getValidationErrors } from '../../../utils/getValidationErrors'
 import { useToast } from '../../../hooks/toast'
+import { api } from '../../../services/api'
+import { useModal } from '../../../hooks/modal'
+
+import { ContributorsStateProps } from '../../../pages/rh/contributors'
 
 interface CreateContributorsProps {
   id: string
+  contributors: ContributorsStateProps
+  setContributors: (data: ContributorsStateProps) => void
 }
 
-export function CreateContributors({ id }: CreateContributorsProps) {
+export function CreateContributors({
+  id,
+  contributors,
+  setContributors
+}: CreateContributorsProps) {
   const formRef = useRef<FormHandles>(null)
+
   const { addToast } = useToast()
-  const handleSubmit = useCallback(async (data, { reset }) => {
-    try {
-      formRef.current.setErrors({})
+  const { setDisplayModal } = useModal()
 
-      const schema = Yup.object().shape({
-        name: Yup.string().required('Campo obrigatório'),
-        date: Yup.string().required('Campo obrigatório'),
-        document: Yup.string().required('Campo obrigatório'),
-        numberofdocument: Yup.string().required('Campo obrigatório'),
-        dateofvalidate: Yup.string().required('Campo obrigatório')
-      })
+  console.log(contributors)
 
-      await schema.validate(data, {
-        abortEarly: false
-      })
+  const handleSubmit = useCallback(
+    async (data, { reset }) => {
+      try {
+        formRef.current.setErrors({})
 
-      reset()
-    } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err)
+        const schema = Yup.object().shape({
+          name: Yup.string().required('Campo obrigatório'),
+          date_birth: Yup.string().required('Campo obrigatório'),
+          type_document: Yup.string().required('Campo obrigatório'),
+          document: Yup.string().required('Campo obrigatório'),
+          date_expiration: Yup.string().required('Campo obrigatório')
+        })
 
-        formRef.current.setErrors(errors)
+        await schema.validate(data, {
+          abortEarly: false
+        })
 
-        return
+        const response = await api.post(`api/contributor`, data)
+
+        setDisplayModal('')
+
+        const contributorsProps = [
+          response.data,
+          ...contributors.contributorsProps
+        ]
+
+        setContributors({ contributorsProps })
+
+        addToast({
+          type: 'success',
+          title: 'Sucesso',
+          description: 'Colaborador cadastrado com sucesso !'
+        })
+        reset()
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err)
+
+          formRef.current.setErrors(errors)
+
+          return
+        }
+
+        addToast({
+          type: 'error',
+          title: 'Error',
+          description: err.response.data.message
+        })
       }
-
-      addToast({
-        type: 'error',
-        title: 'Error',
-        description: err.message
-      })
-    }
-  }, [])
+    },
+    [contributors]
+  )
 
   return (
     <GlobalModal id={id} size={600} title="Cadastrar Colaborador">
@@ -66,13 +100,9 @@ export function CreateContributors({ id }: CreateContributorsProps) {
               </section>
 
               <section>
-                <Input name="date" label="Data de Nascimento" type="date" />
-              </section>
-
-              <section>
                 <Input
                   list="documents"
-                  name="document"
+                  name="type_document"
                   label="Documento"
                   width="100px"
                 />
@@ -87,12 +117,19 @@ export function CreateContributors({ id }: CreateContributorsProps) {
             </WrapperInput>
             <WrapperInput>
               <section>
-                <Input name="numberofdocument" label="N° do Documento " />
+                <Input name="document" label="N° do Documento " />
               </section>
               <section>
                 <Input
-                  name="dateofvalidate"
+                  name="date_expiration"
                   label="Data de Validade"
+                  type="date"
+                />
+              </section>
+              <section>
+                <Input
+                  name="date_birth"
+                  label="Data de Nascimento"
                   type="date"
                 />
               </section>
