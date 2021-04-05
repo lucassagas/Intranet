@@ -15,6 +15,8 @@ import { UpdateContributors } from '../../components/Modal/Contributors/UpdateCo
 import { format } from 'date-fns'
 import { GetServerSideProps } from 'next'
 import { api } from '../../services/api'
+import { DeleteContributors } from '../../components/Modal/Contributors/DeleteContributors'
+import { useAuth } from '../../hooks/auth'
 
 import {
   Container,
@@ -48,9 +50,20 @@ function Contributors(contributorsProps: ContributorsStateProps) {
     contributorsProps
   )
 
+  const { permissions } = useAuth()
   const { setDisplayModal } = useModal()
 
   const handleSearch = useCallback(data => {}, [])
+
+  const handleUpdateContributor = useCallback(
+    (contributor: ContributorsProps) => {
+      if (permissions && permissions.includes('RH.COLABORADORES.EDITAR')) {
+        setDisplayModal('modalUpdateContributor')
+        setSelectedContributor(contributor)
+      }
+    },
+    []
+  )
 
   return (
     <Container>
@@ -64,15 +77,16 @@ function Contributors(contributorsProps: ContributorsStateProps) {
         <Scroll>
           <Table
             ths={['Nome', 'Documento', 'Numero', 'Data de Validade']}
-            isEditable
+            isEditable={
+              permissions && permissions.includes('RH.COLABORADORES.EDITAR')
+            }
           >
             {contributors &&
               contributors.contributorsProps.map(contributor => {
                 return (
                   <tr
                     onClick={() => {
-                      setDisplayModal('modalUpdateContributor')
-                      setSelectedContributor(contributor)
+                      handleUpdateContributor(contributor)
                     }}
                     key={contributor.contri_id}
                   >
@@ -119,9 +133,11 @@ function Contributors(contributorsProps: ContributorsStateProps) {
             <span>Data de Vencimento</span>
           </ButtonFilter>
 
-          <Button onClick={() => setDisplayModal('modalCreateContributors')}>
-            Cadastar
-          </Button>
+          {permissions && permissions.includes('RH.COLABORADORES.CRIAR') && (
+            <Button onClick={() => setDisplayModal('modalCreateContributors')}>
+              Cadastar
+            </Button>
+          )}
         </WrapperFilter>
       </Content>
 
@@ -137,6 +153,13 @@ function Contributors(contributorsProps: ContributorsStateProps) {
         contributors={contributors}
         setContributors={setContributors}
       />
+
+      <DeleteContributors
+        id="modalDeleteContributor"
+        selectedContributor={selectedContributor}
+        contributors={contributors}
+        setContributors={setContributors}
+      />
     </Container>
   )
 }
@@ -144,15 +167,24 @@ function Contributors(contributorsProps: ContributorsStateProps) {
 export default withAuth(Contributors)
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const response = await api.get(`api/contributor`, {
-    headers: {
-      tokenaccess: req.cookies['intranet-token']
+  try {
+    const response = await api.get(`api/contributor`, {
+      headers: {
+        tokenaccess: req.cookies['intranet-token']
+      }
+    })
+
+    const contributorsProps = response.data
+
+    return {
+      props: { contributorsProps }
     }
-  })
-
-  const contributorsProps = response.data
-
-  return {
-    props: { contributorsProps }
+  } catch (err) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false
+      }
+    }
   }
 }

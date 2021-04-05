@@ -34,8 +34,6 @@ export function CreateContributors({
   const { addToast } = useToast()
   const { setDisplayModal } = useModal()
 
-  console.log(contributors)
-
   const handleSubmit = useCallback(
     async (data, { reset }) => {
       try {

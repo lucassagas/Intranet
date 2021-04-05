@@ -5,12 +5,9 @@ import { useCallback, useRef } from 'react'
 import { Button } from '../../Button'
 import { Input } from '../../Input'
 import { GlobalModal } from '../GlobalModal'
+import { InputMask } from '../../InputMask'
 import { FormHandles } from '@unform/core'
 
-import {
-  Container,
-  WrapperInput
-} from '../../../styles/components/Modal/Contributors/UpdateContributors'
 import { getValidationErrors } from '../../../utils/getValidationErrors'
 import { useToast } from '../../../hooks/toast'
 import { api } from '../../../services/api'
@@ -21,9 +18,14 @@ import {
   ContributorsProps
 } from '../../../pages/rh/contributors'
 import { format } from 'date-fns'
-import { InputMask } from '../../InputMask'
 
-interface UpdateContributorsProps {
+import {
+  Container,
+  WrapperInput
+} from '../../../styles/components/Modal/Contributors/UpdateContributors'
+import { useAuth } from '../../../hooks/auth'
+
+export interface UpdateContributorsProps {
   id: string
   contributors: ContributorsStateProps
   setContributors: (data: ContributorsStateProps) => void
@@ -40,6 +42,7 @@ export function UpdateContributors({
 
   const { addToast } = useToast()
   const { setDisplayModal } = useModal()
+  const { permissions } = useAuth()
 
   const handleSubmit = useCallback(
     async (data, { reset }) => {
@@ -167,8 +170,17 @@ export function UpdateContributors({
                   />
                 </section>
               </WrapperInput>
+
+              {permissions && permissions.includes('RH.COLABORADORES.DELETAR') && (
+                <Button
+                  onClick={() => setDisplayModal('modalDeleteContributor')}
+                  type="button"
+                >
+                  Excluir
+                </Button>
+              )}
             </div>
-            <Button type="submit">Cadastrar</Button>
+            <Button type="submit">Atualizar</Button>
           </Form>
         </Container>
       )}

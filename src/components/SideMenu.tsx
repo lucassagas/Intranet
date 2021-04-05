@@ -51,7 +51,7 @@ export function SideMenu() {
       <nav>
         <ul>
           <Li isCategory={router.pathname === '/'}>
-            <Link href="/">
+            <Link href="/" prefetch>
               <MenuOption>
                 <BiHomeAlt size={22} />
                 Início
@@ -71,7 +71,7 @@ export function SideMenu() {
                 {displaySubMenu === 'Rh' && (
                   <>
                     <SubMenu
-                      key="Rh/cola"
+                      key="Rh/colaboradores"
                       initial={{ y: -25, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
                       exit={{ opacity: 0 }}
