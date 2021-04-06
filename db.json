@@ -49,16 +49,6 @@
       "exam_id": 3
     },
     {
-      "exam_name": "MARCELO PEDRO DA CUNHA",
-      "exam_type": "PERIODICO",
-      "exam_realized_date": "1994-03-27",
-      "exam_expiration_date": "2020-03-24",
-      "company": "CORPORI",
-      "local": "Biguaçu",
-      "id": 4,
-      "exam_id": 4
-    },
-    {
       "exam_name": "ISAQUE RAIMUNDO DOS SANTOS",
       "exam_type": "MUDANCA DE FUNCAO",
       "exam_realized_date": "2020-03-27",
@@ -93,8 +83,8 @@
     {
       "id": 1,
       "bran_id": 1,
-      "bran_number": 500,
-      "bran_sector": "agendamento"
+      "bran_number": "500",
+      "bran_sector": "AGENDAMENTOTESTR"
     },
     {
       "id": 2,
@@ -107,21 +97,102 @@
       "bran_id": 3,
       "bran_number": 700,
       "bran_sector": "comercial"
+    }
+  ],
+  "plans": [
+    {
+      "id": 1,
+      "plan_id": 1,
+      "plan_title": "Plano R Light",
+      "plan_installation_price": 100,
+      "plan_monthly_payment": 100,
+      "plan_download": 100,
+      "plan_upload": 10,
+      "plan_neoredetv": true,
+      "plan_neorede_drive": true,
+      "plan_paramount": false,
+      "plan_noggin": false,
+      "plan_telephony": false
     },
     {
-      "bran_sector": "SAC",
-      "bran_number": "800",
+      "id": 2,
+      "plan_id": 2,
+      "plan_title": "Plano R Avançado",
+      "plan_installation_price": 100,
+      "plan_monthly_payment": 100,
+      "plan_download": 200,
+      "plan_upload": 20,
+      "plan_neoredetv": true,
+      "plan_neorede_drive": true,
+      "plan_paramount": false,
+      "plan_noggin": false,
+      "plan_telephony": false
+    },
+    {
+      "id": 3,
+      "plan_id": 3,
+      "plan_title": "Plano R Elite",
+      "plan_installation_price": 100,
+      "plan_monthly_payment": 100,
+      "plan_download": 300,
+      "plan_upload": 30,
+      "plan_neoredetv": true,
+      "plan_neorede_drive": true,
+      "plan_paramount": false,
+      "plan_noggin": false,
+      "plan_telephony": false
+    },
+    {
+      "plan_neoredetv": true,
+      "plan_neorede_drive": true,
+      "plan_paramount": false,
+      "plan_noggin": true,
+      "plan_telephony": true,
+      "plan_title": "Teste",
+      "plan_installation": "100",
+      "plan_monthly_payment": "100",
+      "plan_download": "100",
+      "plan_upload": "100",
       "id": 4
     },
     {
-      "bran_sector": "TESTE",
-      "bran_number": "900",
+      "plan_neoredetv": false,
+      "plan_neorede_drive": false,
+      "plan_paramount": false,
+      "plan_noggin": false,
+      "plan_telephony": false,
+      "plan_title": "teste2",
+      "plan_installation": "200",
+      "plan_monthly_payment": "200",
+      "plan_download": "200",
+      "plan_upload": "200",
       "id": 5
     },
     {
-      "bran_sector": "TESTE2",
-      "bran_number": "500",
+      "plan_neoredetv": false,
+      "plan_neorede_drive": false,
+      "plan_paramount": false,
+      "plan_noggin": false,
+      "plan_telephony": false,
+      "plan_title": "teste3",
+      "plan_installation": "100",
+      "plan_monthly_payment": "100",
+      "plan_download": "100",
+      "plan_upload": "100",
       "id": 6
+    },
+    {
+      "plan_neoredetv": false,
+      "plan_neorede_drive": false,
+      "plan_paramount": false,
+      "plan_noggin": false,
+      "plan_telephony": false,
+      "plan_title": "teste3",
+      "plan_installation": "100",
+      "plan_monthly_payment": "100",
+      "plan_download": "100",
+      "plan_upload": "100",
+      "id": 7
     }
   ]
 }

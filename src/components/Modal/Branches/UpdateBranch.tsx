@@ -4,8 +4,6 @@ import { Input } from '../../Input'
 import { GlobalModal } from '../GlobalModal'
 
 import { BranchesProps } from '../../../pages/rh/branches'
-
-import { Container } from '../../../styles/components/Modal/Branches/UpdateBranch'
 import { Button } from '../../Button'
 import { useToast } from '../../../hooks/toast'
 import { useLoading } from '../../../hooks/loading'
@@ -14,17 +12,27 @@ import { getValidationErrors } from '../../../utils/getValidationErrors'
 import { FormHandles } from '@unform/core'
 import { apiDev } from '../../../services/apiDev'
 
-interface UpdateBranchProps {
+import { Container } from '../../../styles/components/Modal/Branches/UpdateBranch'
+import { useAuth } from '../../../hooks/auth'
+
+export interface UpdateBranchProps {
   id: string
   branches: BranchesProps[]
   setBranches: (data: BranchesProps[]) => void
+  selectedBranch: BranchesProps
 }
 
-export function UpdateBranch({ id, branches, setBranches }: UpdateBranchProps) {
+export function UpdateBranch({
+  id,
+  branches,
+  setBranches,
+  selectedBranch
+}: UpdateBranchProps) {
   const formRef = useRef<FormHandles>(null)
   const { addToast } = useToast()
   const { setLoadingScreen } = useLoading()
   const { setDisplayModal } = useModal()
+  const { permissions } = useAuth()
 
   const handleSubmit = useCallback(
     async (data, { reset }) => {
@@ -41,9 +49,16 @@ export function UpdateBranch({ id, branches, setBranches }: UpdateBranchProps) {
           abortEarly: false
         })
 
-        const response = await apiDev.post('branches', data)
+        const response = await apiDev.patch(
+          `branches/${selectedBranch.bran_id}`,
+          data
+        )
 
-        setBranches([response.data, ...branches])
+        const remainingExtensions = branches.filter(
+          branch => branch.bran_id !== selectedBranch.bran_id
+        )
+
+        setBranches([response.data, ...remainingExtensions])
         setDisplayModal('')
         reset()
         addToast({
@@ -69,12 +84,19 @@ export function UpdateBranch({ id, branches, setBranches }: UpdateBranchProps) {
         setLoadingScreen(false)
       }
     },
-    [branches, addToast]
+    [branches, addToast, selectedBranch]
   )
 
   return (
     <GlobalModal id={id} size={500} title="Editar Ramal">
-      <Container ref={formRef} onSubmit={handleSubmit}>
+      <Container
+        initialData={{
+          bran_sector: selectedBranch?.bran_sector.toUpperCase(),
+          bran_number: selectedBranch?.bran_number
+        }}
+        ref={formRef}
+        onSubmit={handleSubmit}
+      >
         <div>
           <span style={{ width: '100%' }}>
             <Input name="bran_sector" label="Setor Responsável" />
@@ -83,6 +105,17 @@ export function UpdateBranch({ id, branches, setBranches }: UpdateBranchProps) {
             <Input width="150px" name="bran_number" label="Número do Ramal" />
           </span>
         </div>
+
+        {permissions?.includes('RH.RAMAIS.DELETAR') && (
+          <Button
+            type="button"
+            className="deleteButton"
+            onClick={() => setDisplayModal('modalDeleteBranch')}
+          >
+            Excluir
+          </Button>
+        )}
+
         <Button type="submit">Salvar alterações</Button>
       </Container>
     </GlobalModal>

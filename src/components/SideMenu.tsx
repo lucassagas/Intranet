@@ -23,7 +23,9 @@ import {
   HiOutlineUserGroup,
   BiGroup,
   RiFirstAidKitLine,
-  FiPhone
+  FiPhone,
+  FiHeadphones,
+  FaListUl
 } from '../styles/icons'
 
 export function SideMenu() {
@@ -51,7 +53,7 @@ export function SideMenu() {
       <nav>
         <ul>
           <Li isCategory={router.pathname === '/'}>
-            <Link href="/" prefetch>
+            <Link href="/">
               <MenuOption>
                 <BiHomeAlt size={22} />
                 Início
@@ -104,6 +106,34 @@ export function SideMenu() {
                       )}
                     </SubMenu>
                   </>
+                )}
+              </AnimatePresence>
+            </MenuOption>
+          </Li>
+
+          <Li isCategory={router.pathname.includes('/sac/')}>
+            <MenuOption
+              isActive={displaySubMenu === 'Sac'}
+              onClick={() => toggleMenu('Sac')}
+            >
+              <FiHeadphones size={20} />
+              Sac
+              <IoIosArrowDown size={18} />
+              <AnimatePresence exitBeforeEnter>
+                {displaySubMenu === 'Sac' && (
+                  <SubMenu
+                    key="sac/plans"
+                    initial={{ y: -25, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <Link href="/sac/plans">
+                      <SubMenuOption>
+                        <FaListUl size={20} />
+                        Planos
+                      </SubMenuOption>
+                    </Link>
+                  </SubMenu>
                 )}
               </AnimatePresence>
             </MenuOption>

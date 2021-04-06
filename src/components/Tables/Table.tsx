@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 
-import { StyledTable } from '../styles/components/Table'
+import { StyledTable } from '../../styles/components/Tables/Table'
 
 interface TableProps {
   ths: Array<string>

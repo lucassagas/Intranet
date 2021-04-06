@@ -55,12 +55,12 @@ export function CreateExams({ id, exams, setExams }: CreateExamsProps) {
         setLoadingScreen(true)
 
         const schema = Yup.object().shape({
-          exam_name: Yup.string().required('Campo obrigatório'),
-          exam_type: Yup.string().required('Campo obrigatório'),
-          exam_realized_date: Yup.string().required('Campo obrigatório'),
-          exam_expiration_date: Yup.string().required('Campo obrigatório'),
+          contributor: Yup.string().required('Campo obrigatório'),
+          type: Yup.string().required('Campo obrigatório'),
+          date_realized: Yup.string().required('Campo obrigatório'),
+          date_expiration: Yup.string().required('Campo obrigatório'),
           company: Yup.string().required('Campo obrigatório'),
-          local: Yup.string().required('Campo obrigatório')
+          local_service: Yup.string().required('Campo obrigatório')
         })
 
         await schema.validate(data, {
@@ -106,7 +106,7 @@ export function CreateExams({ id, exams, setExams }: CreateExamsProps) {
           <section>
             <div style={{ width: '100%' }}>
               <Input
-                name="exam_name"
+                name="contributor"
                 label="Nome Completo"
                 placeholder="Selecione uma colaborador"
                 list="contributorsNames"
@@ -129,7 +129,7 @@ export function CreateExams({ id, exams, setExams }: CreateExamsProps) {
 
             <div>
               <Input
-                name="exam_type"
+                name="type"
                 label="Exame"
                 placeholder="Selecione um exame"
                 width="250px"
@@ -148,16 +148,12 @@ export function CreateExams({ id, exams, setExams }: CreateExamsProps) {
 
           <section>
             <div>
-              <Input
-                name="exam_realized_date"
-                label="Data Realização"
-                type="date"
-              />
+              <Input name="date_realized" label="Data Realização" type="date" />
             </div>
 
             <div>
               <Input
-                name="exam_expiration_date"
+                name="date_expiration"
                 label="Data de Validade"
                 type="date"
               />
@@ -174,7 +170,11 @@ export function CreateExams({ id, exams, setExams }: CreateExamsProps) {
             </div>
           </section>
 
-          <Input name="local" label="Local" placeholder="Ex: Corpori Biguaçu" />
+          <Input
+            name="local_service"
+            label="Local"
+            placeholder="Ex: Corpori Biguaçu"
+          />
         </WrapperInputs>
         <Button type="submit">Cadastrar</Button>
       </Container>

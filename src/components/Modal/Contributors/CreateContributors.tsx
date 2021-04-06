@@ -17,6 +17,7 @@ import { api } from '../../../services/api'
 import { useModal } from '../../../hooks/modal'
 
 import { ContributorsStateProps } from '../../../pages/rh/contributors'
+import { InputMask } from '../../InputMask'
 
 interface CreateContributorsProps {
   id: string
@@ -53,10 +54,12 @@ export function CreateContributors({
 
         const response = await api.post(`api/contributor`, data)
 
+        console.log(response.data)
+
         setDisplayModal('')
 
         const contributorsProps = [
-          response.data,
+          response.data.contributor,
           ...contributors.contributorsProps
         ]
 
@@ -118,17 +121,17 @@ export function CreateContributors({
                 <Input name="document" label="N° do Documento " />
               </section>
               <section>
-                <Input
+                <InputMask
+                  mask="99-99-9999"
                   name="date_expiration"
                   label="Data de Validade"
-                  type="date"
                 />
               </section>
               <section>
-                <Input
+                <InputMask
+                  mask="99-99-9999"
                   name="date_birth"
                   label="Data de Nascimento"
-                  type="date"
                 />
               </section>
             </WrapperInput>

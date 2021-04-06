@@ -9,6 +9,7 @@ export const themes = {
     gray3: '#37353D',
     gray: '#ADADAE',
     mediumgray: '#525255',
+    grayPriceTable: '#434343',
     orange: '#FF4E00',
     white: '#FFFFFF',
     error: '#c53030',

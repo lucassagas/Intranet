@@ -61,13 +61,20 @@ export function UpdateContributors({
           abortEarly: false
         })
 
-        const response = await api.post(`api/contributor`, data)
+        const response = await api.put(
+          `api/contributor/${selectedContributor.contri_id}`,
+          data
+        )
 
         setDisplayModal('')
 
+        const remainingContributors = contributors.contributorsProps.filter(
+          contributor => contributor.contri_id !== selectedContributor.contri_id
+        )
+
         const contributorsProps = [
-          response.data,
-          ...contributors.contributorsProps
+          response.data.contributor,
+          ...remainingContributors
         ]
 
         setContributors({ contributorsProps })
@@ -94,7 +101,7 @@ export function UpdateContributors({
         })
       }
     },
-    [contributors]
+    [contributors, selectedContributor]
   )
 
   return (
@@ -153,7 +160,7 @@ export function UpdateContributors({
                   <InputMask
                     label="Data de Validade"
                     name="date_expiration"
-                    mask="99/99/9999"
+                    mask="99-99-9999"
                   />
                 </section>
 
@@ -164,7 +171,7 @@ export function UpdateContributors({
                     type="text"
                     value={format(
                       new Date(selectedContributor.contri_date_birth),
-                      'dd/MM/yyyy'
+                      'dd-MM-yyyy'
                     )}
                     readOnly
                   />

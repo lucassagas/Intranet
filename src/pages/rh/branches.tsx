@@ -2,7 +2,7 @@ import Head from 'next/head'
 import withAuth from '../../utils/withAuth'
 import { Header } from '../../components/Header'
 import { AiOutlineSearch } from '../../styles/icons'
-import { Table } from '../../components/Table'
+import { Table } from '../../components/Tables/Table'
 import { useModal } from '../../hooks/modal'
 import { useAuth } from '../../hooks/auth'
 import { useCallback, useState } from 'react'
@@ -11,6 +11,9 @@ import { Input } from '../../components/Input'
 import { Button } from '../../components/Button'
 import { GetServerSideProps } from 'next'
 import { UpdateBranch } from '../../components/Modal/Branches/UpdateBranch'
+import { CreateBranch } from '../../components/Modal/Branches/CreateBranch'
+import { DeleteBranch } from '../../components/Modal/Branches/DeleteBranch'
+import { apiDev } from '../../services/apiDev'
 
 import {
   Container,
@@ -18,8 +21,6 @@ import {
   Scroll,
   WrapperFilter
 } from '../../styles/pages/rh/branches'
-import { apiDev } from '../../services/apiDev'
-import { CreateBranch } from '../../components/Modal/Branches/CreateBranch'
 
 export interface BranchesProps {
   bran_id: number
@@ -40,8 +41,10 @@ function Branches({ branchesProps }: BranchesServerSideProps) {
   const handleSearch = useCallback(data => {}, [])
 
   const handleSelectBranch = useCallback((branch: BranchesProps) => {
-    setDisplayModal('modalUpdateBranch')
-    setSelectedBranch(branch)
+    if (permissions?.includes('RH.RAMAIS.EDITAR')) {
+      setDisplayModal('modalUpdateBranch')
+      setSelectedBranch(branch)
+    }
   }, [])
 
   return (
@@ -54,7 +57,10 @@ function Branches({ branchesProps }: BranchesServerSideProps) {
 
       <Content>
         <Scroll>
-          <Table ths={['Setor', 'Ramal']}>
+          <Table
+            isEditable={permissions?.includes('RH.RAMAIS.EDITAR')}
+            ths={['Setor', 'Ramal']}
+          >
             {branches?.map(branch => {
               return (
                 <tr
@@ -93,6 +99,14 @@ function Branches({ branchesProps }: BranchesServerSideProps) {
         id="modalUpdateBranch"
         branches={branches}
         setBranches={setBranches}
+        selectedBranch={selectedBranch}
+      />
+
+      <DeleteBranch
+        id="modalDeleteBranch"
+        branches={branches}
+        setBranches={setBranches}
+        selectedBranch={selectedBranch}
       />
     </Container>
   )

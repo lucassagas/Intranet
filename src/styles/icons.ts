@@ -1,10 +1,12 @@
-export { BiHomeAlt, BiLockAlt, BiCheck, BiGroup } from 'react-icons/bi'
+export { BiHomeAlt, BiLockAlt, BiCheck, BiGroup, BiGlobe } from 'react-icons/bi'
 
 export {
   IoIosArrowDown,
   IoIosArrowBack,
   IoIosArrowForward
 } from 'react-icons/io'
+
+export { CgScreen } from 'react-icons/cg'
 
 export {
   FiHeadphones,
@@ -37,8 +39,10 @@ export {
 
 export { GrMoney } from 'react-icons/gr'
 
-export { FaRegUser } from 'react-icons/fa'
+export { FaRegUser, FaListUl } from 'react-icons/fa'
 
 export { HiOutlineUsers, HiOutlineUserGroup } from 'react-icons/hi'
 
 export { MdClose } from 'react-icons/md'
+
+export { BsCheck, BsX } from 'react-icons/bs'

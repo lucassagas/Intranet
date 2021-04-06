@@ -1,7 +1,7 @@
 import { parseISO, format } from 'date-fns'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useModal } from '../../../../hooks/modal'
-import { Table } from '../../../Table'
+import { Table } from '../../../Tables/Table'
 import { Form } from '@unform/web'
 import { Button } from '../../../Button'
 import { Input } from '../../../Input'

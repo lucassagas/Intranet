@@ -26,7 +26,7 @@ export function DeleteContributors({
   const handleDeleteContributor = useCallback(() => {
     setLoadingScreen(true)
     api
-      .delete(`/contributor/${selectedContributor.contri_id}`)
+      .delete(`api/contributor/${selectedContributor.contri_id}`)
       .then(() => {
         const removedContributors = contributors.contributorsProps.filter(
           contributor => contributor.contri_id !== selectedContributor.contri_id

@@ -2,7 +2,7 @@ import Head from 'next/head'
 import withAuth from '../../utils/withAuth'
 
 import { Header } from '../../components/Header'
-import { Table } from '../../components/Table'
+import { Table } from '../../components/Tables/Table'
 import { AiOutlineSearch } from '../../styles/icons'
 import { useCallback, useState } from 'react'
 import { Form } from '@unform/web'
