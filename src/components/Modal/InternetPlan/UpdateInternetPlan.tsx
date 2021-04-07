@@ -3,29 +3,32 @@ import * as Yup from 'yup'
 import { Button } from '../../Button'
 import { GlobalModal } from '../GlobalModal'
 import { Input } from '../../Input'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useModal } from '../../../hooks/modal'
 import { useLoading } from '../../../hooks/loading'
 import { useToast } from '../../../hooks/toast'
 import { FormHandles } from '@unform/core'
 import { getValidationErrors } from '../../../utils/getValidationErrors'
 import { apiDev } from '../../../services/apiDev'
+import { PlansProps } from '../../Pages/Sac/Plans/Internet'
 
 import {
   Container,
   Content,
   BenefitButton
-} from '../../../styles/components/Modal/InternetPlan/CreateInternetPlan'
+} from '../../../styles/components/Modal/InternetPlan/UpdateInternetPlan'
 
-interface CreateInternetPlanProps {
+export interface UpdateInternetPlanProps {
   id: string
   handleLoadPlans: () => void
+  selectedPlan: PlansProps
 }
 
-export function CreateInternetPlan({
+export function UpdateInternetPlan({
   id,
-  handleLoadPlans
-}: CreateInternetPlanProps) {
+  handleLoadPlans,
+  selectedPlan
+}: UpdateInternetPlanProps) {
   const [neoredeTv, setNeoredeTv] = useState(false)
   const [telefone, setTelefone] = useState(false)
   const [neoredeDrive, setNeoredeDrive] = useState(false)
@@ -34,67 +37,92 @@ export function CreateInternetPlan({
 
   const formRef = useRef<FormHandles>(null)
 
-  const { setDisplayModal } = useModal()
+  console.log(selectedPlan)
+
+  const { setDisplayModal, displayModal } = useModal()
   const { setLoadingScreen } = useLoading()
   const { addToast } = useToast()
 
-  const handleSubmit = useCallback(async (data, { reset }) => {
-    setLoadingScreen(true)
-    try {
-      formRef.current.setErrors({})
-
-      const schema = Yup.object().shape({
-        plan_title: Yup.string().required('Campo obrigatório'),
-        plan_installation: Yup.number().required('Campo obrigatório'),
-        plan_monthly_payment: Yup.number().required('Campo obrigatório'),
-        plan_download: Yup.number().required('Campo obrigatório'),
-        plan_upload: Yup.number().required('Campo obrigatório')
-      })
-
-      await schema.validate(data, {
-        abortEarly: false
-      })
-
-      const formattedData = {
-        plan_neoredetv: neoredeTv,
-        plan_neorede_drive: neoredeDrive,
-        plan_paramount: paramount,
-        plan_noggin: noggin,
-        plan_telephony: telefone,
-        ...data
-      }
-
-      await apiDev.post('/plans', formattedData)
-
-      handleLoadPlans()
-      setDisplayModal('')
-      reset()
-      addToast({
-        type: 'success',
-        title: 'Sucesso!',
-        description: 'Plano criado com sucesso!'
-      })
-    } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err)
-        formRef.current.setErrors(errors)
-
-        return
-      }
-
-      addToast({
-        type: 'error',
-        title: 'Error',
-        description: err.message
-      })
-    } finally {
-      setLoadingScreen(false)
+  useEffect(() => {
+    if (displayModal === id) {
+      setNeoredeTv(selectedPlan.plan_neoredetv)
+      setTelefone(selectedPlan.plan_telephony)
+      setNeoredeDrive(selectedPlan.plan_neorede_drive)
+      setNoggin(selectedPlan.plan_noggin)
+      setParamount(selectedPlan.plan_paramount)
     }
-  }, [])
+  }, [selectedPlan])
+
+  const handleSubmit = useCallback(
+    async (data, { reset }) => {
+      setLoadingScreen(true)
+      try {
+        formRef.current.setErrors({})
+
+        const schema = Yup.object().shape({
+          plan_title: Yup.string().required('Campo obrigatório'),
+          plan_installation: Yup.number().required('Campo obrigatório'),
+          plan_monthly_payment: Yup.number().required('Campo obrigatório'),
+          plan_download: Yup.number().required('Campo obrigatório'),
+          plan_upload: Yup.number().required('Campo obrigatório')
+        })
+
+        await schema.validate(data, {
+          abortEarly: false
+        })
+
+        const formattedData = {
+          plan_neoredetv: neoredeTv,
+          plan_neorede_drive: neoredeDrive,
+          plan_paramount: paramount,
+          plan_noggin: noggin,
+          plan_telephony: telefone,
+          ...data
+        }
+
+        await apiDev.patch(`/plans/${selectedPlan.plan_id}`, formattedData)
+
+        handleLoadPlans()
+        setDisplayModal('')
+        reset()
+        addToast({
+          type: 'success',
+          title: 'Sucesso!',
+          description: `Plano ${selectedPlan.plan_title} editado com sucesso!`
+        })
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err)
+          formRef.current.setErrors(errors)
+
+          return
+        }
+
+        addToast({
+          type: 'error',
+          title: 'Error',
+          description: err.message
+        })
+      } finally {
+        setLoadingScreen(false)
+      }
+    },
+    [selectedPlan, addToast]
+  )
 
   return (
-    <GlobalModal id={id} size={600} title="Criar Plano">
-      <Container ref={formRef} onSubmit={handleSubmit}>
+    <GlobalModal id={id} size={600} title="Editar Plano">
+      <Container
+        initialData={{
+          plan_title: selectedPlan?.plan_title,
+          plan_installation: selectedPlan?.plan_installation_price,
+          plan_monthly_payment: selectedPlan?.plan_monthly_payment,
+          plan_download: selectedPlan?.plan_download,
+          plan_upload: selectedPlan?.plan_upload
+        }}
+        ref={formRef}
+        onSubmit={handleSubmit}
+      >
         <Content>
           <section>
             <div>
@@ -169,7 +197,7 @@ export function CreateInternetPlan({
             </BenefitButton>
           </section>
         </Content>
-        <Button type="submit">Cadastrar</Button>
+        <Button type="submit">Salvar Alterações</Button>
       </Container>
     </GlobalModal>
   )

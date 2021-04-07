@@ -12,9 +12,11 @@ import {
 } from '../../styles/pages/sac/plans'
 import { useState } from 'react'
 import { Internet } from '../../components/Pages/Sac/Plans/Internet'
+import { Telephony } from '../../components/Pages/Sac/Plans/Telephony'
+import { Cftv } from '../../components/Pages/Sac/Plans/Cftv'
 
 function Plans() {
-  const [activeCategory, setActiveCategory] = useState('internet')
+  const [activeCategory, setActiveCategory] = useState('cftv')
 
   return (
     <Container>
@@ -46,8 +48,8 @@ function Plans() {
           </span>
         </CategoryButton>
         <CategoryButton
-          onClick={() => setActiveCategory('camera')}
-          active={activeCategory === 'camera'}
+          onClick={() => setActiveCategory('cftv')}
+          active={activeCategory === 'cftv'}
           type="button"
         >
           <div />
@@ -59,7 +61,11 @@ function Plans() {
       </Header>
 
       <Content>
-        <Scroll>{activeCategory === 'internet' && <Internet />}</Scroll>
+        <Scroll>
+          {activeCategory === 'internet' && <Internet />}
+          {activeCategory === 'telephony' && <Telephony />}
+          {activeCategory === 'cftv' && <Cftv />}
+        </Scroll>
       </Content>
     </Container>
   )

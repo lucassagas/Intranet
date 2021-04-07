@@ -1,6 +1,10 @@
 import styled from 'styled-components'
 
-export const Container = styled.table`
+interface ContainerProps {
+  isEditable: boolean
+}
+
+export const Container = styled.table<ContainerProps>`
   width: 100%;
 
   border: solid 2px var(--orange);
@@ -21,6 +25,12 @@ export const Container = styled.table`
     &:not(:last-child) {
       border-right: 1px solid var(--gray);
     }
+
+    > button {
+      background: none;
+      border: 0;
+      margin-left: 10px;
+    }
   }
 
   tr {
@@ -37,6 +47,8 @@ export const Container = styled.table`
 
       border-spacing: 20px;
       text-transform: capitalize;
+
+      cursor: ${props => props.isEditable && 'pointer'};
 
       &:not(:last-child) {
         border-right: 1px solid var(--gray);

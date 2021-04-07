@@ -17,7 +17,8 @@ export {
   FiInfo,
   FiXCircle,
   FiClipboard,
-  FiPhone
+  FiPhone,
+  FiSmartphone
 } from 'react-icons/fi'
 
 export {
@@ -25,7 +26,8 @@ export {
   AiOutlineSearch,
   AiOutlineEye,
   AiOutlineQuestionCircle,
-  AiOutlineWarning
+  AiOutlineWarning,
+  AiOutlineCloud
 } from 'react-icons/ai'
 
 export { SiWikipedia } from 'react-icons/si'

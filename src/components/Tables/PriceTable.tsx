@@ -3,13 +3,13 @@ import { Container } from '../../styles/components/Tables/PriceTable'
 
 interface PriceTableProps {
   children: ReactNode
-  ths: Array<string>
-  title: string
+  ths: any
+  isEditable?: boolean
 }
 
-export function PriceTable({ children, ths }: PriceTableProps) {
+export function PriceTable({ children, ths, isEditable }: PriceTableProps) {
   return (
-    <Container>
+    <Container isEditable={isEditable}>
       <thead>
         <tr>
           {ths?.map(th => {

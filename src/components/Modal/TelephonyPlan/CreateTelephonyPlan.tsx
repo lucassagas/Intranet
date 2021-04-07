@@ -15,22 +15,22 @@ import {
   Container,
   Content,
   BenefitButton
-} from '../../../styles/components/Modal/InternetPlan/CreateInternetPlan'
+} from '../../../styles/components/Modal/TelephonyPlan/CreateTelephonyPlan'
 
-interface CreateInternetPlanProps {
+interface CreateTelephonyPlanProps {
   id: string
   handleLoadPlans: () => void
 }
 
-export function CreateInternetPlan({
+export function CreateTelephonyPlan({
   id,
   handleLoadPlans
-}: CreateInternetPlanProps) {
-  const [neoredeTv, setNeoredeTv] = useState(false)
-  const [telefone, setTelefone] = useState(false)
-  const [neoredeDrive, setNeoredeDrive] = useState(false)
-  const [noggin, setNoggin] = useState(false)
-  const [paramount, setParamount] = useState(false)
+}: CreateTelephonyPlanProps) {
+  const [fixoLocal, setFixoLocal] = useState(false)
+  const [fixoDDD, setFixoDDD] = useState(false)
+  const [movelLocal, setMovelLocal] = useState(false)
+  const [movelDDD, setMovelDDD] = useState(false)
+  const [international, setInternational] = useState(false)
 
   const formRef = useRef<FormHandles>(null)
 
@@ -45,10 +45,10 @@ export function CreateInternetPlan({
 
       const schema = Yup.object().shape({
         plan_title: Yup.string().required('Campo obrigatório'),
-        plan_installation: Yup.number().required('Campo obrigatório'),
+        plan_installation_price: Yup.number().required('Campo obrigatório'),
         plan_monthly_payment: Yup.number().required('Campo obrigatório'),
-        plan_download: Yup.number().required('Campo obrigatório'),
-        plan_upload: Yup.number().required('Campo obrigatório')
+        plan_minutes: Yup.number().required('Campo obrigatório'),
+        plan_branches: Yup.number().required('Campo obrigatório')
       })
 
       await schema.validate(data, {
@@ -56,15 +56,15 @@ export function CreateInternetPlan({
       })
 
       const formattedData = {
-        plan_neoredetv: neoredeTv,
-        plan_neorede_drive: neoredeDrive,
-        plan_paramount: paramount,
-        plan_noggin: noggin,
-        plan_telephony: telefone,
+        plan_fix_local: fixoLocal,
+        plan_fix_ddd: fixoDDD,
+        plan_mov_local: movelLocal,
+        plan_mov_ddd: movelDDD,
+        plan_international: international,
         ...data
       }
 
-      await apiDev.post('/plans', formattedData)
+      await apiDev.post('/telephony', formattedData)
 
       handleLoadPlans()
       setDisplayModal('')
@@ -72,7 +72,7 @@ export function CreateInternetPlan({
       addToast({
         type: 'success',
         title: 'Sucesso!',
-        description: 'Plano criado com sucesso!'
+        description: `Plano ${data.plan_title} criado com sucesso!`
       })
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
@@ -102,7 +102,20 @@ export function CreateInternetPlan({
             </div>
             <div>
               <Input
-                name="plan_installation"
+                name="plan_minutes"
+                label="Minutagem do Plano"
+                type="number"
+              />
+            </div>
+            <div>
+              <Input name="plan_branches" label="Ramais" type="number" />
+            </div>
+          </section>
+
+          <section>
+            <div>
+              <Input
+                name="plan_installation_price"
                 label="Preço de Instalação"
                 type="number"
               />
@@ -117,55 +130,46 @@ export function CreateInternetPlan({
           </section>
 
           <section>
-            <div>
-              <Input name="plan_download" label="Download" type="number" />
-            </div>
-            <div>
-              <Input name="plan_upload" label="Upload" type="number" />
-            </div>
-          </section>
-
-          <section>
             <BenefitButton
-              onClick={() => setNeoredeTv(!neoredeTv)}
-              active={neoredeTv}
+              onClick={() => setFixoLocal(!fixoLocal)}
+              active={fixoLocal}
               type="button"
             >
               <div />
-              <span>NeoredeTV</span>
+              <span>Fixo Local</span>
             </BenefitButton>
 
             <BenefitButton
-              onClick={() => setTelefone(!telefone)}
-              active={telefone}
+              onClick={() => setFixoDDD(!fixoDDD)}
+              active={fixoDDD}
               type="button"
             >
               <div />
-              <span>Telefone</span>
+              <span>Fixo DDD</span>
             </BenefitButton>
             <BenefitButton
-              onClick={() => setNeoredeDrive(!neoredeDrive)}
-              active={neoredeDrive}
+              onClick={() => setMovelLocal(!movelLocal)}
+              active={movelLocal}
               type="button"
             >
               <div />
-              <span>Neorede Drive</span>
+              <span>Movel Local</span>
             </BenefitButton>
             <BenefitButton
-              onClick={() => setNoggin(!noggin)}
-              active={noggin}
+              onClick={() => setMovelDDD(!movelDDD)}
+              active={movelDDD}
               type="button"
             >
               <div />
-              <span>Noggin</span>
+              <span>Movel DDD</span>
             </BenefitButton>
             <BenefitButton
-              onClick={() => setParamount(!paramount)}
-              active={paramount}
+              onClick={() => setInternational(!international)}
+              active={international}
               type="button"
             >
               <div />
-              <span>Paramount</span>
+              <span>Ligações Internacionais</span>
             </BenefitButton>
           </section>
         </Content>
