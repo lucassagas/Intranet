@@ -37,8 +37,6 @@ export function UpdateInternetPlan({
 
   const formRef = useRef<FormHandles>(null)
 
-  console.log(selectedPlan)
-
   const { setDisplayModal, displayModal } = useModal()
   const { setLoadingScreen } = useLoading()
   const { addToast } = useToast()

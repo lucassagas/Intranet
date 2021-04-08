@@ -1,16 +1,16 @@
 import { Button } from '../../Button'
 import { GlobalModal } from '../GlobalModal'
 import { UpdateExamsProps } from './UpdateExam'
+import { useCallback } from 'react'
+import { api } from '../../../services/api'
+import { useLoading } from '../../../hooks/loading'
+import { useToast } from '../../../hooks/toast'
+import { useModal } from '../../../hooks/modal'
 
 import {
   Container,
   Wrapper
 } from '../../../styles/components/Modal/Exams/DeleteExam'
-import { useCallback } from 'react'
-import { apiDev } from '../../../services/apiDev'
-import { useLoading } from '../../../hooks/loading'
-import { useToast } from '../../../hooks/toast'
-import { useModal } from '../../../hooks/modal'
 
 export function DeleteExam({
   id,
@@ -24,8 +24,8 @@ export function DeleteExam({
 
   const handleDeleteExam = useCallback(() => {
     setLoadingScreen(true)
-    apiDev
-      .delete(`exam/${selectedExam.exam_id}`)
+    api
+      .delete(`api/exam/${selectedExam.exam_id}`)
       .then(() => {
         setDisplayModal('')
         const remainingExams = exams.filter(
@@ -35,7 +35,7 @@ export function DeleteExam({
         addToast({
           type: 'success',
           title: 'Sucesso!',
-          description: `Exame de ${selectedExam.exam_name} excluido com sucesso!`
+          description: `Exame de ${selectedExam.contri_name} excluido com sucesso!`
         })
       })
       .catch(err => {
@@ -53,7 +53,7 @@ export function DeleteExam({
       <Container>
         <Wrapper>
           <strong>Colaborador:</strong>
-          <p>{selectedExam?.exam_name}</p>
+          <p>{selectedExam?.contri_name}</p>
         </Wrapper>
 
         <Wrapper>
@@ -63,7 +63,7 @@ export function DeleteExam({
 
         <Wrapper>
           <strong>Data de validade:</strong>
-          <p>{selectedExam?.exam_realized_date}</p>
+          <p>{selectedExam?.exam_date_realization}</p>
         </Wrapper>
 
         <Button onClick={handleDeleteExam} type="button">

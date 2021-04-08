@@ -94,10 +94,12 @@ function Contributors(contributorsProps: ContributorsStateProps) {
                     <td>{contributor.contri_type_document}</td>
                     <td>{contributor.contri_document}</td>
                     <td style={{ textAlign: 'center' }}>
-                      {format(
-                        new Date(contributor.contri_date_expiration),
-                        'dd/MM/yyyy'
-                      )}
+                      {contributor.contri_date_expiration
+                        ? format(
+                            new Date(contributor.contri_date_expiration),
+                            'dd/MM/yyyy'
+                          )
+                        : null}
                     </td>
                   </tr>
                 )

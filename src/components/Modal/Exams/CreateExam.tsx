@@ -10,7 +10,6 @@ import { getValidationErrors } from '../../../utils/getValidationErrors'
 import { FormHandles } from '@unform/core'
 import { useToast } from '../../../hooks/toast'
 import { ExamsProps } from '../../../pages/rh/exams'
-import { apiDev } from '../../../services/apiDev'
 import { useLoading } from '../../../hooks/loading'
 
 import {
@@ -57,7 +56,7 @@ export function CreateExams({ id, exams, setExams }: CreateExamsProps) {
         const schema = Yup.object().shape({
           contributor: Yup.string().required('Campo obrigatório'),
           type: Yup.string().required('Campo obrigatório'),
-          date_realized: Yup.string().required('Campo obrigatório'),
+          date_realization: Yup.string().required('Campo obrigatório'),
           date_expiration: Yup.string().required('Campo obrigatório'),
           company: Yup.string().required('Campo obrigatório'),
           local_service: Yup.string().required('Campo obrigatório')
@@ -67,11 +66,11 @@ export function CreateExams({ id, exams, setExams }: CreateExamsProps) {
           abortEarly: false
         })
 
-        const response = await apiDev.post('exam', data)
+        const response = await api.post('api/exam', data)
 
         setDisplayModal('')
         reset()
-        setExams([response.data, ...exams])
+        setExams([response.data.exam, ...exams])
 
         addToast({
           type: 'success',
@@ -90,7 +89,7 @@ export function CreateExams({ id, exams, setExams }: CreateExamsProps) {
         addToast({
           type: 'error',
           title: 'Error',
-          description: err.message
+          description: err.response.data.message
         })
       } finally {
         setLoadingScreen(false)
@@ -148,7 +147,11 @@ export function CreateExams({ id, exams, setExams }: CreateExamsProps) {
 
           <section>
             <div>
-              <Input name="date_realized" label="Data Realização" type="date" />
+              <Input
+                name="date_realization"
+                label="Data Realização"
+                type="date"
+              />
             </div>
 
             <div>

@@ -4,13 +4,12 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Button } from '../../Button'
 import { Input } from '../../Input'
 import { GlobalModal } from '../GlobalModal'
-import { api } from '../../../services/api'
 import { useModal } from '../../../hooks/modal'
 import { getValidationErrors } from '../../../utils/getValidationErrors'
 import { FormHandles } from '@unform/core'
 import { useToast } from '../../../hooks/toast'
 import { ExamsProps } from '../../../pages/rh/exams'
-import { apiDev } from '../../../services/apiDev'
+import { api } from '../../../services/api'
 import { InputMask } from '../../InputMask'
 import { useLoading } from '../../../hooks/loading'
 import { useAuth } from '../../../hooks/auth'
@@ -57,6 +56,8 @@ export function UpdateExams({
     }
   }, [displayModal, id])
 
+  const formatterDate = new Intl.DateTimeFormat('pt-br')
+
   const handleSubmit = useCallback(
     async (data, { reset }) => {
       try {
@@ -64,30 +65,37 @@ export function UpdateExams({
         setLoadingScreen(true)
 
         const schema = Yup.object().shape({
-          exam_name: Yup.string().required('Campo obrigatório'),
-          exam_type: Yup.string().required('Campo obrigatório'),
-          exam_realized_date: Yup.string().required('Campo obrigatório'),
-          exam_expiration_date: Yup.string().required('Campo obrigatório'),
+          contributor: Yup.string().required('Campo obrigatório'),
+          type: Yup.string().required('Campo obrigatório'),
+          date_realization: Yup.string().required('Campo obrigatório'),
+          date_expiration: Yup.string().required('Campo obrigatório'),
           company: Yup.string().required('Campo obrigatório'),
-          local: Yup.string().required('Campo obrigatório')
+          local_service: Yup.string().required('Campo obrigatório')
         })
 
         await schema.validate(data, {
           abortEarly: false
         })
 
-        const response = await apiDev.patch(
-          `exam/${selectedExam.exam_id}`,
-          data
-        )
+        const response = await api.put(`api/exam/${selectedExam.exam_id}`, data)
 
         const formattedExams = exams.filter(
           exam => exam.exam_id !== selectedExam.exam_id
         )
 
+        const formattedExamDate = {
+          ...response.data.exam,
+          date_expiration: formatterDate.format(
+            response.data.exam.date_expiration
+          ),
+          date_realization: formatterDate.format(
+            response.data.exam.date_realization
+          )
+        }
+
         setDisplayModal('')
         reset()
-        setExams([response.data, ...formattedExams])
+        setExams([formattedExamDate, ...formattedExams])
 
         addToast({
           type: 'success',
@@ -106,7 +114,7 @@ export function UpdateExams({
         addToast({
           type: 'error',
           title: 'Error',
-          description: err.message
+          description: err.response ? err.response.data.message : err.message
         })
       } finally {
         setLoadingScreen(false)
@@ -119,10 +127,11 @@ export function UpdateExams({
     <GlobalModal id={id} size={700} title="Editar Exame">
       <Container
         initialData={{
-          exam_name: selectedExam?.exam_name,
-          exam_type: selectedExam?.exam_type,
-          exam_realized_date: selectedExam?.exam_realized_date,
-          exam_expiration_date: selectedExam?.exam_expiration_date
+          contributor: selectedExam?.contri_name,
+          type: selectedExam?.exam_type,
+          local_service: selectedExam?.exam_local_service,
+          date_realization: selectedExam?.exam_date_realization,
+          date_expiration: selectedExam?.exam_date_expiration
         }}
         ref={formRef}
         onSubmit={handleSubmit}
@@ -131,10 +140,11 @@ export function UpdateExams({
           <section>
             <div style={{ width: '100%' }}>
               <Input
-                name="exam_name"
+                name="contributor"
                 label="Nome Completo"
                 placeholder="Selecione uma colaborador"
                 list="contributorsNames"
+                readOnly
               />
 
               <datalist id="contributorsNames">
@@ -154,11 +164,12 @@ export function UpdateExams({
 
             <div>
               <Input
-                name="exam_type"
+                name="type"
                 label="Exame"
                 placeholder="Selecione um exame"
                 width="250px"
                 list="exams"
+                readOnly
               />
 
               <datalist id="exams">
@@ -174,16 +185,16 @@ export function UpdateExams({
           <section>
             <div>
               <InputMask
-                mask="99/99/9999"
-                name="exam_realized_date"
+                mask="9999-99-99"
+                name="date_realization"
                 label="Data Realização"
               />
             </div>
 
             <div>
               <InputMask
-                mask="99/99/9999"
-                name="exam_expiration_date"
+                mask="9999-99-99"
+                name="date_expiration"
                 label="Data de Validade"
               />
             </div>
@@ -199,7 +210,12 @@ export function UpdateExams({
             </div>
           </section>
 
-          <Input name="local" label="Local" placeholder="Ex: Corpori Biguaçu" />
+          <Input
+            name="local_service"
+            label="Local"
+            placeholder="Ex: Corpori Biguaçu"
+            readOnly
+          />
         </WrapperInputs>
 
         {permissions?.includes('RH.EXAMES.DELETAR') && (

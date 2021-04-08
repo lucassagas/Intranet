@@ -174,8 +174,8 @@ export function EditGroup({ id }: EditGroupProps) {
                     <div>
                       <span>
                         <MainButton
-                          isActive={permissionsId.includes(
-                            group.page_index_permission.perm_id
+                          isActive={permissionsId?.includes(
+                            group.page_index_permission?.perm_id
                           )}
                           type="button"
                           onClick={(e: MouseEvent) => {

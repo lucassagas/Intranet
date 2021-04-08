@@ -16,7 +16,7 @@ import { Telephony } from '../../components/Pages/Sac/Plans/Telephony'
 import { Cftv } from '../../components/Pages/Sac/Plans/Cftv'
 
 function Plans() {
-  const [activeCategory, setActiveCategory] = useState('cftv')
+  const [activeCategory, setActiveCategory] = useState('internet')
 
   return (
     <Container>

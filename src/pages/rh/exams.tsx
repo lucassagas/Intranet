@@ -10,7 +10,12 @@ import { Input } from '../../components/Input'
 import { Button } from '../../components/Button'
 import { useAuth } from '../../hooks/auth'
 import { GetServerSideProps } from 'next'
-import { apiDev } from '../../services/apiDev'
+import { CreateExams } from '../../components/Modal/Exams/CreateExam'
+import { useModal } from '../../hooks/modal'
+import { UpdateExams } from '../../components/Modal/Exams/UpdateExam'
+import { DeleteExam } from '../../components/Modal/Exams/DeleteExam'
+
+import { api } from '../../services/api'
 
 import {
   Container,
@@ -19,17 +24,14 @@ import {
   WrapperFilter,
   ButtonFilter
 } from '../../styles/pages/rh/exams'
-import { CreateExams } from '../../components/Modal/Exams/CreateExam'
-import { useModal } from '../../hooks/modal'
-import { UpdateExams } from '../../components/Modal/Exams/UpdateExam'
-import { DeleteExam } from '../../components/Modal/Exams/DeleteExam'
 
 export interface ExamsProps {
   exam_id: number
-  exam_name: string
+  contri_name: string
   exam_type: string
-  exam_realized_date: string
-  exam_expiration_date: string
+  exam_local_service: string
+  exam_date_realization: string | number
+  exam_date_expiration: string | number
 }
 
 export interface ExamsServerSideProps {
@@ -70,13 +72,16 @@ function Exams({ examsProps }: ExamsServerSideProps) {
             ths={['Nome', 'Exame', 'Realizado', 'Data de Validade']}
           >
             {exams.map(exam => {
+              const dateFormatter = new Intl.DateTimeFormat('pt-br')
               return (
                 <tr onClick={() => handleSelectExam(exam)} key={exam.exam_id}>
-                  <td>{exam.exam_name}</td>
+                  <td>{exam.contri_name}</td>
                   <td>{exam.exam_type}</td>
-                  <td>{exam.exam_realized_date}</td>
+                  <td>
+                    {dateFormatter.format(new Date(exam.exam_date_realization))}
+                  </td>
                   <td style={{ textAlign: 'center' }}>
-                    {exam.exam_expiration_date}
+                    {dateFormatter.format(new Date(exam.exam_date_expiration))}
                   </td>
                 </tr>
               )
@@ -134,12 +139,25 @@ function Exams({ examsProps }: ExamsServerSideProps) {
 
 export default withAuth(Exams)
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const response = await apiDev.get('exam')
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  try {
+    const response = await api.get('api/exam', {
+      headers: {
+        tokenaccess: req.cookies['intranet-token']
+      }
+    })
 
-  const examsProps = response.data
+    const examsProps = response.data
 
-  return {
-    props: { examsProps }
+    return {
+      props: { examsProps }
+    }
+  } catch (err) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false
+      }
+    }
   }
 }

@@ -13,7 +13,7 @@ import { GetServerSideProps } from 'next'
 import { UpdateBranch } from '../../components/Modal/Branches/UpdateBranch'
 import { CreateBranch } from '../../components/Modal/Branches/CreateBranch'
 import { DeleteBranch } from '../../components/Modal/Branches/DeleteBranch'
-import { apiDev } from '../../services/apiDev'
+import { api } from '../../services/api'
 
 import {
   Container,
@@ -114,12 +114,26 @@ function Branches({ branchesProps }: BranchesServerSideProps) {
 
 export default withAuth(Branches)
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const response = await apiDev.get('branches')
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  try {
+    const response = await api.get('api/branch', {
+      headers: {
+        tokenaccess: req.cookies['intranet-token']
+      }
+    })
 
-  const branchesProps = response.data
+    const branchesProps = response.data
 
-  return {
-    props: { branchesProps }
+    return {
+      props: { branchesProps }
+    }
+  } catch (err) {
+    console.log(err)
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false
+      }
+    }
   }
 }

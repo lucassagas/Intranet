@@ -10,7 +10,7 @@ import { useLoading } from '../../../hooks/loading'
 import { useModal } from '../../../hooks/modal'
 import { getValidationErrors } from '../../../utils/getValidationErrors'
 import { FormHandles } from '@unform/core'
-import { apiDev } from '../../../services/apiDev'
+import { api } from '../../../services/api'
 
 import { Container } from '../../../styles/components/Modal/Branches/UpdateBranch'
 import { useAuth } from '../../../hooks/auth'
@@ -41,16 +41,16 @@ export function UpdateBranch({
         formRef.current.setErrors({})
 
         const schema = Yup.object().shape({
-          bran_sector: Yup.string().required('Campo obrigatório'),
-          bran_number: Yup.string().required('Campo obrigatório')
+          sector: Yup.string().required('Campo obrigatório'),
+          number: Yup.string().required('Campo obrigatório')
         })
 
         await schema.validate(data, {
           abortEarly: false
         })
 
-        const response = await apiDev.patch(
-          `branches/${selectedBranch.bran_id}`,
+        const response = await api.put(
+          `api/branch/${selectedBranch.bran_id}`,
           data
         )
 
@@ -58,13 +58,13 @@ export function UpdateBranch({
           branch => branch.bran_id !== selectedBranch.bran_id
         )
 
-        setBranches([response.data, ...remainingExtensions])
+        setBranches([response.data.branch, ...remainingExtensions])
         setDisplayModal('')
         reset()
         addToast({
           type: 'success',
           title: 'Sucesso!',
-          description: 'Ramal editado com sucesso'
+          description: `Ramal ${data.number} editado com sucesso`
         })
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -78,7 +78,7 @@ export function UpdateBranch({
         addToast({
           type: 'error',
           title: 'Error',
-          description: err.message
+          description: err.response ? err.response.data.message : err.message
         })
       } finally {
         setLoadingScreen(false)
@@ -91,18 +91,18 @@ export function UpdateBranch({
     <GlobalModal id={id} size={500} title="Editar Ramal">
       <Container
         initialData={{
-          bran_sector: selectedBranch?.bran_sector.toUpperCase(),
-          bran_number: selectedBranch?.bran_number
+          sector: selectedBranch?.bran_sector.toUpperCase(),
+          number: selectedBranch?.bran_number
         }}
         ref={formRef}
         onSubmit={handleSubmit}
       >
         <div>
           <span style={{ width: '100%' }}>
-            <Input name="bran_sector" label="Setor Responsável" />
+            <Input name="sector" label="Setor Responsável" />
           </span>
           <span>
-            <Input width="150px" name="bran_number" label="Número do Ramal" />
+            <Input width="150px" name="number" label="Número do Ramal" />
           </span>
         </div>
 

@@ -151,7 +151,7 @@ export function EditUser({ id, reloadFunction, user }: EditUserProps) {
             ))}
           </datalist>
         </InputWrapper>
-        <Button type="submit">Cadastrar</Button>
+        <Button type="submit">Salvar Alterações</Button>
       </Container>
     </GlobalModal>
   )
