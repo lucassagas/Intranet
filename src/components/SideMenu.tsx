@@ -25,7 +25,8 @@ import {
   RiFirstAidKitLine,
   FiPhone,
   FiHeadphones,
-  FaListUl
+  FaListUl,
+  AiOutlineTag
 } from '../styles/icons'
 
 export function SideMenu() {
@@ -131,6 +132,13 @@ export function SideMenu() {
                       <SubMenuOption>
                         <FaListUl size={20} />
                         Planos
+                      </SubMenuOption>
+                    </Link>
+
+                    <Link href="/sac/services">
+                      <SubMenuOption>
+                        <AiOutlineTag size={20} />
+                        Serviços
                       </SubMenuOption>
                     </Link>
                   </SubMenu>

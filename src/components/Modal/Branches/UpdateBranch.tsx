@@ -12,8 +12,8 @@ import { getValidationErrors } from '../../../utils/getValidationErrors'
 import { FormHandles } from '@unform/core'
 import { api } from '../../../services/api'
 
-import { Container } from '../../../styles/components/Modal/Branches/UpdateBranch'
 import { useAuth } from '../../../hooks/auth'
+import { Container } from '../../../styles/components/Modal/Branches/UpdateBranch'
 
 export interface UpdateBranchProps {
   id: string

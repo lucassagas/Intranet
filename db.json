@@ -211,5 +211,23 @@
       "price_per_cam_fidelity": 50,
       "price_per_cam_without_fidelity": 100
     }
+  ],
+  "product": [
+    {
+      "value": "105",
+      "deadline": "5",
+      "lending": "sim",
+      "product": "ONU",
+      "type_of_payment": "boleto",
+      "id": 1
+    },
+    {
+      "id": 3,
+      "value": 300,
+      "deadline": 5,
+      "lending": "sim",
+      "product": "ONU",
+      "type_of_payment": "boleto"
+    }
   ]
 }

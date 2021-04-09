@@ -120,14 +120,14 @@ export function CreateContributors({
               </section>
               <section>
                 <InputMask
-                  mask="99-99-9999"
+                  mask="9999-99-99"
                   name="date_expiration"
                   label="Data de Validade"
                 />
               </section>
               <section>
                 <InputMask
-                  mask="99-99-9999"
+                  mask="9999-99-99"
                   name="date_birth"
                   label="Data de Nascimento"
                 />

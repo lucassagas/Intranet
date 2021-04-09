@@ -27,7 +27,9 @@ export {
   AiOutlineEye,
   AiOutlineQuestionCircle,
   AiOutlineWarning,
-  AiOutlineCloud
+  AiOutlineCloud,
+  AiOutlineTag,
+  AiOutlineShopping
 } from 'react-icons/ai'
 
 export { SiWikipedia } from 'react-icons/si'

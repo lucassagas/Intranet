@@ -160,19 +160,17 @@ export function UpdateContributors({
                   <InputMask
                     label="Data de Validade"
                     name="date_expiration"
-                    mask="99-99-9999"
+                    mask="9999-99-99"
                   />
                 </section>
 
                 <section>
-                  <Input
+                  <InputMask
                     name="date_birth"
                     label="Data de Nascimento"
                     type="text"
-                    value={format(
-                      new Date(selectedContributor.contri_date_birth),
-                      'dd-MM-yyyy'
-                    )}
+                    mask="9999-99-99"
+                    value={selectedContributor.contri_date_birth}
                     readOnly
                   />
                 </section>
