@@ -13,7 +13,7 @@ import { DeleteProduct } from '../../../Modal/Products/DeleteProduct'
 import {
   Container,
   Wrapper
-} from '../../../../styles/components/Pages/Services/Product'
+} from '../../../../styles/components/Pages/Sac/Services/Product'
 
 export interface ProductsProps {
   id: number

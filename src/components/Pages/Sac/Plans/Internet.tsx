@@ -16,7 +16,7 @@ import {
   Wrapper,
   Comments,
   Actions
-} from '../../../../styles/components/Pages/Plans/Internet'
+} from '../../../../styles/components/Pages/Sac/Plans/Internet'
 
 export interface PlansProps {
   plan_id: number

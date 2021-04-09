@@ -1,7 +1,10 @@
 import Head from 'next/head'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Header } from '../../components/Header'
 import withAuth from '../../utils/withAuth'
+
+import { Products } from '../../components/Pages/Sac/Services/Product'
+import { Services } from '../../components/Pages/Sac/Services/Service'
 
 import { AiOutlineShopping, AiOutlineTag } from '../../styles/icons'
 
@@ -11,9 +14,8 @@ import {
   Content,
   Scroll
 } from '../../styles/pages/sac/services'
-import { Products } from '../../components/Pages/Sac/Services/Product'
 
-function Services() {
+function ServicesPage() {
   const [activeCategory, setActiveCategory] = useState('products')
   return (
     <Container>
@@ -48,9 +50,10 @@ function Services() {
 
       <Content>
         <Scroll>{activeCategory === 'products' && <Products />}</Scroll>
+        <Scroll>{activeCategory === 'services' && <Services />}</Scroll>
       </Content>
     </Container>
   )
 }
 
-export default withAuth(Services)
+export default withAuth(ServicesPage)

@@ -22,7 +22,7 @@ import {
   Wrapper,
   Comments,
   WrapperBenefit
-} from '../../../../styles/components/Pages/Plans/Cftv'
+} from '../../../../styles/components/Pages/Sac/Plans/Cftv'
 
 export interface CftvProps {
   id: number

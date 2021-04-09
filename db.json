@@ -229,5 +229,28 @@
       "product": "ONU",
       "type_of_payment": "boleto"
     }
+  ],
+  "service": [
+    {
+      "value": "100",
+      "deadline": "5",
+      "type_of_payment": "boleto",
+      "service": "ONU",
+      "id": 1
+    },
+    {
+      "value": "200",
+      "deadline": "5",
+      "type_of_payment": "boleto",
+      "service": "ONU",
+      "id": 3
+    },
+    {
+      "value": "100",
+      "deadline": "30",
+      "type_of_payment": "boleto",
+      "service": "ip fixo",
+      "id": 7
+    }
   ]
 }
