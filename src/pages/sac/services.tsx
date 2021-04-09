@@ -49,8 +49,10 @@ function ServicesPage() {
       </Header>
 
       <Content>
-        <Scroll>{activeCategory === 'products' && <Products />}</Scroll>
-        <Scroll>{activeCategory === 'services' && <Services />}</Scroll>
+        <Scroll>
+          {activeCategory === 'services' && <Services />}
+          {activeCategory === 'products' && <Products />}
+        </Scroll>
       </Content>
     </Container>
   )

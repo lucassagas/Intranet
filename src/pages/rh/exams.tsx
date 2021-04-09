@@ -8,14 +8,15 @@ import { useCallback, useState } from 'react'
 import { Form } from '@unform/web'
 import { Input } from '../../components/Input'
 import { Button } from '../../components/Button'
-import { useAuth } from '../../hooks/auth'
+
 import { GetServerSideProps } from 'next'
 import { CreateExams } from '../../components/Modal/Exams/CreateExam'
-import { useModal } from '../../hooks/modal'
 import { UpdateExams } from '../../components/Modal/Exams/UpdateExam'
 import { DeleteExam } from '../../components/Modal/Exams/DeleteExam'
-
 import { api } from '../../services/api'
+
+import { useAuth } from '../../hooks/auth'
+import { useModal } from '../../hooks/modal'
 
 import {
   Container,
