@@ -25,6 +25,9 @@ function Plans() {
       </Head>
 
       <Header category="Sac" route="Planos">
+        <div />
+
+        <div></div>
         <CategoryButton
           onClick={() => setActiveCategory('internet')}
           type="button"

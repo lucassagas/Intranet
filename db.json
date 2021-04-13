@@ -252,5 +252,63 @@
       "service": "ip fixo",
       "id": 7
     }
+  ],
+  "condominium": [
+    {
+      "id": 1,
+      "cep": 88161680,
+      "city": "Biguaçu",
+      "street": "Rua Manoel Mariano Ferreira",
+      "number": 559,
+      "neighborhood": "Rio Caveiras",
+      "state": "SC",
+      "condominium": "Residencial Villa Rica",
+      "connection": "Fibra",
+      "housing_type": "Apartamento",
+      "price": "Gratuito",
+      "observation": null
+    },
+    {
+      "id": 2,
+      "cep": 88161680,
+      "city": "Biguaçu",
+      "street": "Rua Manoel Mariano Ferreira",
+      "number": 559,
+      "neighborhood": "Rio Caveiras",
+      "state": "SC",
+      "condominium": "Residencial Villa Rica",
+      "connection": "Fibra",
+      "housing_type": "Apartamento",
+      "price": "Gratuito",
+      "observation": null
+    },
+    {
+      "id": 3,
+      "cep": 88161680,
+      "city": "Biguaçu",
+      "street": "Rua Manoel Mariano Ferreira",
+      "number": 559,
+      "neighborhood": "Rio Caveiras",
+      "state": "SC",
+      "condominium": "Residencial Villa Rica",
+      "connection": "Fibra",
+      "housing_type": "Apartamento",
+      "price": "Gratuito",
+      "observation": null
+    },
+    {
+      "cep": "88161-680",
+      "state": "SC",
+      "city": "Biguaçu",
+      "neighborhood": "Rio Caveiras",
+      "street": "Rua Manoel Mariano Ferreira",
+      "number": "559",
+      "condominium": "Residencial Portal das Cores",
+      "connection": "fibra",
+      "housing_type": "apartamento",
+      "price": "100",
+      "observation": "",
+      "id": 4
+    }
   ]
 }

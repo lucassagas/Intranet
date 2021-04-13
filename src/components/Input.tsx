@@ -19,6 +19,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string
   password?: boolean
   calendar?: boolean
+  disabled?: boolean
 }
 
 export function Input({
@@ -27,6 +28,7 @@ export function Input({
   width,
   label,
   password,
+  disabled,
   ...rest
 }: InputProps) {
   const InputRef = useRef<HTMLInputElement>(null)
@@ -60,7 +62,7 @@ export function Input({
 
   return (
     <>
-      {label && <Label>{label}</Label>}
+      {label && <Label disabled={disabled}>{label}</Label>}
       <Container
         id="defaultInput"
         width={width}
@@ -72,6 +74,7 @@ export function Input({
         <input
           type={seePassword ? 'password' : 'text'}
           ref={InputRef}
+          disabled={disabled}
           {...rest}
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}

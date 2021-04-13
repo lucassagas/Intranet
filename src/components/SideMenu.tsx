@@ -26,7 +26,8 @@ import {
   FiPhone,
   FiHeadphones,
   FaListUl,
-  AiOutlineTag
+  AiOutlineTag,
+  BiBuildings
 } from '../styles/icons'
 
 export function SideMenu() {
@@ -128,6 +129,13 @@ export function SideMenu() {
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ opacity: 0 }}
                   >
+                    <Link href="/sac/condominium">
+                      <SubMenuOption>
+                        <BiBuildings size={20} />
+                        Condominios
+                      </SubMenuOption>
+                    </Link>
+
                     <Link href="/sac/plans">
                       <SubMenuOption>
                         <FaListUl size={20} />

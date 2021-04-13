@@ -8,15 +8,10 @@ interface ContainerProps {
   width?: string
   theme?: string
   calendar?: boolean
-  disabled?: boolean
 }
 
-interface LabelProps {
-  disabled?: boolean
-}
-
-export const Label = styled.span<LabelProps>`
-  color: ${props => (props.disabled ? 'var(--gray)' : 'var(--white)')};
+export const Label = styled.span`
+  color: var(--white);
   font-weight: 400;
   font-size: 0.8rem;
   display: block;
@@ -27,7 +22,6 @@ export const Container = styled.div<ContainerProps>`
   background: var(--darkgray);
   border-radius: 10px;
   padding: 10px;
-  max-height: 40px;
 
   ${props =>
     props.width
@@ -71,14 +65,14 @@ export const Container = styled.div<ContainerProps>`
       color: var(--orange);
     `}
 
-    input {
+    textarea {
     background: transparent;
     border: 0;
     color: var(--white);
     width: 100%;
     flex: 1;
 
-    cursor: ${props => props.disabled && 'not-allowed'};
+    resize: none;
 
     ::-webkit-calendar-picker-indicator {
       filter: invert(1);

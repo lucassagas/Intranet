@@ -111,10 +111,7 @@ export function UpdateContributors({
           <Form
             initialData={{
               type_document: selectedContributor.contri_type_document,
-              date_expiration: format(
-                new Date(selectedContributor.contri_date_expiration),
-                'dd/MM/yyyy'
-              )
+              date_expiration: selectedContributor.contri_date_expiration
             }}
             ref={formRef}
             onSubmit={handleSubmit}
