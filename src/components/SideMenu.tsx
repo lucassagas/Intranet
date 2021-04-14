@@ -136,12 +136,14 @@ export function SideMenu() {
                       </SubMenuOption>
                     </Link>
 
-                    <Link href="/sac/plans">
-                      <SubMenuOption>
-                        <FaListUl size={20} />
-                        Planos
-                      </SubMenuOption>
-                    </Link>
+                    {permissions.includes('SAC.PLANOS.VISUALIZAR') && (
+                      <Link href="/sac/plans">
+                        <SubMenuOption>
+                          <FaListUl size={20} />
+                          Planos
+                        </SubMenuOption>
+                      </Link>
+                    )}
 
                     <Link href="/sac/services">
                       <SubMenuOption>

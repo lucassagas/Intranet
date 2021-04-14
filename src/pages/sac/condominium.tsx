@@ -43,9 +43,10 @@ export interface CondominiumProps {
 
 interface CondominuimServerSideProps {
   condominiumProps: CondominiumProps[]
+  page: number
 }
 
-function Condominium({ condominiumProps }: CondominuimServerSideProps) {
+function Condominium({ condominiumProps, page }: CondominuimServerSideProps) {
   const [isActiveFilter, setIsActiveFilter] = useState('name')
   const [
     selectedCondominium,
@@ -73,7 +74,7 @@ function Condominium({ condominiumProps }: CondominuimServerSideProps) {
         <title>Intranet | Sac | Condomínios</title>
       </Head>
       <Header category="Sac" route="Condomínios">
-        <Paginate />
+        <Paginate totalPages={300} currentPage={page} />
       </Header>
       <Content>
         <Scroll>
@@ -163,12 +164,14 @@ function Condominium({ condominiumProps }: CondominuimServerSideProps) {
 
 export default withAuth(Condominium)
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const response = await apiDev.get('condominium')
 
   const condominiumProps = response.data
 
+  const page = query?.page ? query.page : 1
+
   return {
-    props: { condominiumProps }
+    props: { condominiumProps, page }
   }
 }

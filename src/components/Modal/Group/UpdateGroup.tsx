@@ -76,7 +76,7 @@ export function EditGroup({ id }: EditGroupProps) {
             permissions_id.push(permission.page_index_permission.perm_id)
             permission.pages.map(page => {
               page.page_permissions.map(p => {
-                permissions_id.push(p.perm_id)
+                permissions_id.push(p?.perm_id)
               })
             })
           })
@@ -85,7 +85,7 @@ export function EditGroup({ id }: EditGroupProps) {
           addToast({
             type: 'error',
             title: 'Erro',
-            description: err.response.data.message
+            description: err.response ? err.response.data.message : err.message
           })
         })
 
@@ -180,13 +180,13 @@ export function EditGroup({ id }: EditGroupProps) {
                           type="button"
                           onClick={(e: MouseEvent) => {
                             handleSelectGroup(
-                              group.page_index_permission.perm_id
+                              group.page_index_permission?.perm_id
                             )
                             e.stopPropagation()
                           }}
                         >
                           {permissionsId.includes(
-                            group.page_index_permission.perm_id
+                            group.page_index_permission?.perm_id
                           ) && <BiCheck size={18} />}
                         </MainButton>
                         {group.page_index}

@@ -1,11 +1,17 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import * as Yup from 'yup'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { PriceTable } from '../../../Tables/PriceTable'
-import { apiDev } from '../../../../services/apiDev'
+import { api } from '../../../../services/api'
 import { useToast } from '../../../../hooks/toast'
 import { BsCheck, BsX, FiTrash } from '../../../../styles/icons'
 import { Input } from '../../../Input'
 import { Button } from '../../../Button'
+import { FormHandles } from '@unform/core'
+
 import { useModal } from '../../../../hooks/modal'
+import { useAuth } from '../../../../hooks/auth'
+import { useLoading } from '../../../../hooks/loading'
+import { useRouter } from 'next/router'
 
 import { CreateInternetPlan } from '../../../Modal/InternetPlan/CreateInternetPlan'
 import { UpdateInternetPlan } from '../../../Modal/InternetPlan/UpdateInternetPlan'
@@ -17,30 +23,42 @@ import {
   Comments,
   Actions
 } from '../../../../styles/components/Pages/Sac/Plans/Internet'
+import { getValidationErrors } from '../../../../utils/getValidationErrors'
 
 export interface PlansProps {
   plan_id: number
-  plan_title: string
-  plan_installation_price: number
-  plan_monthly_payment: number
-  plan_download: number
-  plan_upload: number
-  plan_neoredetv: boolean
-  plan_neorede_drive: boolean
-  plan_paramount: boolean
-  plan_noggin: boolean
-  plan_telephony: boolean
+  plan_name: string
+  activation: number
+  price: number
+  download: number
+  upload: number
+  neo_stream: boolean
+  neo_drive: boolean
+  paramount: boolean
+  noggin: boolean
+  telephone: boolean
+}
+
+interface observationProps {
+  obs_content: string
+  obs_id: number
 }
 
 export function Internet() {
+  const [observations, setObservations] = useState<observationProps[]>([])
   const [plans, setPlans] = useState<PlansProps[]>([])
   const [selectedPlan, setSelectedPlan] = useState<PlansProps>()
+  const formRef = useRef<FormHandles>(null)
+
   const { addToast } = useToast()
   const { setDisplayModal } = useModal()
+  const { permissions } = useAuth()
+  const { setLoadingScreen } = useLoading()
+  const router = useRouter()
 
   const handleLoadPlans = useCallback(() => {
-    apiDev
-      .get('plans')
+    api
+      .get('api/plan?type=network')
       .then(response => {
         setPlans(response.data)
       })
@@ -54,10 +72,86 @@ export function Internet() {
   }, [])
 
   useEffect(() => {
+    if (!permissions.includes('SAC.PLANOS.VISUALIZAR')) {
+      router.push('/')
+    }
     handleLoadPlans()
+
+    api.get('/api/plan/observation?type=network').then(response => {
+      setObservations(response.data)
+    })
   }, [])
 
-  const handleSubmit = useCallback(() => {}, [])
+  const handleSubmit = useCallback(
+    async (data, { reset }) => {
+      setLoadingScreen(true)
+      try {
+        const schema = Yup.object().shape({
+          observation: Yup.string().required('Campo obrigatório')
+        })
+
+        await schema.validate(data, {
+          abortEarly: false
+        })
+
+        const formattedData = {
+          type: 'network',
+          content: data.observation
+        }
+        const response = await api.post('api/plan/observation', formattedData)
+
+        setObservations([response.data.obs, ...observations])
+
+        addToast({
+          type: 'success',
+          title: 'Sucesso!',
+          description: 'Observação cadastrada com sucesso!'
+        })
+
+        reset()
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err)
+
+          formRef.current.setErrors(errors)
+
+          return
+        }
+
+        addToast({
+          type: 'error',
+          title: 'Error',
+          description: err.response ? err.response.data.message : err.message
+        })
+      } finally {
+        setLoadingScreen(false)
+      }
+    },
+    [observations, addToast]
+  )
+
+  const handleDeleteObservations = useCallback(
+    async (id: number) => {
+      try {
+        const response = await api.delete(`api/plan/observation/${id}`)
+
+        console.log(response)
+
+        const remainingObservations = observations.filter(
+          obs => obs.obs_id !== id
+        )
+
+        setObservations(remainingObservations)
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Error',
+          description: err.response ? err.response.data.message : err.message
+        })
+      }
+    },
+    [observations]
+  )
 
   const handleSelectPlan = useCallback((plan: PlansProps) => {
     setDisplayModal('modalUpdateInternetPlan')
@@ -69,7 +163,7 @@ export function Internet() {
     setSelectedPlan(plan)
   }, [])
 
-  const plansTitle = useMemo(() => plans.map(plan => plan.plan_title), [plans])
+  const plansTitle = useMemo(() => plans.map(plan => plan.plan_name), [plans])
 
   const formattedPlan = useMemo(() => {
     let preco = []
@@ -89,18 +183,16 @@ export function Internet() {
     })
 
     plans.map(plan => {
-      preco.push(<td>{formatterCurrency.format(plan.plan_monthly_payment)}</td>)
+      preco.push(<td>{formatterCurrency.format(plan.price)}</td>)
 
-      download.push(<td>{plan.plan_download}Mb's</td>)
+      download.push(<td>{plan.download}Mb's</td>)
 
-      upload.push(<td>{plan.plan_upload}Mb's</td>)
+      upload.push(<td>{plan.upload}Mb's</td>)
 
-      ativacao.push(
-        <td>{formatterCurrency.format(plan.plan_installation_price)}</td>
-      )
+      ativacao.push(<td>{formatterCurrency.format(plan.activation)}</td>)
       neoredetv.push(
         <td>
-          {plan.plan_neoredetv ? (
+          {plan.neo_stream ? (
             <BsCheck size={20} color="var(--green)" />
           ) : (
             <BsX size={20} color="var(--danger)" />
@@ -109,7 +201,7 @@ export function Internet() {
       )
       neorededrive.push(
         <td>
-          {plan.plan_neorede_drive ? (
+          {plan.neo_drive ? (
             <BsCheck size={20} color="var(--green)" />
           ) : (
             <BsX size={20} color="var(--danger)" />
@@ -118,7 +210,7 @@ export function Internet() {
       )
       paramount.push(
         <td>
-          {plan.plan_paramount ? (
+          {plan.paramount ? (
             <BsCheck size={20} color="var(--green)" />
           ) : (
             <BsX size={20} color="var(--danger)" />
@@ -127,7 +219,7 @@ export function Internet() {
       )
       noggin.push(
         <td>
-          {plan.plan_noggin ? (
+          {plan.noggin ? (
             <BsCheck size={20} color="var(--green)" />
           ) : (
             <BsX size={20} color="var(--danger)" />
@@ -136,7 +228,7 @@ export function Internet() {
       )
       telefonia.push(
         <td>
-          {plan.plan_telephony ? (
+          {plan.telephone ? (
             <BsCheck size={20} color="var(--green)" />
           ) : (
             <BsX size={20} color="var(--danger)" />
@@ -146,10 +238,15 @@ export function Internet() {
       actions.push(
         <td>
           <Actions>
-            <button onClick={() => handleSelectPlan(plan)}>Editar</button>
-            <button onClick={() => handleDeleteInternetPlan(plan)}>
-              Excluir
-            </button>
+            {permissions.includes('SAC.PLANOS.EDITAR') && (
+              <button onClick={() => handleSelectPlan(plan)}>Editar</button>
+            )}
+
+            {permissions.includes('SAC.PLANOS.DELETAR') && (
+              <button onClick={() => handleDeleteInternetPlan(plan)}>
+                Excluir
+              </button>
+            )}
           </Actions>
         </td>
       )
@@ -212,60 +309,48 @@ export function Internet() {
           <td>Telefonia</td>
           {formattedPlan.telefonia}
         </tr>
-        <tr>
-          <td>Ações</td>
-          {formattedPlan.actions}
-        </tr>
+        {permissions.includes('SAC.PLANOS.EDITAR' || 'SAC.PLANOS.EXCLUIR') && (
+          <tr>
+            <td>Ações</td>
+            {formattedPlan.actions}
+          </tr>
+        )}
       </PriceTable>
-      <Wrapper onSubmit={handleSubmit}>
-        <Input
-          width="100%"
-          name="comments"
-          type="text"
-          placeholder="Inserir observações"
-        />
-        <Button type="submit">Inserir Observações</Button>
-        <Button
-          onClick={() => setDisplayModal('modalCreateInternetPlan')}
-          type="button"
-        >
-          Cadastrar Planos
-        </Button>
-      </Wrapper>
+      {permissions.includes('SAC.PLANOS.CRIAR') && (
+        <Wrapper ref={formRef} onSubmit={handleSubmit}>
+          <Input
+            width="100%"
+            name="observation"
+            type="text"
+            placeholder="Inserir observações"
+          />
+          <Button type="submit">Inserir Observações</Button>
+          <Button
+            onClick={() => setDisplayModal('modalCreateInternetPlan')}
+            type="button"
+          >
+            Cadastrar Planos
+          </Button>
+        </Wrapper>
+      )}
+
       <Comments>
         <strong>Observações: </strong>
-        <div>
-          <p>Planos Combo R possuem Wifi de Alta bla bla bla bla bla bla bla</p>
-          <FiTrash size={20} />
-        </div>
-        <div>
-          <p>Planos Combo R possuem Wifi de Alta bla bla bla bla bla bla bla</p>
-          <FiTrash size={20} />
-        </div>
-        <div>
-          <p>Planos Combo R possuem Wifi de Alta bla bla bla bla bla bla bla</p>
-          <FiTrash size={20} />
-        </div>
-        <div>
-          <p>Planos Combo R possuem Wifi de Alta bla bla bla bla bla bla bla</p>
-          <FiTrash size={20} />
-        </div>
-        <div>
-          <p>Planos Combo R possuem Wifi de Alta bla bla bla bla bla bla bla</p>
-          <FiTrash size={20} />
-        </div>
-        <div>
-          <p>Planos Combo R possuem Wifi de Alta bla bla bla bla bla bla bla</p>
-          <FiTrash size={20} />
-        </div>
-        <div>
-          <p>Planos Combo R possuem Wifi de Alta bla bla bla bla bla bla bla</p>
-          <FiTrash size={20} />
-        </div>
-        <div>
-          <p>Planos Combo R possuem Wifi de Alta bla bla bla bla bla bla bla</p>
-          <FiTrash size={20} />
-        </div>
+        {observations.map(obs => {
+          return (
+            <div key={obs.obs_id}>
+              <p>{obs.obs_content}</p>
+              {permissions.includes('SAC.PLANOS.DELETAR') && (
+                <button
+                  onClick={() => handleDeleteObservations(obs.obs_id)}
+                  type="button"
+                >
+                  <FiTrash size={20} />
+                </button>
+              )}
+            </div>
+          )
+        })}
       </Comments>
       <CreateInternetPlan
         handleLoadPlans={handleLoadPlans}

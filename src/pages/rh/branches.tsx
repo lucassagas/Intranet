@@ -128,7 +128,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
       props: { branchesProps }
     }
   } catch (err) {
-    console.log(err)
     return {
       redirect: {
         destination: '/',

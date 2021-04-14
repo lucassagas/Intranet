@@ -99,7 +99,7 @@ function AuthProvider({ children }: AuthProviderData) {
         addToast({
           type: 'error',
           title: 'Erro na autenticação',
-          description: err.response.data.message
+          description: err.response ? err.response.data.message : err.message
         })
       })
       .finally(() => setLoadingButton(false))

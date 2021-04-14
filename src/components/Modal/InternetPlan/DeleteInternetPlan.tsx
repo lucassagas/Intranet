@@ -6,7 +6,7 @@ import { UpdateInternetPlanProps } from './UpdateInternetPlan'
 import { useModal } from '../../../hooks/modal'
 import { useLoading } from '../../../hooks/loading'
 import { useToast } from '../../../hooks/toast'
-import { apiDev } from '../../../services/apiDev'
+import { api } from '../../../services/api'
 
 import { Container } from '../../../styles/components/Modal/InternetPlan/DeleteInternetPlan'
 
@@ -21,15 +21,15 @@ export function DeleteInternetPlan({
 
   const handleDeleteInternetPlan = useCallback(() => {
     setLoadingScreen(true)
-    apiDev
-      .delete(`plans/${selectedPlan?.plan_id}`)
+    api
+      .delete(`api/plan/${selectedPlan?.plan_id}`)
       .then(() => {
         setDisplayModal('')
         handleLoadPlans()
         addToast({
           type: 'success',
           title: 'Sucesso!',
-          description: `Plano ${selectedPlan?.plan_title} deletado com sucesso!`
+          description: `Plano ${selectedPlan?.plan_name} deletado com sucesso!`
         })
       })
       .catch(err => {
@@ -48,7 +48,7 @@ export function DeleteInternetPlan({
         <div>
           <section>
             <strong>Plano </strong>
-            <p>{selectedPlan?.plan_title}</p>
+            <p>{selectedPlan?.plan_name}</p>
           </section>
 
           <p>Tem certeza de que quer excluir este plano ?</p>
