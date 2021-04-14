@@ -133,9 +133,7 @@ export function Internet() {
   const handleDeleteObservations = useCallback(
     async (id: number) => {
       try {
-        const response = await api.delete(`api/plan/observation/${id}`)
-
-        console.log(response)
+        await api.delete(`api/plan/observation/${id}`)
 
         const remainingObservations = observations.filter(
           obs => obs.obs_id !== id

@@ -9,7 +9,7 @@ import { useLoading } from '../../../hooks/loading'
 import { useToast } from '../../../hooks/toast'
 import { FormHandles } from '@unform/core'
 import { getValidationErrors } from '../../../utils/getValidationErrors'
-import { apiDev } from '../../../services/apiDev'
+import { api } from '../../../services/api'
 
 import {
   Container,
@@ -38,59 +38,63 @@ export function CreateTelephonyPlan({
   const { setLoadingScreen } = useLoading()
   const { addToast } = useToast()
 
-  const handleSubmit = useCallback(async (data, { reset }) => {
-    setLoadingScreen(true)
-    try {
-      formRef.current.setErrors({})
+  const handleSubmit = useCallback(
+    async (data, { reset }) => {
+      setLoadingScreen(true)
+      try {
+        formRef.current.setErrors({})
 
-      const schema = Yup.object().shape({
-        plan_title: Yup.string().required('Campo obrigatório'),
-        plan_installation_price: Yup.number().required('Campo obrigatório'),
-        plan_monthly_payment: Yup.number().required('Campo obrigatório'),
-        plan_minutes: Yup.number().required('Campo obrigatório'),
-        plan_branches: Yup.number().required('Campo obrigatório')
-      })
+        const schema = Yup.object().shape({
+          name: Yup.string().required('Campo obrigatório'),
+          activation: Yup.number().required('Campo obrigatório'),
+          price: Yup.number().required('Campo obrigatório'),
+          minutes: Yup.number().required('Campo obrigatório'),
+          branches: Yup.number().required('Campo obrigatório')
+        })
 
-      await schema.validate(data, {
-        abortEarly: false
-      })
+        await schema.validate(data, {
+          abortEarly: false
+        })
 
-      const formattedData = {
-        plan_fix_local: fixoLocal,
-        plan_fix_ddd: fixoDDD,
-        plan_mov_local: movelLocal,
-        plan_mov_ddd: movelDDD,
-        plan_international: international,
-        ...data
+        const formattedData = {
+          type: 'telephone',
+          landline_local: fixoLocal,
+          landline_ddd: fixoDDD,
+          mobile_local: movelLocal,
+          mobile_ddd: movelDDD,
+          international_call: international,
+          ...data
+        }
+
+        await api.post('api/plan', formattedData)
+
+        handleLoadPlans()
+        setDisplayModal('')
+        reset()
+        addToast({
+          type: 'success',
+          title: 'Sucesso!',
+          description: `Plano ${data.name} criado com sucesso!`
+        })
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err)
+          formRef.current.setErrors(errors)
+
+          return
+        }
+
+        addToast({
+          type: 'error',
+          title: 'Error',
+          description: err.message
+        })
+      } finally {
+        setLoadingScreen(false)
       }
-
-      await apiDev.post('/telephony', formattedData)
-
-      handleLoadPlans()
-      setDisplayModal('')
-      reset()
-      addToast({
-        type: 'success',
-        title: 'Sucesso!',
-        description: `Plano ${data.plan_title} criado com sucesso!`
-      })
-    } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err)
-        formRef.current.setErrors(errors)
-
-        return
-      }
-
-      addToast({
-        type: 'error',
-        title: 'Error',
-        description: err.message
-      })
-    } finally {
-      setLoadingScreen(false)
-    }
-  }, [])
+    },
+    [fixoLocal, fixoDDD, movelLocal, movelDDD, international, addToast]
+  )
 
   return (
     <GlobalModal id={id} size={600} title="Criar Plano">
@@ -98,34 +102,26 @@ export function CreateTelephonyPlan({
         <Content>
           <section>
             <div>
-              <Input name="plan_title" label="Titulo do Plano" />
+              <Input name="name" label="Titulo do Plano" />
             </div>
             <div>
-              <Input
-                name="plan_minutes"
-                label="Minutagem do Plano"
-                type="number"
-              />
+              <Input name="minutes" label="Minutagem do Plano" type="number" />
             </div>
             <div>
-              <Input name="plan_branches" label="Ramais" type="number" />
+              <Input name="branches" label="Ramais" type="number" />
             </div>
           </section>
 
           <section>
             <div>
               <Input
-                name="plan_installation_price"
+                name="activation"
                 label="Preço de Instalação"
                 type="number"
               />
             </div>
             <div>
-              <Input
-                name="plan_monthly_payment"
-                label="Valor Mensal"
-                type="number"
-              />
+              <Input name="price" label="Valor Mensal" type="number" />
             </div>
           </section>
 

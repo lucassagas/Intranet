@@ -9,7 +9,7 @@ import { useLoading } from '../../../hooks/loading'
 import { useToast } from '../../../hooks/toast'
 import { FormHandles } from '@unform/core'
 import { getValidationErrors } from '../../../utils/getValidationErrors'
-import { apiDev } from '../../../services/apiDev'
+import { api } from '../../../services/api'
 import { PlansProps } from '../../Pages/Sac/Plans/Telephony'
 
 import {
@@ -43,11 +43,11 @@ export function UpdateTelephonyPlan({
 
   useEffect(() => {
     if (displayModal === id) {
-      setFixoLocal(selectedPlan.plan_fix_local)
-      setFixoDDD(selectedPlan.plan_fix_ddd)
-      setMovelLocal(selectedPlan.plan_mov_local)
-      setMovelDDD(selectedPlan.plan_mov_ddd)
-      setInternational(selectedPlan.plan_international)
+      setFixoLocal(selectedPlan.landline_local)
+      setFixoDDD(selectedPlan.landline_ddd)
+      setMovelLocal(selectedPlan.mobile_local)
+      setMovelDDD(selectedPlan.mobile_ddd)
+      setInternational(selectedPlan.international_called)
     }
   }, [selectedPlan])
 
@@ -58,11 +58,11 @@ export function UpdateTelephonyPlan({
         formRef.current.setErrors({})
 
         const schema = Yup.object().shape({
-          plan_title: Yup.string().required('Campo obrigatório'),
-          plan_installation_price: Yup.number().required('Campo obrigatório'),
-          plan_monthly_payment: Yup.number().required('Campo obrigatório'),
-          plan_minutes: Yup.number().required('Campo obrigatório'),
-          plan_branches: Yup.number().required('Campo obrigatório')
+          name: Yup.string().required('Campo obrigatório'),
+          activation: Yup.number().required('Campo obrigatório'),
+          price: Yup.number().required('Campo obrigatório'),
+          minutes: Yup.number().required('Campo obrigatório'),
+          branches: Yup.number().required('Campo obrigatório')
         })
 
         await schema.validate(data, {
@@ -70,17 +70,16 @@ export function UpdateTelephonyPlan({
         })
 
         const formattedData = {
-          plan_fix_local: fixoLocal,
-          plan_fix_ddd: fixoDDD,
-          plan_mov_local: movelLocal,
-          plan_mov_ddd: movelDDD,
-          plan_international: international,
+          landline_local: fixoLocal,
+          landline_ddd: fixoDDD,
+          mobile_local: movelLocal,
+          mobile_ddd: movelDDD,
+          international_called: international,
+          type: 'telephone',
           ...data
         }
 
-        await apiDev.patch(`/telephony/${selectedPlan.plan_id}`, formattedData)
-
-        await apiDev.patch(`/telephony/${selectedPlan.plan_id}`, formattedData)
+        await api.put(`api/plan/${selectedPlan.plan_id}`, formattedData)
 
         handleLoadPlans()
         setDisplayModal('')
@@ -88,7 +87,7 @@ export function UpdateTelephonyPlan({
         addToast({
           type: 'success',
           title: 'Sucesso!',
-          description: `Plano ${selectedPlan.plan_title} editado com sucesso!`
+          description: `Plano ${selectedPlan.plan_name} editado com sucesso!`
         })
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -107,18 +106,26 @@ export function UpdateTelephonyPlan({
         setLoadingScreen(false)
       }
     },
-    [selectedPlan, addToast]
+    [
+      selectedPlan,
+      addToast,
+      fixoLocal,
+      fixoDDD,
+      movelLocal,
+      movelDDD,
+      international
+    ]
   )
 
   return (
     <GlobalModal id={id} size={600} title="Editar Plano">
       <Container
         initialData={{
-          plan_title: selectedPlan?.plan_title,
-          plan_installation_price: selectedPlan?.plan_installation_price,
-          plan_monthly_payment: selectedPlan?.plan_monthly_payment,
-          plan_minutes: selectedPlan?.plan_minutes,
-          plan_branches: selectedPlan?.plan_branches
+          name: selectedPlan?.plan_name,
+          activation: selectedPlan?.activation,
+          price: selectedPlan?.price,
+          minutes: selectedPlan?.minutes,
+          branches: selectedPlan?.branches
         }}
         ref={formRef}
         onSubmit={handleSubmit}
@@ -126,34 +133,26 @@ export function UpdateTelephonyPlan({
         <Content>
           <section>
             <div>
-              <Input name="plan_title" label="Titulo do Plano" />
+              <Input name="name" label="Titulo do Plano" />
             </div>
             <div>
-              <Input
-                name="plan_minutes"
-                label="Minutagem do Plano"
-                type="number"
-              />
+              <Input name="minutes" label="Minutagem do Plano" type="number" />
             </div>
             <div>
-              <Input name="plan_branches" label="Ramais" type="number" />
+              <Input name="branches" label="Ramais" type="number" />
             </div>
           </section>
 
           <section>
             <div>
               <Input
-                name="plan_installation_price"
+                name="activation"
                 label="Preço de Instalação"
                 type="number"
               />
             </div>
             <div>
-              <Input
-                name="plan_monthly_payment"
-                label="Valor Mensal"
-                type="number"
-              />
+              <Input name="price" label="Valor Mensal" type="number" />
             </div>
           </section>
 

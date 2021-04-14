@@ -1,13 +1,17 @@
+import * as Yup from 'yup'
 import { PriceTable } from '../../../Tables/PriceTable'
-
-import { useCallback, useEffect, useMemo, useState } from 'react'
-
-import { apiDev } from '../../../../services/apiDev'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { api } from '../../../../services/api'
 import { useToast } from '../../../../hooks/toast'
 import { BsCheck, BsX, FiTrash } from '../../../../styles/icons'
 import { Input } from '../../../Input'
 import { Button } from '../../../Button'
+
 import { useModal } from '../../../../hooks/modal'
+import { useAuth } from '../../../../hooks/auth'
+import { useRouter } from 'next/router'
+import { useLoading } from '../../../../hooks/loading'
+
 import { CreateTelephonyPlan } from '../../../Modal/TelephonyPlan/CreateTelephonyPlan'
 import { UpdateTelephonyPlan } from '../../../Modal/TelephonyPlan/UpdateTelephonyPlan'
 import { DeleteTelephonyPlan } from '../../../Modal/TelephonyPlan/DeleteTelephonyPlan'
@@ -18,30 +22,44 @@ import {
   Comments,
   Actions
 } from '../../../../styles/components/Pages/Sac/Plans/Telephony'
+import { getValidationErrors } from '../../../../utils/getValidationErrors'
+import { FormHandles } from '@unform/core'
 
 export interface PlansProps {
   plan_id: number
-  plan_title: string
-  plan_installation_price: number
-  plan_monthly_payment: number
-  plan_minutes: number
-  plan_branches: number
-  plan_fix_local: boolean
-  plan_fix_ddd: boolean
-  plan_mov_local: boolean
-  plan_mov_ddd: boolean
-  plan_international: boolean
+  plan_name: string
+  branches: string
+  landline_ddd: boolean
+  price: number
+  minutes: number
+  landline_local: boolean
+  mobile_ddd: boolean
+  mobile_local: boolean
+  activation: number
+  international_called: boolean
+}
+
+interface observationProps {
+  obs_content: string
+  obs_id: number
 }
 
 export function Telephony() {
+  const [observations, setObservations] = useState<observationProps[]>([])
   const [plans, setPlans] = useState<PlansProps[]>([])
   const [selectedPlan, setSelectedPlan] = useState<PlansProps>()
+
+  const formRef = useRef<FormHandles>(null)
+
   const { addToast } = useToast()
   const { setDisplayModal } = useModal()
+  const { permissions } = useAuth()
+  const router = useRouter()
+  const { setLoadingScreen } = useLoading()
 
   const handleLoadPlans = useCallback(() => {
-    apiDev
-      .get('telephony')
+    api
+      .get('api/plan?type=telephone')
       .then(response => {
         setPlans(response.data)
       })
@@ -55,10 +73,64 @@ export function Telephony() {
   }, [])
 
   useEffect(() => {
+    if (!permissions.includes('SAC.PLANOS.VISUALIZAR')) {
+      router.push('/')
+    }
+
+    api.get('/api/plan/observation?type=telephone').then(response => {
+      setObservations(response.data)
+    })
+
     handleLoadPlans()
   }, [])
 
-  const handleSubmit = useCallback(() => {}, [])
+  const handleSubmit = useCallback(
+    async (data, { reset }) => {
+      setLoadingScreen(true)
+      try {
+        const schema = Yup.object().shape({
+          observation: Yup.string().required('Campo obrigatório')
+        })
+
+        await schema.validate(data, {
+          abortEarly: false
+        })
+
+        const formattedData = {
+          type: 'telephone',
+          content: data.observation
+        }
+        const response = await api.post('api/plan/observation', formattedData)
+
+        setObservations([response.data.obs, ...observations])
+
+        addToast({
+          type: 'success',
+          title: 'Sucesso!',
+          description: 'Observação cadastrada com sucesso!'
+        })
+
+        reset()
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err)
+
+          formRef.current.setErrors(errors)
+
+          return
+        }
+
+        addToast({
+          type: 'error',
+          title: 'Error',
+          description: err.response ? err.response.data.message : err.message
+        })
+      } finally {
+        setLoadingScreen(false)
+      }
+    },
+    [observations, addToast]
+  )
 
   const handleSelectPlan = useCallback((plan: PlansProps) => {
     setDisplayModal('modalUpdateTelephonyPlan')
@@ -70,7 +142,28 @@ export function Telephony() {
     setSelectedPlan(plan)
   }, [])
 
-  const plansTitle = useMemo(() => plans.map(plan => plan.plan_title), [plans])
+  const handleDeleteObservations = useCallback(
+    async (id: number) => {
+      try {
+        await api.delete(`api/plan/observation/${id}`)
+
+        const remainingObservations = observations.filter(
+          obs => obs.obs_id !== id
+        )
+
+        setObservations(remainingObservations)
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Error',
+          description: err.response ? err.response.data.message : err.message
+        })
+      }
+    },
+    [observations]
+  )
+
+  const plansTitle = useMemo(() => plans.map(plan => plan.plan_name), [plans])
 
   const formattedPlan = useMemo(() => {
     let preco = []
@@ -90,19 +183,17 @@ export function Telephony() {
     })
 
     plans.map(plan => {
-      preco.push(<td>{formatterCurrency.format(plan.plan_monthly_payment)}</td>)
+      preco.push(<td>{formatterCurrency.format(plan.price)}</td>)
 
-      ativacao.push(
-        <td>{formatterCurrency.format(plan.plan_installation_price)}</td>
-      )
+      ativacao.push(<td>{formatterCurrency.format(plan.activation)}</td>)
 
-      minutos.push(<td>{plan.plan_minutes}</td>)
+      minutos.push(<td>{plan.minutes}</td>)
 
-      ramais.push(<td>{plan.plan_branches}</td>)
+      ramais.push(<td>{plan.branches}</td>)
 
       fixo_local.push(
         <td>
-          {plan.plan_fix_local ? (
+          {plan.landline_local ? (
             <BsCheck size={20} color="var(--green)" />
           ) : (
             <BsX size={20} color="var(--danger)" />
@@ -111,7 +202,7 @@ export function Telephony() {
       )
       fixo_ddd.push(
         <td>
-          {plan.plan_fix_ddd ? (
+          {plan.landline_ddd ? (
             <BsCheck size={20} color="var(--green)" />
           ) : (
             <BsX size={20} color="var(--danger)" />
@@ -120,7 +211,7 @@ export function Telephony() {
       )
       movel_local.push(
         <td>
-          {plan.plan_mov_local ? (
+          {plan.mobile_local ? (
             <BsCheck size={20} color="var(--green)" />
           ) : (
             <BsX size={20} color="var(--danger)" />
@@ -129,7 +220,7 @@ export function Telephony() {
       )
       movel_ddd.push(
         <td>
-          {plan.plan_mov_ddd ? (
+          {plan.mobile_ddd ? (
             <BsCheck size={20} color="var(--green)" />
           ) : (
             <BsX size={20} color="var(--danger)" />
@@ -138,20 +229,21 @@ export function Telephony() {
       )
       internacionais.push(
         <td>
-          {plan.plan_international ? (
-            <BsCheck size={20} color="var(--green)" />
-          ) : (
-            <BsX size={20} color="var(--danger)" />
-          )}
+          <BsX size={20} color="var(--danger)" />
         </td>
       )
       actions.push(
         <td>
           <Actions>
-            <button onClick={() => handleSelectPlan(plan)}>Editar</button>
-            <button onClick={() => handleDeleteTelephonyPlan(plan)}>
-              Excluir
-            </button>
+            {permissions.includes('SAC.PLANOS.EDITAR') && (
+              <button onClick={() => handleSelectPlan(plan)}>Editar</button>
+            )}
+
+            {permissions.includes('SAC.PLANOS.DELETAR') && (
+              <button onClick={() => handleDeleteTelephonyPlan(plan)}>
+                Excluir
+              </button>
+            )}
           </Actions>
         </td>
       )
@@ -212,84 +304,49 @@ export function Telephony() {
           </td>
           {formattedPlan.internacionais}
         </tr>
-        <tr>
-          <td>Ações</td>
-          {formattedPlan.actions}
-        </tr>
+
+        {permissions.includes('SAC.PLANOS.EDITAR' || 'SAC.PLANOS.DELETAR') && (
+          <tr>
+            <td>Ações</td>
+            {formattedPlan.actions}
+          </tr>
+        )}
       </PriceTable>
-      <Wrapper onSubmit={handleSubmit}>
-        <Input
-          width="100%"
-          name="comments"
-          type="text"
-          placeholder="Inserir observações"
-        />
-        <Button type="submit">Inserir Observações</Button>
-        <Button
-          onClick={() => setDisplayModal('modalCreateTelephonyPlan')}
-          type="button"
-        >
-          Cadastrar Planos
-        </Button>
-      </Wrapper>
+
+      {permissions.includes('SAC.PLANOS.CRIAR') && (
+        <Wrapper ref={formRef} onSubmit={handleSubmit}>
+          <Input
+            width="100%"
+            name="observation"
+            type="text"
+            placeholder="Inserir observações"
+          />
+          <Button type="submit">Inserir Observações</Button>
+          <Button
+            onClick={() => setDisplayModal('modalCreateTelephonyPlan')}
+            type="button"
+          >
+            Cadastrar Planos
+          </Button>
+        </Wrapper>
+      )}
       <Comments>
         <strong>Observações: </strong>
-        <div>
-          <p>
-            Planos de telefonia PABX são planos que possuem RAMAIS + URA para o
-            cliente final.
-          </p>
-          <FiTrash size={20} />
-        </div>
-        <div>
-          <p>
-            Planos de telefonia PABX são planos que possuem RAMAIS + URA para o
-            cliente final.
-          </p>
-          <FiTrash size={20} />
-        </div>
-        <div>
-          <p>
-            Planos de telefonia PABX são planos que possuem RAMAIS + URA para o
-            cliente final.
-          </p>
-          <FiTrash size={20} />
-        </div>
-        <div>
-          <p>
-            Planos de telefonia PABX são planos que possuem RAMAIS + URA para o
-            cliente final.
-          </p>
-          <FiTrash size={20} />
-        </div>
-        <div>
-          <p>
-            Planos de telefonia PABX são planos que possuem RAMAIS + URA para o
-            cliente final.
-          </p>
-          <FiTrash size={20} />
-        </div>
-        <div>
-          <p>
-            Planos de telefonia PABX são planos que possuem RAMAIS + URA para o
-            cliente final.
-          </p>
-          <FiTrash size={20} />
-        </div>
-        <div>
-          <p>
-            Planos de telefonia PABX são planos que possuem RAMAIS + URA para o
-            cliente final.
-          </p>
-          <FiTrash size={20} />
-        </div>
-        <div>
-          <p>
-            Planos de telefonia PABX são planos que possuem RAMAIS + URA para o
-            cliente final.
-          </p>
-          <FiTrash size={20} />
-        </div>
+        {observations.map(obs => {
+          return (
+            <div key={obs.obs_id}>
+              <p>{obs.obs_content}</p>
+              {permissions.includes('SAC.PLANOS.DELETAR') && (
+                <button
+                  onClick={() => handleDeleteObservations(obs.obs_id)}
+                  type="button"
+                >
+                  <FiTrash size={20} />
+                </button>
+              )}
+            </div>
+          )
+        })}
       </Comments>
 
       <CreateTelephonyPlan

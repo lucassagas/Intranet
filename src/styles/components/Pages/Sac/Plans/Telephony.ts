@@ -21,6 +21,7 @@ export const Wrapper = styled(Form)`
 `
 
 export const Comments = styled.div`
+  margin-top: 1rem;
   > div {
     display: flex;
     align-items: center;
@@ -30,6 +31,11 @@ export const Comments = styled.div`
     padding: 0.5rem 0;
 
     border-bottom: 1px solid var(--orange);
+
+    > button {
+      border: 0;
+      background: none;
+    }
 
     & + div {
       margin-top: 1rem;

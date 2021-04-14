@@ -2,11 +2,11 @@ import { Button } from '../../Button'
 import { GlobalModal } from '../GlobalModal'
 import { useCallback } from 'react'
 import { UpdateTelephonyPlanProps } from './UpdateTelephonyPlan'
+import { api } from '../../../services/api'
 
 import { useModal } from '../../../hooks/modal'
 import { useLoading } from '../../../hooks/loading'
 import { useToast } from '../../../hooks/toast'
-import { apiDev } from '../../../services/apiDev'
 
 import { Container } from '../../../styles/components/Modal/TelephonyPlan/DeleteTelephonyPlan'
 
@@ -21,15 +21,15 @@ export function DeleteTelephonyPlan({
 
   const handleDeleteInternetPlan = useCallback(() => {
     setLoadingScreen(true)
-    apiDev
-      .delete(`telephony/${selectedPlan?.plan_id}`)
+    api
+      .delete(`api/plan/${selectedPlan?.plan_id}`)
       .then(() => {
         setDisplayModal('')
         handleLoadPlans()
         addToast({
           type: 'success',
           title: 'Sucesso!',
-          description: `Plano ${selectedPlan?.plan_title} deletado com sucesso!`
+          description: `Plano ${selectedPlan?.plan_name} deletado com sucesso!`
         })
       })
       .catch(err => {
@@ -48,7 +48,7 @@ export function DeleteTelephonyPlan({
         <div>
           <section>
             <strong>Plano </strong>
-            <p>{selectedPlan?.plan_title}</p>
+            <p>{selectedPlan?.plan_name}</p>
           </section>
 
           <p>Tem certeza de que quer excluir este plano ?</p>
