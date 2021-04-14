@@ -9,8 +9,9 @@ import { useToast } from '../../../hooks/toast'
 import { useLoading } from '../../../hooks/loading'
 import { FormHandles } from '@unform/core'
 import { getValidationErrors } from '../../../utils/getValidationErrors'
-import { apiDev } from '../../../services/apiDev'
+import { api } from '../../../services/api'
 import { CftvProps } from '../../Pages/Sac/Plans/Cftv'
+import { useAuth } from '../../../hooks/auth'
 
 import { Container } from '../../../styles/components/Modal/CftvPlans/UpdateCftvPlan'
 
@@ -30,6 +31,7 @@ export function UpdateCftvPlan({
   const { setDisplayModal } = useModal()
   const { setLoadingScreen } = useLoading()
   const { addToast } = useToast()
+  const { permissions } = useAuth()
 
   const handleSubmit = useCallback(
     async (data, { reset }) => {
@@ -40,22 +42,26 @@ export function UpdateCftvPlan({
         const schema = Yup.object().shape({
           price_with_fidelity: Yup.number().required('Campo obrigatório'),
           price_without_fidelity: Yup.number().required('Campo obrigatório'),
-          recording_days: Yup.number().required('Campo obrigatório')
+          name: Yup.number().required('Campo obrigatório')
         })
 
         await schema.validate(data, {
           abortEarly: false
         })
 
-        await apiDev.patch(`cftv/${selectedCftvPlan.id}`, data)
+        const formattedData = {
+          type: 'cftv',
+          ...data
+        }
 
+        await api.put(`api/plan/${selectedCftvPlan.plan_id}`, formattedData)
         reset()
         setDisplayModal('')
         loadCftvPlans()
         addToast({
           type: 'success',
           title: 'Sucesso!',
-          description: `Plano ${selectedCftvPlan.recording_days} editado com sucesso!`
+          description: `Plano ${selectedCftvPlan.plan_name} editado com sucesso!`
         })
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -83,7 +89,7 @@ export function UpdateCftvPlan({
         initialData={{
           price_with_fidelity: selectedCftvPlan?.price_with_fidelity,
           price_without_fidelity: selectedCftvPlan?.price_without_fidelity,
-          recording_days: selectedCftvPlan?.recording_days
+          name: selectedCftvPlan?.plan_name
         }}
         ref={formRef}
         onSubmit={handleSubmit}
@@ -99,15 +105,17 @@ export function UpdateCftvPlan({
             label="Valor sem Mensalidade"
             type="number"
           />
-          <Input name="recording_days" label="Dias de Gravação" type="number" />
+          <Input name="name" label="Dias de Gravação" type="number" />
         </div>
-        <Button
-          onClick={() => setDisplayModal('modalDeleteCftvPlan')}
-          className="deleteButton"
-          type="button"
-        >
-          Excluir
-        </Button>
+        {permissions.includes('SAC.PLANOS.DELETAR') && (
+          <Button
+            onClick={() => setDisplayModal('modalDeleteCftvPlan')}
+            className="deleteButton"
+            type="button"
+          >
+            Excluir
+          </Button>
+        )}
         <Button type="submit">Salvar Alterações</Button>
       </Container>
     </GlobalModal>

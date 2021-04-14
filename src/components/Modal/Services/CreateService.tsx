@@ -6,7 +6,7 @@ import { Button } from '../../Button'
 import { FormHandles } from '@unform/core'
 import { getValidationErrors } from '../../../utils/getValidationErrors'
 import { ServiceProps } from '../../Pages/Sac/Services/Service'
-import { apiDev } from '../../../services/apiDev'
+import { api } from '../../../services/api'
 
 import { useModal } from '../../../hooks/modal'
 import { useLoading } from '../../../hooks/loading'
@@ -37,26 +37,33 @@ export function CreateService({
         formRef.current.setErrors({})
 
         const schema = Yup.object().shape({
-          value: Yup.number().required('Campo obrigatório'),
+          price: Yup.number().required('Campo obrigatório'),
           deadline: Yup.number().required('Campo obrigatório'),
-          service: Yup.string().required('Campo obrigatório'),
-          type_of_payment: Yup.string().required('Campo obrigatório')
+          name: Yup.string().required('Campo obrigatório'),
+          form_payment: Yup.string().required('Campo obrigatório')
         })
 
         await schema.validate(data, {
           abortEarly: false
         })
 
-        const response = await apiDev.post('service', data)
+        const formattedData = {
+          type: 'service',
+          ...data
+        }
 
-        setServices([response.data, ...services])
+        const response = await api.post('api/service', formattedData)
+
+        console.log(response)
+
+        setServices([response.data.service, ...services])
 
         setDisplayModal('')
         reset()
         addToast({
           type: 'success',
           title: 'Sucesso!',
-          description: `Serviço ${data.service} cadastrado com sucesso!`
+          description: `Serviço ${data.name} cadastrado com sucesso!`
         })
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -84,7 +91,7 @@ export function CreateService({
       <Container ref={formRef} onSubmit={handleSubmit}>
         <div>
           <span>
-            <Input name="value" label="Valor" type="number" />
+            <Input name="price" label="Valor" type="number" />
           </span>
 
           <span>
@@ -92,13 +99,13 @@ export function CreateService({
           </span>
 
           <span>
-            <Input name="type_of_payment" label="Tipo de pagamento" />
+            <Input name="form_payment" label="Tipo de pagamento" />
           </span>
         </div>
 
         <div>
           <span style={{ width: '100%' }}>
-            <Input name="service" width="100%" label="Serviço" />
+            <Input name="name" width="100%" label="Serviço" />
           </span>
         </div>
         <Button type="submit">Cadastrar</Button>

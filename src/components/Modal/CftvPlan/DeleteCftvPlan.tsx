@@ -3,7 +3,7 @@ import { Button } from '../../Button'
 import { GlobalModal } from '../GlobalModal'
 
 import { UpdateCftvProps } from './UpdateCftvPlan'
-import { apiDev } from '../../../services/apiDev'
+import { api } from '../../../services/api'
 import { useLoading } from '../../../hooks/loading'
 import { useToast } from '../../../hooks/toast'
 import { useModal } from '../../../hooks/modal'
@@ -26,15 +26,15 @@ export function DeleteCftvPlan({
 
   const handleDeleteCftvPlan = useCallback(() => {
     setLoadingScreen(true)
-    apiDev
-      .delete(`cftv/${selectedCftvPlan.id}`)
-      .then(() => {
+    api
+      .delete(`api/plan/${selectedCftvPlan.plan_id}`)
+      .then(response => {
         loadCftvPlans()
         setDisplayModal('')
         addToast({
           type: 'success',
           title: 'Sucesso!',
-          description: `Plano ${selectedCftvPlan.recording_days} excluido com sucesso!`
+          description: `Plano ${selectedCftvPlan.plan_name} excluido com sucesso!`
         })
       })
       .catch(err => {
@@ -55,7 +55,7 @@ export function DeleteCftvPlan({
         <div>
           <section>
             <strong>Dias</strong>
-            <p>{selectedCftvPlan?.recording_days}</p>
+            <p>{selectedCftvPlan?.plan_name}</p>
           </section>
           <section>
             <strong>Valor com validade</strong>

@@ -7,7 +7,7 @@ import { useToast } from '../../../hooks/toast'
 import { useLoading } from '../../../hooks/loading'
 import { FormHandles } from '@unform/core'
 import { getValidationErrors } from '../../../utils/getValidationErrors'
-import { apiDev } from '../../../services/apiDev'
+import { api } from '../../../services/api'
 import { useCallback, useRef } from 'react'
 
 import { Container } from '../../../styles/components/Modal/CftvPlans/CreateCftvPlan'
@@ -32,14 +32,19 @@ export function CreateCftvPlan({ id, loadCftvPlans }: CreateCftvProps) {
       const schema = Yup.object().shape({
         price_with_fidelity: Yup.number().required('Campo obrigatório'),
         price_without_fidelity: Yup.number().required('Campo obrigatório'),
-        recording_days: Yup.number().required('Campo obrigatório')
+        name: Yup.number().required('Campo obrigatório')
       })
 
       await schema.validate(data, {
         abortEarly: false
       })
 
-      await apiDev.post('cftv', data)
+      const formattedData = {
+        type: 'cftv',
+        ...data
+      }
+
+      await api.post('api/plan', formattedData)
 
       reset()
       setDisplayModal('')
@@ -81,7 +86,7 @@ export function CreateCftvPlan({ id, loadCftvPlans }: CreateCftvProps) {
             label="Valor sem Mensalidade"
             type="number"
           />
-          <Input name="recording_days" label="Dias de Gravação" type="number" />
+          <Input name="name" label="Dias de Gravação" type="number" />
         </div>
         <Button type="submit">Cadastrar</Button>
       </Container>
