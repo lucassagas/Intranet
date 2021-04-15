@@ -31,6 +31,7 @@ export {
 export {
   AiOutlineLaptop,
   AiOutlineSearch,
+  AiOutlineDatabase,
   AiOutlineEye,
   AiOutlineQuestionCircle,
   AiOutlineWarning,
@@ -45,7 +46,8 @@ export {
   RiAdminLine,
   RiLogoutCircleLine,
   RiEyeCloseLine,
-  RiFirstAidKitLine
+  RiFirstAidKitLine,
+  RiDatabase2Line
 } from 'react-icons/ri'
 
 export { GrMoney } from 'react-icons/gr'

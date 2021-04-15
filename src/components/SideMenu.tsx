@@ -27,7 +27,9 @@ import {
   FiHeadphones,
   FaListUl,
   AiOutlineTag,
-  BiBuildings
+  BiBuildings,
+  AiOutlineLaptop,
+  AiOutlineDatabase
 } from '../styles/icons'
 
 export function SideMenu() {
@@ -155,6 +157,34 @@ export function SideMenu() {
                         </SubMenuOption>
                       </Link>
                     )}
+                  </SubMenu>
+                )}
+              </AnimatePresence>
+            </MenuOption>
+          </Li>
+
+          <Li isCategory={router.pathname.includes('/noc/')}>
+            <MenuOption
+              isActive={displaySubMenu === 'Noc'}
+              onClick={() => toggleMenu('Noc')}
+            >
+              <AiOutlineLaptop size={20} />
+              Noc
+              <IoIosArrowDown size={18} />
+              <AnimatePresence exitBeforeEnter>
+                {displaySubMenu === 'Noc' && (
+                  <SubMenu
+                    key="noc/backup"
+                    initial={{ y: -25, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <Link href="/noc/backup">
+                      <SubMenuOption>
+                        <AiOutlineDatabase size={20} />
+                        Backup
+                      </SubMenuOption>
+                    </Link>
                   </SubMenu>
                 )}
               </AnimatePresence>

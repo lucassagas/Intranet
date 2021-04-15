@@ -71,8 +71,6 @@ export function UpdateCondominium({
           cond => cond.cond_id !== selectedCondominium.cond_id
         )
 
-        console.log(response)
-
         // setCondominiums([response.data.condominium, ...remainingCondominiums])
 
         addToast({

@@ -227,8 +227,6 @@ export const getServerSideProps: GetServerSideProps = async ({
       }
     )
 
-    console.log(response.data)
-
     const condominiumProps = response.data.items
     const totalPagesProps = response.data.meta.totalPages
 

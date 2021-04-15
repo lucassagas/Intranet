@@ -46,9 +46,7 @@ export function CreateProduct({ id, handleLoadProducts }: CreateProductsProps) {
         ...data
       }
 
-      const response = await api.post('api/service', formattedData)
-
-      console.log(response)
+      await api.post('api/service', formattedData)
 
       handleLoadProducts()
       setDisplayModal('')
