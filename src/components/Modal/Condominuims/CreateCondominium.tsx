@@ -8,7 +8,7 @@ import { GlobalModal } from '../GlobalModal'
 import { FormHandles } from '@unform/core'
 import { getValidationErrors } from '../../../utils/getValidationErrors'
 import { CondominiumProps } from '../../../pages/sac/condominium'
-import { apiDev } from '../../../services/apiDev'
+import { api } from '../../../services/api'
 import { InputMask } from '../../InputMask'
 
 import { useLoading } from '../../../hooks/loading'
@@ -46,6 +46,10 @@ export function CreateCondominium({
 
   const formRef = useRef<FormHandles>(null)
 
+  function removeAccents(str) {
+    return str.normalize('NFD').replace(/[^a -zA -Zs]/g, '')
+  }
+
   const handleSubmit = useCallback(
     async (data, { reset }) => {
       setLoadingScreen(true)
@@ -57,27 +61,34 @@ export function CreateCondominium({
           cep: Yup.string().required('Campo obrigatório'),
           state: Yup.string().required('Campo obrigatório'),
           city: Yup.string().required('Campo obrigatório'),
-          neighborhood: Yup.string().required('Campo obrigatório'),
+          neigh: Yup.string().required('Campo obrigatório'),
           street: Yup.string().required('Campo obrigatório'),
           number: Yup.number().required('Campo obrigatório'),
-          condominium: Yup.string().required('Campo obrigatório'),
+          name: Yup.string().required('Campo obrigatório'),
           connection: Yup.string().required('Campo obrigatório'),
-          housing_type: Yup.string().required('Campo obrigatório'),
-          price: Yup.number().required('Campo obrigatório')
+          type: Yup.string().required('Campo obrigatório'),
+          price: Yup.string().required('Campo obrigatório')
         })
 
         await schema.validate(data, {
           abortEarly: false
         })
 
-        const response = await apiDev.post('condominium', data)
+        const newCity = removeAccents(data.city)
 
-        setCondominiums([response.data, ...condominiums])
+        const formattedData = {
+          ...data,
+          city: newCity
+        }
+
+        const response = await api.post('api/condominium', formattedData)
+
+        setCondominiums([response.data.condominium, ...condominiums])
 
         addToast({
           type: 'success',
           title: 'Sucesso!',
-          description: `Condomínio ${data.condominium} cadastrado com sucesso!`
+          description: `Condomínio ${data.name} cadastrado com sucesso!`
         })
 
         setDisplayModal('')
@@ -144,7 +155,7 @@ export function CreateCondominium({
         initialData={{
           city: cep?.localidade,
           street: cep?.logradouro,
-          neighborhood: cep?.bairro,
+          neigh: cep?.bairro,
           state: cep?.uf
         }}
         onSubmit={handleSubmit}
@@ -171,7 +182,7 @@ export function CreateCondominium({
 
         <Wrapper>
           <span>
-            <Input width="200px" name="neighborhood" label="Bairro" />
+            <Input width="200px" name="neigh" label="Bairro" />
           </span>
 
           <span style={{ width: '100%' }}>
@@ -185,7 +196,7 @@ export function CreateCondominium({
 
         <Wrapper>
           <span style={{ width: '100%' }}>
-            <Input name="condominium" label="Condomínio" />
+            <Input name="name" label="Condomínio" />
           </span>
 
           <span>
@@ -203,7 +214,7 @@ export function CreateCondominium({
           </span>
 
           <span>
-            <Input name="housing_type" width="120px" label="Tipo de Moradia" />
+            <Input name="type" width="120px" label="Tipo de Moradia" />
           </span>
 
           <span>
@@ -211,14 +222,14 @@ export function CreateCondominium({
               name="price"
               width="120px"
               label="Valor da Instalação"
-              type="number"
+              type="string"
             />
           </span>
         </Wrapper>
 
         <Wrapper>
           <span style={{ width: '100%' }}>
-            <Textarea name="observation" label="Observações" rows={5} />
+            <Textarea name="obs" label="Observações" rows={5} />
           </span>
         </Wrapper>
         <Button type="submit">Cadastrar</Button>

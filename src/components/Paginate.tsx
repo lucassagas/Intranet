@@ -45,7 +45,7 @@ export function Paginate({ totalPages, currentPage }: PaginateProps) {
       >
         <IoIosArrowBack size={20} />
       </PrevButton>
-      {totalPages > 1 && (
+      {totalPages >= 1 && (
         <>
           <PaginateButton
             onClick={() => handleChangePage(1)}
@@ -54,7 +54,7 @@ export function Paginate({ totalPages, currentPage }: PaginateProps) {
           >
             1
           </PaginateButton>
-          {totalPages > 2 && (
+          {totalPages >= 2 && (
             <>
               <PaginateButton
                 onClick={() =>
@@ -68,7 +68,7 @@ export function Paginate({ totalPages, currentPage }: PaginateProps) {
                 {Number(currentPage) > 2 ? Number(currentPage) - 1 : 2}
               </PaginateButton>
 
-              {totalPages > 3 && (
+              {totalPages >= 3 && (
                 <>
                   <PaginateButton
                     onClick={() =>

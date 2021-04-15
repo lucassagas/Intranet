@@ -2,7 +2,7 @@ import { GlobalModal } from '../GlobalModal'
 import { UpdateProductsProps } from './UpdateProduct'
 import { useCallback } from 'react'
 import { Button } from '../../Button'
-import { apiDev } from '../../../services/apiDev'
+import { api } from '../../../services/api'
 
 import { useLoading } from '../../../hooks/loading'
 import { useModal } from '../../../hooks/modal'
@@ -15,8 +15,7 @@ import {
 
 export function DeleteProduct({
   id,
-  products,
-  setProducts,
+  handleLoadProducts,
   selectedProduct
 }: UpdateProductsProps) {
   const { setLoadingScreen } = useLoading()
@@ -25,19 +24,15 @@ export function DeleteProduct({
 
   const handleDeleteProduct = useCallback(() => {
     setLoadingScreen(true)
-    apiDev
-      .delete(`product/${selectedProduct.id}`)
+    api
+      .delete(`api/service/${selectedProduct.serv_id}`)
       .then(() => {
-        const remainingProducts = products.filter(
-          product => product.id !== selectedProduct.id
-        )
-
-        setProducts(remainingProducts)
+        handleLoadProducts()
         setDisplayModal('')
         addToast({
           type: 'success',
           title: 'Sucesso!',
-          description: `Produto ${selectedProduct.product.toUpperCase()} deletado com sucesso!`
+          description: `Produto ${selectedProduct.serv_name.toUpperCase()} deletado com sucesso!`
         })
       })
       .catch(err => {
@@ -50,23 +45,15 @@ export function DeleteProduct({
       .finally(() => setLoadingScreen(false))
   }, [selectedProduct])
 
-  const CurrencyFormatter = new Intl.NumberFormat([], {
-    style: 'currency',
-    currency: 'BRL'
-  })
-
   return (
     <GlobalModal size={400} title="Deletar Produto" id={id}>
       <Container>
         <Wrapper>
           <span>
             <strong>Produto</strong>
-            <p>{selectedProduct?.product}</p>
+            <p>{selectedProduct?.serv_name}</p>
           </span>
-          <span>
-            <strong>Valor</strong>
-            <p>{CurrencyFormatter.format(selectedProduct?.value)}</p>
-          </span>
+
           <p>Tem certeza de que quer deletar este produto ?</p>
         </Wrapper>
         <Button onClick={handleDeleteProduct} type="button">

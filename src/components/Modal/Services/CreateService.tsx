@@ -16,75 +16,65 @@ import { Container } from '../../../styles/components/Modal/Services/CreateServi
 
 interface CreateServiceProps {
   id: string
-  services: ServiceProps[]
-  setServices: (services: ServiceProps[]) => void
+  handleLoadPlans: () => void
 }
 
-export function CreateService({
-  id,
-  services,
-  setServices
-}: CreateServiceProps) {
+export function CreateService({ id, handleLoadPlans }: CreateServiceProps) {
   const formRef = useRef<FormHandles>()
   const { setDisplayModal } = useModal()
   const { setLoadingScreen } = useLoading()
   const { addToast } = useToast()
 
-  const handleSubmit = useCallback(
-    async (data, { reset }) => {
-      setLoadingScreen(true)
-      try {
-        formRef.current.setErrors({})
+  const handleSubmit = useCallback(async (data, { reset }) => {
+    setLoadingScreen(true)
+    try {
+      formRef.current.setErrors({})
 
-        const schema = Yup.object().shape({
-          price: Yup.number().required('Campo obrigatório'),
-          deadline: Yup.number().required('Campo obrigatório'),
-          name: Yup.string().required('Campo obrigatório'),
-          form_payment: Yup.string().required('Campo obrigatório')
-        })
+      const schema = Yup.object().shape({
+        price: Yup.number().required('Campo obrigatório'),
+        deadline: Yup.number().required('Campo obrigatório'),
+        name: Yup.string().required('Campo obrigatório'),
+        form_payment: Yup.string().required('Campo obrigatório')
+      })
 
-        await schema.validate(data, {
-          abortEarly: false
-        })
+      await schema.validate(data, {
+        abortEarly: false
+      })
 
-        const formattedData = {
-          type: 'service',
-          ...data
-        }
-
-        const response = await api.post('api/service', formattedData)
-
-        console.log(response)
-
-        setServices([response.data.service, ...services])
-
-        setDisplayModal('')
-        reset()
-        addToast({
-          type: 'success',
-          title: 'Sucesso!',
-          description: `Serviço ${data.name} cadastrado com sucesso!`
-        })
-      } catch (err) {
-        if (err instanceof Yup.ValidationError) {
-          const errors = getValidationErrors(err)
-
-          formRef.current.setErrors(errors)
-
-          return
-        }
-
-        addToast({
-          type: 'error',
-          title: 'Error',
-          description: err.response ? err.response.data.message : err.message
-        })
-      } finally {
-        setLoadingScreen(false)
+      const formattedData = {
+        type: 'service',
+        ...data
       }
-    },
-    [services]
-  )
+
+      await api.post('api/service', formattedData)
+
+      handleLoadPlans()
+
+      setDisplayModal('')
+      reset()
+      addToast({
+        type: 'success',
+        title: 'Sucesso!',
+        description: `Serviço ${data.name} cadastrado com sucesso!`
+      })
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(err)
+
+        formRef.current.setErrors(errors)
+
+        return
+      }
+
+      addToast({
+        type: 'error',
+        title: 'Error',
+        description: err.response ? err.response.data.message : err.message
+      })
+    } finally {
+      setLoadingScreen(false)
+    }
+  }, [])
 
   return (
     <GlobalModal id={id} size={600} title="Cadastrar Serviço">

@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { Button } from '../../Button'
 import { GlobalModal } from '../GlobalModal'
 import { UpdateCondominiumProps } from './UpdateCondominium'
-import { apiDev } from '../../../services/apiDev'
+import { api } from '../../../services/api'
 
 import { useToast } from '../../../hooks/toast'
 import { useModal } from '../../../hooks/modal'
@@ -23,10 +23,10 @@ export function DeleteCondominium({
   const handleDeleteCondominium = useCallback(async () => {
     setLoadingScreen(true)
     try {
-      await apiDev.delete(`condominium/${selectedCondominium.id}`)
+      await api.delete(`api/condominium/${selectedCondominium.cond_id}`)
 
       const remainingCondominiums = condominiums.filter(
-        cond => cond.id !== selectedCondominium.id
+        cond => cond.cond_id !== selectedCondominium.cond_id
       )
       setCondominiums(remainingCondominiums)
       setDisplayModal('')
@@ -34,7 +34,7 @@ export function DeleteCondominium({
       addToast({
         type: 'success',
         title: 'Sucesso!',
-        description: `Condomínio ${selectedCondominium?.condominium} excluido com sucesso!`
+        description: `Condomínio ${selectedCondominium?.cond_name} excluido com sucesso!`
       })
     } catch (err) {
       addToast({
@@ -53,22 +53,22 @@ export function DeleteCondominium({
         <div>
           <span>
             <strong>Condominio: </strong>
-            <p>{selectedCondominium?.condominium}</p>
+            <p>{selectedCondominium?.cond_name}</p>
           </span>
 
           <span>
             <strong>Cidade: </strong>
-            <p>{selectedCondominium?.city}</p>
+            <p>{selectedCondominium?.city_name}</p>
           </span>
 
           <span>
             <strong>Bairro: </strong>
-            <p>{selectedCondominium?.neighborhood}</p>
+            <p>{selectedCondominium?.cond_neigh}</p>
           </span>
 
           <span>
             <strong>Rua: </strong>
-            <p>{selectedCondominium?.street}</p>
+            <p>{selectedCondominium?.cond_street}</p>
           </span>
 
           <p>Tem certeza de que quer excluir este condomínio ?</p>

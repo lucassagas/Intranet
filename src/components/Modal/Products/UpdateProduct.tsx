@@ -1,36 +1,36 @@
 import * as Yup from 'yup'
-import { useCallback, useRef } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { Input } from '../../Input'
 import { GlobalModal } from '../GlobalModal'
 import { Button } from '../../Button'
 import { FormHandles } from '@unform/core'
 import { getValidationErrors } from '../../../utils/getValidationErrors'
 import { ProductsProps } from '../../Pages/Sac/Services/Product'
-import { apiDev } from '../../../services/apiDev'
+import { api } from '../../../services/api'
 
 import { useModal } from '../../../hooks/modal'
 import { useLoading } from '../../../hooks/loading'
 import { useToast } from '../../../hooks/toast'
+import { useAuth } from '../../../hooks/auth'
 
 import { Container } from '../../../styles/components/Modal/Products/UpdateProduct'
 
 export interface UpdateProductsProps {
   id: string
-  products: ProductsProps[]
-  setProducts: (products: ProductsProps[]) => void
+  handleLoadProducts: () => void
   selectedProduct: ProductsProps
 }
 
 export function UpdateeProduct({
   id,
-  products,
-  setProducts,
-  selectedProduct
+  selectedProduct,
+  handleLoadProducts
 }: UpdateProductsProps) {
   const formRef = useRef<FormHandles>()
   const { setDisplayModal } = useModal()
   const { setLoadingScreen } = useLoading()
   const { addToast } = useToast()
+  const { permissions } = useAuth()
 
   const handleSubmit = useCallback(
     async (data, { reset }) => {
@@ -39,31 +39,32 @@ export function UpdateeProduct({
         formRef.current.setErrors({})
 
         const schema = Yup.object().shape({
-          value: Yup.number().required('Campo obrigatório'),
-          deadline: Yup.number().required('Campo obrigatório'),
+          price: Yup.number().required('Campo obrigatório'),
+          deadline: Yup.string().required('Campo obrigatório'),
           lending: Yup.string().required('Campo obrigatório'),
-          product: Yup.string().required('Campo obrigatório'),
-          type_of_payment: Yup.string().required('Campo obrigatório')
+          name: Yup.string().required('Campo obrigatório'),
+          form_payment: Yup.string().required('Campo obrigatório')
         })
 
         await schema.validate(data, {
           abortEarly: false
         })
 
-        const response = await apiDev.put(`product/${selectedProduct.id}`, data)
+        const formattedData = {
+          type: 'product',
+          ...data
+        }
 
-        const remainingProducts = products.filter(
-          product => product.id !== selectedProduct.id
-        )
+        await api.put(`api/service/${selectedProduct.serv_id}`, formattedData)
 
-        setProducts([response.data, ...remainingProducts])
+        handleLoadProducts()
 
         setDisplayModal('')
         reset()
         addToast({
           type: 'success',
           title: 'Sucesso!',
-          description: `Produto ${data.product} editado com sucesso!`
+          description: `Produto ${data.name} editado com sucesso!`
         })
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -83,52 +84,91 @@ export function UpdateeProduct({
         setLoadingScreen(false)
       }
     },
-    [products, selectedProduct]
+    [selectedProduct]
   )
+
+  const products = useMemo(() => {
+    const price = selectedProduct?.products.find(
+      product => product.prod_name === 'PRICE'
+    )
+
+    const deadline = selectedProduct?.products.find(
+      product => product.prod_name === 'DEADLINE'
+    )
+
+    const form_payment = selectedProduct?.products.find(
+      product => product.prod_name === 'FORM_PAYMENT'
+    )
+
+    const lending = selectedProduct?.products.find(
+      product => product.prod_name === 'LENDING'
+    )
+
+    return {
+      price,
+      deadline,
+      form_payment,
+      lending
+    }
+  }, [selectedProduct])
 
   return (
     <GlobalModal id={id} size={600} title="Editar Produto">
       <Container
         initialData={{
-          value: selectedProduct?.value,
-          deadline: selectedProduct?.deadline,
-          lending: selectedProduct?.lending,
-          product: selectedProduct?.product,
-          type_of_payment: selectedProduct?.type_of_payment
+          price: products?.price?.product_value_string,
+          deadline: products?.deadline?.product_value_string,
+          lending: products?.lending?.product_value_string,
+          name: selectedProduct?.serv_name,
+          form_payment: products?.form_payment?.product_value_string
         }}
         ref={formRef}
         onSubmit={handleSubmit}
       >
         <div>
           <span>
-            <Input name="value" label="Valor" type="number" />
+            <Input name="price" label="Valor" type="number" />
           </span>
 
           <span>
-            <Input name="deadline" label="Prazo de Pagamento" type="number" />
+            <Input name="deadline" label="Prazo de Pagamento" type="text" />
           </span>
 
           <span>
-            <Input name="lending" label="Comotado" />
+            <Input name="lending" label="Comotado" list="lending" />
+
+            <datalist id="lending">
+              <option value="SIM">SIM</option>
+              <option value="NÃO">NÃO</option>
+            </datalist>
           </span>
         </div>
 
         <div>
           <span style={{ width: '100%' }}>
-            <Input name="product" width="100%" label="Produto" />
+            <Input name="name" width="100%" label="Produto" />
           </span>
 
           <span>
-            <Input name="type_of_payment" label="Tipo de pagamento" />
+            <Input
+              name="form_payment"
+              label="Tipo de pagamento"
+              list="form_payment"
+            />
+            <datalist id="form_payment">
+              <option value="BOLETO">BOLETO</option>
+            </datalist>
           </span>
         </div>
-        <Button
-          onClick={() => setDisplayModal('modalDeleteProduct')}
-          className="deleteButton"
-          type="button"
-        >
-          Excluir
-        </Button>
+        {permissions.includes('SAC.SERVICOS.DELETAR') && (
+          <Button
+            onClick={() => setDisplayModal('modalDeleteProduct')}
+            className="deleteButton"
+            type="button"
+          >
+            Excluir
+          </Button>
+        )}
 
         <Button type="submit">Salvar Alterações</Button>
       </Container>

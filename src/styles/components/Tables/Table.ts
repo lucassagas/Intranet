@@ -17,9 +17,12 @@ export const StyledTable = styled.table<TableProps>`
 
   th {
     text-align: left;
-    padding-bottom: 10px;
+
     position: sticky;
-    top: 0;
+    top: -20px;
+    height: 40px;
+
+    padding: 0 1rem 0 0;
     background: var(--darkgray);
     &:first-child {
       padding-left: 5px;
@@ -28,7 +31,7 @@ export const StyledTable = styled.table<TableProps>`
 
   td {
     text-transform: uppercase;
-    padding: 10px 0;
+    padding: 0.8rem 1rem 0.8rem 0;
 
     &:first-child {
       border-radius: 6px 0 0 6px;

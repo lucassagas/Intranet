@@ -1,13 +1,13 @@
 import Head from 'next/head'
 import withAuth from '../../utils/withAuth'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
 import { Header } from '../../components/Header'
 import { Form } from '@unform/web'
 import { Input } from '../../components/Input'
 import { Button } from '../../components/Button'
-import { apiDev } from '../../services/apiDev'
+import { api } from '../../services/api'
 import { Table } from '../../components/Tables/Table'
 import { Paginate } from '../../components/Paginate'
 
@@ -16,6 +16,7 @@ import { UpdateCondominium } from '../../components/Modal/Condominuims/UpdateCon
 import { DeleteCondominium } from '../../components/Modal/Condominuims/DeleteCondominium'
 
 import { useModal } from '../../hooks/modal'
+import { useAuth } from '../../hooks/auth'
 
 import { AiOutlineSearch } from '../../styles/icons'
 import {
@@ -25,38 +26,49 @@ import {
   WrapperFilter,
   ButtonFilter
 } from '../../styles/pages/sac/condominium'
+import { useToast } from '../../hooks/toast'
 
 export interface CondominiumProps {
-  id: number
-  cep: number
-  city: string
-  street: string
-  number: number
-  neighborhood: string
-  state: string
-  condominium: string
-  connection: string
-  housing_type: string
-  price: number
-  observation: string
+  cond_id: number
+  cond_name: string
+  cond_type: string
+  cond_connection: string
+  cond_neigh: string
+  cond_street: string
+  cond_number: number
+  cond_price: string
+  city_name: string
+  cond_obs: string
 }
 
 interface CondominuimServerSideProps {
   condominiumProps: CondominiumProps[]
   page: number
+  totalPagesProps: number
 }
 
-function Condominium({ condominiumProps, page }: CondominuimServerSideProps) {
+function Condominium({
+  condominiumProps,
+  page,
+  totalPagesProps
+}: CondominuimServerSideProps) {
   const [isActiveFilter, setIsActiveFilter] = useState('name')
+  const [totalPages, setTotalPages] = useState<number>(totalPagesProps)
+  const [condominiums, setCondominiums] = useState<CondominiumProps[]>(
+    condominiumProps
+  )
   const [
     selectedCondominium,
     setSelectedCondominium
   ] = useState<CondominiumProps>()
-  const [condominiums, setCondominiums] = useState<CondominiumProps[]>(
-    condominiumProps
-  )
 
   const { setDisplayModal } = useModal()
+  const { permissions } = useAuth()
+  const { addToast } = useToast()
+
+  useEffect(() => {
+    setCondominiums(condominiumProps)
+  }, [page])
 
   const handleSelectCondominium = useCallback(
     (condominium: CondominiumProps) => {
@@ -66,7 +78,31 @@ function Condominium({ condominiumProps, page }: CondominuimServerSideProps) {
     []
   )
 
-  const handleSearch = useCallback(data => {}, [])
+  function removeAccents(str) {
+    return str.normalize('NFD').replace(/[^a -zA -Zs]/g, '')
+  }
+
+  const handleSearch = useCallback(
+    async data => {
+      try {
+        const response = await api.get(
+          `api/condominium/search?${isActiveFilter}=${
+            isActiveFilter === 'city' ? removeAccents(data.filter) : data.filter
+          }&limit=20`
+        )
+
+        setCondominiums(response.data.items)
+        setTotalPages(response.data.meta.totalPages)
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Error',
+          description: err.response ? err.response.data.message : err.message
+        })
+      }
+    },
+    [isActiveFilter]
+  )
 
   return (
     <Container>
@@ -74,7 +110,7 @@ function Condominium({ condominiumProps, page }: CondominuimServerSideProps) {
         <title>Intranet | Sac | Condomínios</title>
       </Head>
       <Header category="Sac" route="Condomínios">
-        <Paginate totalPages={300} currentPage={page} />
+        <Paginate totalPages={totalPages} currentPage={page} />
       </Header>
       <Content>
         <Scroll>
@@ -84,13 +120,16 @@ function Condominium({ condominiumProps, page }: CondominuimServerSideProps) {
           >
             {condominiums?.map(cond => {
               return (
-                <tr onClick={() => handleSelectCondominium(cond)} key={cond.id}>
-                  <td>{cond.condominium}</td>
-                  <td>{cond.housing_type}</td>
-                  <td>{cond.street}</td>
-                  <td>{cond.number}</td>
-                  <td>{cond.neighborhood}</td>
-                  <td>{cond.condominium}</td>
+                <tr
+                  onClick={() => handleSelectCondominium(cond)}
+                  key={cond.cond_id}
+                >
+                  <td>{cond.cond_name}</td>
+                  <td>{cond.cond_type}</td>
+                  <td>{cond.cond_street}</td>
+                  <td>{cond.cond_number}</td>
+                  <td>{cond.cond_neigh}</td>
+                  <td>{cond.city_name}</td>
                 </tr>
               )
             })}
@@ -99,7 +138,9 @@ function Condominium({ condominiumProps, page }: CondominuimServerSideProps) {
           <WrapperFilter>
             <Form onSubmit={handleSearch}>
               <Input name="filter" placeholder="Buscar" />
-              <AiOutlineSearch size={20} />
+              <button type="submit">
+                <AiOutlineSearch size={20} />
+              </button>
             </Form>
 
             <ButtonFilter
@@ -110,8 +151,8 @@ function Condominium({ condominiumProps, page }: CondominuimServerSideProps) {
               <span>Condominios</span>
             </ButtonFilter>
             <ButtonFilter
-              onClick={() => setIsActiveFilter('neighborhood')}
-              isActive={isActiveFilter === 'neighborhood'}
+              onClick={() => setIsActiveFilter('neigh')}
+              isActive={isActiveFilter === 'neigh'}
             >
               <div />
               <span>Bairro</span>
@@ -132,17 +173,21 @@ function Condominium({ condominiumProps, page }: CondominuimServerSideProps) {
               <span>Cidade</span>
             </ButtonFilter>
 
-            <Button onClick={() => setDisplayModal('modalCreateCondominuim')}>
-              Cadastar
-            </Button>
+            {permissions.includes('SAC.CONDOMINIOS.CRIAR') && (
+              <Button onClick={() => setDisplayModal('modalCreateCondominuim')}>
+                Cadastar
+              </Button>
+            )}
           </WrapperFilter>
         </Scroll>
 
-        <CreateCondominium
-          condominiums={condominiums}
-          setCondominiums={setCondominiums}
-          id="modalCreateCondominuim"
-        />
+        {permissions.includes('SAC.CONDOMINIOS.CRIAR') && (
+          <CreateCondominium
+            condominiums={condominiums}
+            setCondominiums={setCondominiums}
+            id="modalCreateCondominuim"
+          />
+        )}
 
         <UpdateCondominium
           condominiums={condominiums}
@@ -151,12 +196,14 @@ function Condominium({ condominiumProps, page }: CondominuimServerSideProps) {
           selectedCondominium={selectedCondominium}
         />
 
-        <DeleteCondominium
-          condominiums={condominiums}
-          setCondominiums={setCondominiums}
-          id="modalDeleteCondominium"
-          selectedCondominium={selectedCondominium}
-        />
+        {permissions.includes('SAC.CONDOMINIOS.DELETAR') && (
+          <DeleteCondominium
+            condominiums={condominiums}
+            setCondominiums={setCondominiums}
+            id="modalDeleteCondominium"
+            selectedCondominium={selectedCondominium}
+          />
+        )}
       </Content>
     </Container>
   )
@@ -164,14 +211,36 @@ function Condominium({ condominiumProps, page }: CondominuimServerSideProps) {
 
 export default withAuth(Condominium)
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const response = await apiDev.get('condominium')
+export const getServerSideProps: GetServerSideProps = async ({
+  query,
+  req
+}) => {
+  try {
+    const page = query?.page ? query.page : 1
 
-  const condominiumProps = response.data
+    const response = await api.get(
+      `api/condominium/paginate?page=${page}&limit=20`,
+      {
+        headers: {
+          tokenaccess: req.cookies['intranet-token']
+        }
+      }
+    )
 
-  const page = query?.page ? query.page : 1
+    console.log(response.data)
 
-  return {
-    props: { condominiumProps, page }
+    const condominiumProps = response.data.items
+    const totalPagesProps = response.data.meta.totalPages
+
+    return {
+      props: { condominiumProps, page, totalPagesProps }
+    }
+  } catch (err) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false
+      }
+    }
   }
 }

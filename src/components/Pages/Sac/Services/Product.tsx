@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
-import { apiDev } from '../../../../services/apiDev'
+import { api } from '../../../../services/api'
 import { Button } from '../../../Button'
 import { PriceTable } from '../../../Tables/PriceTable'
 
 import { useToast } from '../../../../hooks/toast'
 import { useModal } from '../../../../hooks/modal'
+import { useAuth } from '../../../../hooks/auth'
+import { useRouter } from 'next/router'
 
 import { CreateProduct } from '../../../Modal/Products/CreateProduct'
 import { UpdateeProduct } from '../../../Modal/Products/UpdateProduct'
@@ -16,12 +18,14 @@ import {
 } from '../../../../styles/components/Pages/Sac/Services/Product'
 
 export interface ProductsProps {
-  id: number
-  value: number
-  deadline: number
-  lending: string
-  product: string
-  type_of_payment: string
+  serv_id: number
+  serv_name: string
+  products: Array<{
+    prod_id: number
+    prod_name: string
+    product_value_string: string
+    product_value_boolean: boolean
+  }>
 }
 
 export function Products() {
@@ -30,12 +34,15 @@ export function Products() {
 
   const { addToast } = useToast()
   const { setDisplayModal } = useModal()
+  const { permissions } = useAuth()
+  const router = useRouter()
 
-  useEffect(() => {
-    apiDev
-      .get('product')
+  const handleLoadProducts = useCallback(() => {
+    api
+      .get('api/service?type=product')
       .then(response => {
         setProducts(response.data)
+        console.log(response.data)
       })
       .catch(err => {
         addToast({
@@ -46,9 +53,18 @@ export function Products() {
       })
   }, [])
 
+  useEffect(() => {
+    if (!permissions.includes('SAC.SERVICOS.VISUALIZAR')) {
+      router.push('/')
+    }
+    handleLoadProducts()
+  }, [])
+
   const handleSelectProduct = useCallback((product: ProductsProps) => {
-    setSelectedProduct(product)
-    setDisplayModal('modalUpdateProduct')
+    if (permissions.includes('SAC.SERVICOS.EDITAR')) {
+      setSelectedProduct(product)
+      setDisplayModal('modalUpdateProduct')
+    }
   }, [])
 
   const CurrencyFormatter = new Intl.NumberFormat([], {
@@ -66,48 +82,70 @@ export function Products() {
           'Prazo de Pagamento',
           'Comodato'
         ]}
-        isEditable
+        isEditable={permissions.includes('SAC.SERVICOS.EDITAR')}
       >
-        {products.map(product => {
+        {products?.map(product => {
+          const price = product.products.find(
+            product => product.prod_name === 'PRICE'
+          )
+          const deadline = product.products.find(
+            product => product.prod_name === 'DEADLINE'
+          )
+          const form_payment = product.products.find(
+            product => product.prod_name === 'FORM_PAYMENT'
+          )
+          const lending = product.products.find(
+            product => product.prod_name === 'LENDING'
+          )
           return (
-            <tr onClick={() => handleSelectProduct(product)} key={product.id}>
-              <td>{product.product.toUpperCase()}</td>
-              <td>{CurrencyFormatter.format(product.value)}</td>
-              <td>{product.type_of_payment.toLowerCase()}</td>
-              <td>{product.deadline} Dias</td>
-              <td>{product.lending.toLowerCase()}</td>
+            <tr
+              onClick={() => handleSelectProduct(product)}
+              key={product.serv_id}
+            >
+              <td>{product.serv_name.toUpperCase()}</td>
+              <td>
+                {CurrencyFormatter.format(Number(price.product_value_string))}
+              </td>
+              <td>{form_payment.product_value_string?.toLowerCase()}</td>
+              <td>{deadline.product_value_string}</td>
+              <td>{lending.product_value_string?.toLowerCase()}</td>
             </tr>
           )
         })}
       </PriceTable>
-      <Wrapper>
-        <Button
-          onClick={() => setDisplayModal('modalCreateProduct')}
-          type="button"
-        >
-          Cadastrar Produtos
-        </Button>
-      </Wrapper>
+      {permissions.includes('SAC.SERVICOS.CRIAR') && (
+        <Wrapper>
+          <Button
+            onClick={() => setDisplayModal('modalCreateProduct')}
+            type="button"
+          >
+            Cadastrar Produtos
+          </Button>
+        </Wrapper>
+      )}
 
-      <CreateProduct
-        id="modalCreateProduct"
-        products={products}
-        setProducts={setProducts}
-      />
+      {permissions.includes('SAC.SERVICOS.CRIAR') && (
+        <CreateProduct
+          id="modalCreateProduct"
+          handleLoadProducts={handleLoadProducts}
+        />
+      )}
 
-      <UpdateeProduct
-        id="modalUpdateProduct"
-        products={products}
-        setProducts={setProducts}
-        selectedProduct={selectedProduct}
-      />
+      {permissions.includes('SAC.SERVICOS.EDITAR') && (
+        <UpdateeProduct
+          id="modalUpdateProduct"
+          handleLoadProducts={handleLoadProducts}
+          selectedProduct={selectedProduct}
+        />
+      )}
 
-      <DeleteProduct
-        id="modalDeleteProduct"
-        products={products}
-        setProducts={setProducts}
-        selectedProduct={selectedProduct}
-      />
+      {permissions.includes('SAC.SERVICOS.DELETAR') && (
+        <DeleteProduct
+          id="modalDeleteProduct"
+          selectedProduct={selectedProduct}
+          handleLoadProducts={handleLoadProducts}
+        />
+      )}
     </Container>
   )
 }

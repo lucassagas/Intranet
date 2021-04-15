@@ -1,36 +1,36 @@
 import * as Yup from 'yup'
-import { useCallback, useRef } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { Input } from '../../Input'
 import { GlobalModal } from '../GlobalModal'
 import { Button } from '../../Button'
 import { FormHandles } from '@unform/core'
 import { getValidationErrors } from '../../../utils/getValidationErrors'
 import { ServiceProps } from '../../Pages/Sac/Services/Service'
-import { apiDev } from '../../../services/apiDev'
+import { api } from '../../../services/api'
 
 import { useModal } from '../../../hooks/modal'
 import { useLoading } from '../../../hooks/loading'
 import { useToast } from '../../../hooks/toast'
+import { useAuth } from '../../../hooks/auth'
 
 import { Container } from '../../../styles/components/Modal/Services/UpdateService'
 
 export interface UpdateServicesProps {
   id: string
-  services: ServiceProps[]
-  setServices: (services: ServiceProps[]) => void
+  handleLoadPlans: () => void
   selectedService: ServiceProps
 }
 
 export function UpdateService({
   id,
-  services,
-  setServices,
+  handleLoadPlans,
   selectedService
 }: UpdateServicesProps) {
   const formRef = useRef<FormHandles>()
   const { setDisplayModal } = useModal()
   const { setLoadingScreen } = useLoading()
   const { addToast } = useToast()
+  const { permissions } = useAuth()
 
   const handleSubmit = useCallback(
     async (data, { reset }) => {
@@ -39,30 +39,30 @@ export function UpdateService({
         formRef.current.setErrors({})
 
         const schema = Yup.object().shape({
-          value: Yup.number().required('Campo obrigatório'),
+          price: Yup.number().required('Campo obrigatório'),
           deadline: Yup.number().required('Campo obrigatório'),
-          service: Yup.string().required('Campo obrigatório'),
-          type_of_payment: Yup.string().required('Campo obrigatório')
+          name: Yup.string().required('Campo obrigatório'),
+          form_payment: Yup.string().required('Campo obrigatório')
         })
 
         await schema.validate(data, {
           abortEarly: false
         })
 
-        const response = await apiDev.put(`service/${selectedService.id}`, data)
+        const formattedData = {
+          type: 'service',
+          ...data
+        }
 
-        const remainingServices = services.filter(
-          service => service.id !== selectedService.id
-        )
+        await api.put(`api/service/${selectedService.serv_id}`, formattedData)
 
-        setServices([response.data, ...remainingServices])
-
+        handleLoadPlans()
         setDisplayModal('')
         reset()
         addToast({
           type: 'success',
           title: 'Sucesso!',
-          description: `Serviço ${data.service} editado com sucesso!`
+          description: `Serviço ${data.name} editado com sucesso!`
         })
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -82,24 +82,42 @@ export function UpdateService({
         setLoadingScreen(false)
       }
     },
-    [services, selectedService]
+    [selectedService]
   )
+
+  const products = useMemo(() => {
+    const price = selectedService?.products.find(
+      service => service.prod_name === 'PRICE'
+    )
+    const deadline = selectedService?.products.find(
+      service => service.prod_name === 'DEADLINE'
+    )
+    const form_payment = selectedService?.products.find(
+      service => service.prod_name === 'FORM_PAYMENT'
+    )
+
+    return {
+      price,
+      deadline,
+      form_payment
+    }
+  }, [selectedService])
 
   return (
     <GlobalModal id={id} size={600} title="Editar Serviço">
       <Container
         initialData={{
-          value: selectedService?.value,
-          deadline: selectedService?.deadline,
-          service: selectedService?.service,
-          type_of_payment: selectedService?.type_of_payment
+          price: products?.price?.product_value_string,
+          deadline: products?.deadline?.product_value_string,
+          name: selectedService?.serv_name,
+          form_payment: products?.form_payment?.product_value_string
         }}
         ref={formRef}
         onSubmit={handleSubmit}
       >
         <div>
           <span>
-            <Input name="value" label="Valor" type="number" />
+            <Input name="price" label="Valor" type="number" />
           </span>
 
           <span>
@@ -107,22 +125,25 @@ export function UpdateService({
           </span>
 
           <span>
-            <Input name="type_of_payment" label="Tipo de pagamento" />
+            <Input name="form_payment" label="Tipo de pagamento" />
           </span>
         </div>
 
         <div>
           <span style={{ width: '100%' }}>
-            <Input name="service" width="100%" label="Serviço" />
+            <Input name="name" width="100%" label="Serviço" />
           </span>
         </div>
-        <Button
-          onClick={() => setDisplayModal('modalDeleteService')}
-          className="deleteButton"
-          type="button"
-        >
-          Excluir
-        </Button>
+
+        {permissions.includes('SAC.SERVICOS.DELETAR') && (
+          <Button
+            onClick={() => setDisplayModal('modalDeleteService')}
+            className="deleteButton"
+            type="button"
+          >
+            Excluir
+          </Button>
+        )}
 
         <Button type="submit">Salvar Alterações</Button>
       </Container>

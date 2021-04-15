@@ -19,7 +19,7 @@ export const Content = styled.div`
 `
 
 export const Scroll = styled.div`
-  max-height: 100%;
+  max-height: calc(100% - 60px);
   overflow: auto;
   background: var(--darkgray);
   padding: 1rem;
@@ -68,12 +68,18 @@ export const WrapperFilter = styled.div`
       flex: 1;
     }
 
-    > svg {
+    > button {
       position: absolute;
 
       right: 7px;
       top: 5px;
-      background: var(--darkgray);
+
+      border: 0;
+      background: none;
+
+      > svg {
+        background: var(--darkgray);
+      }
     }
   }
 `

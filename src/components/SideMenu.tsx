@@ -129,12 +129,14 @@ export function SideMenu() {
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ opacity: 0 }}
                   >
-                    <Link href="/sac/condominium">
-                      <SubMenuOption>
-                        <BiBuildings size={20} />
-                        Condominios
-                      </SubMenuOption>
-                    </Link>
+                    {permissions.includes('SAC.CONDOMINIOS.VISUALIZAR') && (
+                      <Link href="/sac/condominium">
+                        <SubMenuOption>
+                          <BiBuildings size={20} />
+                          Condominios
+                        </SubMenuOption>
+                      </Link>
+                    )}
 
                     {permissions.includes('SAC.PLANOS.VISUALIZAR') && (
                       <Link href="/sac/plans">
@@ -145,12 +147,14 @@ export function SideMenu() {
                       </Link>
                     )}
 
-                    <Link href="/sac/services">
-                      <SubMenuOption>
-                        <AiOutlineTag size={20} />
-                        Serviços
-                      </SubMenuOption>
-                    </Link>
+                    {permissions.includes('SAC.SERVICOS.VISUALIZAR') && (
+                      <Link href="/sac/services">
+                        <SubMenuOption>
+                          <AiOutlineTag size={20} />
+                          Serviços
+                        </SubMenuOption>
+                      </Link>
+                    )}
                   </SubMenu>
                 )}
               </AnimatePresence>

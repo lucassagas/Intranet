@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { apiDev } from '../../../../services/apiDev'
+import { api } from '../../../../services/api'
 import { Button } from '../../../Button'
 import { PriceTable } from '../../../Tables/PriceTable'
 
 import { useToast } from '../../../../hooks/toast'
 import { useModal } from '../../../../hooks/modal'
+import { useAuth } from '../../../../hooks/auth'
+import { useRouter } from 'next/router'
 
 import { CreateService } from '../../../Modal/Services/CreateService'
 import { UpdateService } from '../../../Modal/Services/UpdateService'
@@ -16,11 +18,14 @@ import {
 } from '../../../../styles/components/Pages/Sac/Services/Service'
 
 export interface ServiceProps {
-  id: number
-  value: number
-  deadline: number
-  service: string
-  type_of_payment: string
+  serv_id: number
+  serv_name: string
+  products: Array<{
+    prod_id: number
+    prod_name: string
+    product_value_string: string
+    product_value_boolean: boolean
+  }>
 }
 
 export function Services() {
@@ -29,10 +34,12 @@ export function Services() {
 
   const { addToast } = useToast()
   const { setDisplayModal } = useModal()
+  const { permissions } = useAuth()
+  const router = useRouter()
 
-  useEffect(() => {
-    apiDev
-      .get('service')
+  const handleLoadPlans = useCallback(() => {
+    api
+      .get('/api/service?type=service')
       .then(response => {
         setServices(response.data)
       })
@@ -45,9 +52,18 @@ export function Services() {
       })
   }, [])
 
+  useEffect(() => {
+    if (!permissions.includes('SAC.SERVICOS.VISUALIZAR')) {
+      router.push('/')
+    }
+    handleLoadPlans()
+  }, [])
+
   const handleSelectService = useCallback((product: ServiceProps) => {
-    setSelectedService(product)
-    setDisplayModal('modalUpdateService')
+    if (permissions.includes('SAC.SERVICOS.EDITAR')) {
+      setSelectedService(product)
+      setDisplayModal('modalUpdateService')
+    }
   }, [])
 
   const CurrencyFormatter = new Intl.NumberFormat([], {
@@ -59,47 +75,69 @@ export function Services() {
     <Container>
       <PriceTable
         ths={['Serviço', 'Valor', 'Tipo de Pagamento', 'Prazo de Pagamento']}
-        isEditable
+        isEditable={permissions.includes('SAC.SERVICOS.EDITAR')}
       >
         {services.map(service => {
+          const price = service.products.find(
+            product => product.prod_name === 'PRICE'
+          )
+
+          const form_payment = service.products.find(
+            product => product.prod_name === 'FORM_PAYMENT'
+          )
+
+          const deadline = service.products.find(
+            product => product.prod_name === 'DEADLINE'
+          )
+
           return (
-            <tr onClick={() => handleSelectService(service)} key={service.id}>
-              <td>{service.service.toLowerCase()}</td>
-              <td>{CurrencyFormatter.format(service.value)}</td>
-              <td>{service.type_of_payment.toLowerCase()}</td>
-              <td>{service.deadline} Dias</td>
+            <tr
+              onClick={() => handleSelectService(service)}
+              key={service.serv_id}
+            >
+              <td>{service.serv_name}</td>
+              <td>
+                {CurrencyFormatter.format(Number(price.product_value_string))}
+              </td>
+              <td>{form_payment.product_value_string}</td>
+              <td>{deadline.product_value_string}</td>
             </tr>
           )
         })}
       </PriceTable>
-      <Wrapper>
-        <Button
-          onClick={() => setDisplayModal('modalCreateService')}
-          type="button"
-        >
-          Cadastrar Serviços
-        </Button>
-      </Wrapper>
+      {permissions.includes('SAC.SERVICOS.CRIAR') && (
+        <Wrapper>
+          <Button
+            onClick={() => setDisplayModal('modalCreateService')}
+            type="button"
+          >
+            Cadastrar Serviços
+          </Button>
+        </Wrapper>
+      )}
 
-      <CreateService
-        id="modalCreateService"
-        services={services}
-        setServices={setServices}
-      />
+      {permissions.includes('SAC.SERVICOS.CRIAR') && (
+        <CreateService
+          id="modalCreateService"
+          handleLoadPlans={handleLoadPlans}
+        />
+      )}
 
-      <UpdateService
-        id="modalUpdateService"
-        services={services}
-        setServices={setServices}
-        selectedService={selectedService}
-      />
+      {permissions.includes('SAC.SERVICOS.EDITAR') && (
+        <UpdateService
+          id="modalUpdateService"
+          handleLoadPlans={handleLoadPlans}
+          selectedService={selectedService}
+        />
+      )}
 
-      <DeleteService
-        id="modalDeleteService"
-        services={services}
-        setServices={setServices}
-        selectedService={selectedService}
-      />
+      {permissions.includes('SAC.SERVICOS.DELETAR') && (
+        <DeleteService
+          id="modalDeleteService"
+          handleLoadPlans={handleLoadPlans}
+          selectedService={selectedService}
+        />
+      )}
     </Container>
   )
 }
