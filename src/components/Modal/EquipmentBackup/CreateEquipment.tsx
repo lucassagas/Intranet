@@ -4,10 +4,10 @@ import { Input } from '../../Input'
 import { GlobalModal } from '../GlobalModal'
 import { Button } from '../../Button'
 import { FormHandles } from '@unform/core'
-import { useCallback, useRef } from 'react'
 import { getValidationErrors } from '../../../utils/getValidationErrors'
 import { apiDev } from '../../../services/apiDev'
 
+import { useCallback, useRef } from 'react'
 import { useModal } from '../../../hooks/modal'
 import { useLoading } from '../../../hooks/loading'
 import { useToast } from '../../../hooks/toast'
@@ -15,17 +15,17 @@ import { useToast } from '../../../hooks/toast'
 import {
   Container,
   Wrapper
-} from '../../../styles/components/Modal/EquipamentBackup/CreateEquipament'
+} from '../../../styles/components/Modal/EquipmentBackup/CreateEquipment'
 
-interface CreateEquipamentProps {
+interface CreateEquipmentProps {
   id: string
-  handleLoadEquipaments: () => void
+  handleLoadEquipments: () => void
 }
 
-export function CreateEquipament({
+export function CreateEquipment({
   id,
-  handleLoadEquipaments
-}: CreateEquipamentProps) {
+  handleLoadEquipments
+}: CreateEquipmentProps) {
   const formRef = useRef<FormHandles>(null)
 
   const { addToast } = useToast()
@@ -43,7 +43,7 @@ export function CreateEquipament({
         status: Yup.string().required('Campo obrigatório'),
         city: Yup.string().required('Campo obrigatório'),
         ip: Yup.string().required('Campo obrigatório'),
-        equipament: Yup.string().required('Campo obrigatório'),
+        equipment: Yup.string().required('Campo obrigatório'),
         manufactory: Yup.string().required('Campo obrigatório')
       })
 
@@ -51,9 +51,9 @@ export function CreateEquipament({
         abortEarly: false
       })
 
-      await apiDev.post('equipament', data)
+      await apiDev.post('equipment', data)
 
-      handleLoadEquipaments()
+      handleLoadEquipments()
       setDisplayModal('')
       reset()
       addToast({
@@ -110,7 +110,7 @@ export function CreateEquipament({
 
           <section>
             <span>
-              <Input name="equipament" label="Equipamento" list="equipment" />
+              <Input name="equipment" label="Equipamento" list="equipment" />
               <datalist id="equipment">
                 <option value="OLT">OLT</option>
                 <option value="RB">RB</option>

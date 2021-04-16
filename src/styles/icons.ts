@@ -37,7 +37,8 @@ export {
   AiOutlineWarning,
   AiOutlineCloud,
   AiOutlineTag,
-  AiOutlineShopping
+  AiOutlineShopping,
+  AiOutlineDownload
 } from 'react-icons/ai'
 
 export { SiWikipedia } from 'react-icons/si'

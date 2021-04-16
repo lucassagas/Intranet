@@ -179,12 +179,14 @@ export function SideMenu() {
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ opacity: 0 }}
                   >
-                    <Link href="/noc/backup">
-                      <SubMenuOption>
-                        <AiOutlineDatabase size={20} />
-                        Backup
-                      </SubMenuOption>
-                    </Link>
+                    {permissions.includes('NOC.BACKUP.VISUALIZAR') && (
+                      <Link href="/noc/backup">
+                        <SubMenuOption>
+                          <AiOutlineDatabase size={20} />
+                          Backup
+                        </SubMenuOption>
+                      </Link>
+                    )}
                   </SubMenu>
                 )}
               </AnimatePresence>

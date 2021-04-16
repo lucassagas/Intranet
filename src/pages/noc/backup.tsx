@@ -1,15 +1,17 @@
 import Head from 'next/head'
+import withAuth from '../../utils/withAuth'
+
 import { useState } from 'react'
 import { Header } from '../../components/Header'
-import withAuth from '../../utils/withAuth'
-import { RiDatabase2Line, AiOutlineDatabase } from '../../styles/icons'
+import { Equipments } from '../../components/Pages/Noc/Backup/Equipments'
+import { Archives } from '../../components/Pages/Noc/Backup/Archives'
 
+import { RiDatabase2Line, AiOutlineDatabase } from '../../styles/icons'
 import {
   Container,
   CategoryButton,
   Content
 } from '../../styles/pages/noc/backup'
-import { Equipaments } from '../../components/Pages/Noc/Backup/Equipaments'
 
 function Backup() {
   const [activeCategory, setActiveCategory] = useState('equipments')
@@ -46,7 +48,10 @@ function Backup() {
         </CategoryButton>
       </Header>
 
-      <Content>{activeCategory === 'equipments' && <Equipaments />}</Content>
+      <Content>
+        {activeCategory === 'equipments' && <Equipments />}
+        {activeCategory === 'archives' && <Archives />}
+      </Content>
     </Container>
   )
 }

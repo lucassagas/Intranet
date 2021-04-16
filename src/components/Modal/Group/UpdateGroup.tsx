@@ -96,7 +96,7 @@ export function EditGroup({ id }: EditGroupProps) {
   const handleSubmit = useCallback(() => {
     api
       .put(`api/group/${id}`, {
-        permissions: [...permissionsId, ...isActiveGroup]
+        permissions: [...permissionsId]
       })
       .then(response => {
         addToast({
@@ -120,14 +120,17 @@ export function EditGroup({ id }: EditGroupProps) {
     (group: number) => {
       if (permissionsId.includes(group)) {
         const groups = permissionsId.filter(isActive => isActive !== group)
-        setIsActiveGroup(groups)
+        setPermissionsId(groups)
 
         return
       }
 
-      setIsActiveGroup([...permissionsId, group])
+      console.log(group)
+
+      setPermissionsId([...permissionsId, group])
+      setIsActiveGroup([...isActiveGroup, group])
     },
-    [isActiveGroup]
+    [isActiveGroup, permissionsId]
   )
 
   const handleSelectPermissions = useCallback(

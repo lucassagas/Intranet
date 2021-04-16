@@ -6,6 +6,16 @@ export const Scroll = styled.div`
   background: var(--darkgray);
   padding: 1rem;
 
+  th:last-child {
+    text-align: center;
+  }
+
+  td:last-child button {
+    padding: 0 1rem;
+    background: none;
+    border: 0;
+  }
+
   ::-webkit-scrollbar {
     width: 5px;
     border-radius: 10px;
@@ -34,7 +44,7 @@ export const WrapperFilter = styled.div`
   justify-content: flex-start;
   background: var(--darkgray);
 
-  gap: 2rem;
+  gap: 0.5rem;
 
   > button:last-child {
     max-width: 200px;
@@ -62,48 +72,6 @@ export const WrapperFilter = styled.div`
       > svg {
         background: var(--darkgray);
       }
-    }
-  }
-`
-
-interface ButtonFilterProps {
-  isActive: boolean
-}
-
-export const ButtonFilter = styled.button<ButtonFilterProps>`
-  border: 0;
-
-  padding: 0.4rem;
-
-  border: 0;
-  background: transparent;
-  position: relative;
-
-  display: flex;
-  align-items: center;
-
-  > div {
-    width: 12px;
-    height: 12px;
-    border-radius: 2px;
-
-    margin-right: 10px;
-
-    transition: all 0.3s;
-
-    ${props =>
-      props.isActive
-        ? css`
-            background: var(--orange);
-            border: 0;
-          `
-        : css`
-            background: transparent;
-            border: 1px solid var(--gray);
-          `}
-
-    &:first-child {
-      margin-right: 10px;
     }
   }
 `

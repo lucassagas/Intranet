@@ -311,22 +311,13 @@
       "id": 4
     }
   ],
-  "equipament": [
-    {
-      "name": "PE AGUAS MORNAS",
-      "status": "ATIVO",
-      "city": "BIGUACU",
-      "ip": "10.200.200.85",
-      "equipament": "HUAWEI",
-      "manufactory": "HUAWEI",
-      "id": 1
-    },
+  "equipment": [
     {
       "name": "PE TESTE",
       "status": "ATIVO",
       "city": "SANTO AMARO DA IMPERATRIZ",
       "ip": "10.200.200.200",
-      "equipament": "HUAWEI",
+      "equipment": "HUAWEI",
       "manufactory": "HUAWEI",
       "id": 2
     },
@@ -335,7 +326,7 @@
       "status": "ATIVO",
       "city": "SANTO AMARO DA IMPERATRIZ",
       "ip": "10.200.200.200",
-      "equipament": "HUAWEI",
+      "equipment": "HUAWEI",
       "manufactory": "HUAWEI",
       "id": 3
     },
@@ -344,7 +335,7 @@
       "status": "ATIVO",
       "city": "SANTO AMARO DA IMPERATRIZ",
       "ip": "10.200.200.200",
-      "equipament": "HUAWEI",
+      "equipment": "HUAWEI",
       "manufactory": "HUAWEI",
       "id": 4
     },
@@ -353,7 +344,7 @@
       "status": "ATIVO",
       "city": "SANTO AMARO DA IMPERATRIZ",
       "ip": "10.200.200.200",
-      "equipament": "HUAWEI",
+      "equipment": "HUAWEI",
       "manufactory": "HUAWEI",
       "id": 5
     },
@@ -362,18 +353,9 @@
       "status": "ATIVO",
       "city": "SANTO AMARO DA IMPERATRIZ",
       "ip": "10.200.200.200",
-      "equipament": "HUAWEI",
+      "equipment": "HUAWEI",
       "manufactory": "HUAWEI",
       "id": 6
-    },
-    {
-      "name": "pe teste 2 ",
-      "status": "ATIVO",
-      "city": "testando",
-      "ip": "10.20.0.0",
-      "equipament": "OLT",
-      "manufactory": "HUAWEI",
-      "id": 7
     }
   ]
 }

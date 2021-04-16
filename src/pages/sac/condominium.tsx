@@ -27,6 +27,7 @@ import {
   ButtonFilter
 } from '../../styles/pages/sac/condominium'
 import { useToast } from '../../hooks/toast'
+import { ResultNotFound } from '../../components/Messages/ResultNotFound'
 
 export interface CondominiumProps {
   cond_id: number
@@ -133,6 +134,8 @@ function Condominium({
                 </tr>
               )
             })}
+
+            {!condominiums[0] && <ResultNotFound />}
           </Table>
 
           <WrapperFilter>

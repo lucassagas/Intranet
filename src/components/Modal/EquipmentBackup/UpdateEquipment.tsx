@@ -7,26 +7,27 @@ import { FormHandles } from '@unform/core'
 import { useCallback, useRef } from 'react'
 import { getValidationErrors } from '../../../utils/getValidationErrors'
 import { apiDev } from '../../../services/apiDev'
-import { EquipamentsProps } from '../../Pages/Noc/Backup/Equipaments'
+import { EquipmentsProps } from '../../Pages/Noc/Backup/Equipments'
 
 import { useModal } from '../../../hooks/modal'
 import { useLoading } from '../../../hooks/loading'
 import { useToast } from '../../../hooks/toast'
+import { useAuth } from '../../../hooks/auth'
 
 import {
   Container,
   Wrapper
-} from '../../../styles/components/Modal/EquipamentBackup/UpdateEquipament'
+} from '../../../styles/components/Modal/EquipmentBackup/UpdateEquipment'
 
-interface UpdateEquipamentProps {
+export interface UpdateEquipamentProps {
   id: string
-  handleLoadEquipaments: () => void
-  selectedEquipment: EquipamentsProps
+  handleLoadEquipments: () => void
+  selectedEquipment: EquipmentsProps
 }
 
-export function UpdateEquipament({
+export function UpdateEquipment({
   id,
-  handleLoadEquipaments,
+  handleLoadEquipments,
   selectedEquipment
 }: UpdateEquipamentProps) {
   const formRef = useRef<FormHandles>(null)
@@ -34,6 +35,7 @@ export function UpdateEquipament({
   const { addToast } = useToast()
   const { setLoadingScreen } = useLoading()
   const { setDisplayModal } = useModal()
+  const { permissions } = useAuth()
 
   const handleSubmit = useCallback(async (data, { reset }) => {
     setLoadingScreen(true)
@@ -46,7 +48,7 @@ export function UpdateEquipament({
         status: Yup.string().required('Campo obrigatório'),
         city: Yup.string().required('Campo obrigatório'),
         ip: Yup.string().required('Campo obrigatório'),
-        equipament: Yup.string().required('Campo obrigatório'),
+        equipment: Yup.string().required('Campo obrigatório'),
         manufactory: Yup.string().required('Campo obrigatório')
       })
 
@@ -54,9 +56,9 @@ export function UpdateEquipament({
         abortEarly: false
       })
 
-      await apiDev.post('equipament', data)
+      await apiDev.post('equipment', data)
 
-      handleLoadEquipaments()
+      handleLoadEquipments()
       setDisplayModal('')
       reset()
       addToast({
@@ -85,15 +87,38 @@ export function UpdateEquipament({
 
   return (
     <GlobalModal id={id} size={600} title="Editar Equipamento">
-      <Container ref={formRef} onSubmit={handleSubmit}>
+      <Container
+        initialData={{
+          name: selectedEquipment?.name,
+          status: selectedEquipment?.status,
+          city: selectedEquipment?.city,
+          equipment: selectedEquipment?.equipment,
+          manufactory: selectedEquipment?.manufactory,
+          access: selectedEquipment?.access,
+          user: selectedEquipment?.user,
+          port: selectedEquipment?.port,
+          ip: selectedEquipment?.ip
+        }}
+        ref={formRef}
+        onSubmit={handleSubmit}
+      >
         <Wrapper>
           <section>
             <span style={{ width: '100%' }}>
-              <Input name="name" label="Nome" />
+              <Input
+                disabled={!permissions.includes('NOC.BACKUP.EDITAR')}
+                name="name"
+                label="Nome"
+              />
             </span>
 
             <span>
-              <Input name="status" label="Status" list="status" />
+              <Input
+                disabled={!permissions.includes('NOC.BACKUP.EDITAR')}
+                name="status"
+                label="Status"
+                list="status"
+              />
 
               <datalist id="status">
                 <option value="ATIVO">ATIVO</option>
@@ -104,16 +129,30 @@ export function UpdateEquipament({
 
           <section>
             <span style={{ width: '100%' }}>
-              <Input name="city" label="Cidade" />
+              <Input
+                disabled={!permissions.includes('NOC.BACKUP.EDITAR')}
+                name="city"
+                label="Cidade"
+              />
             </span>
             <span>
-              <Input width="200px" name="ip" label="IP" />
+              <Input
+                disabled={!permissions.includes('NOC.BACKUP.EDITAR')}
+                width="200px"
+                name="ip"
+                label="IP"
+              />
             </span>
           </section>
 
           <section>
             <span style={{ width: '100%' }}>
-              <Input name="equipament" label="Equipamento" list="equipment" />
+              <Input
+                disabled={!permissions.includes('NOC.BACKUP.EDITAR')}
+                name="equipment"
+                label="Equipamento"
+                list="equipment"
+              />
               <datalist id="equipment">
                 <option value="OLT">OLT</option>
                 <option value="RB">RB</option>
@@ -123,6 +162,7 @@ export function UpdateEquipament({
 
             <span>
               <Input
+                disabled={!permissions.includes('NOC.BACKUP.EDITAR')}
                 width="150px"
                 name="manufactory"
                 label="Fabricante"
@@ -137,7 +177,13 @@ export function UpdateEquipament({
             </span>
 
             <span>
-              <Input name="access" width="130px" label="Acesso" list="access" />
+              <Input
+                disabled={!permissions.includes('NOC.BACKUP.EDITAR')}
+                name="access"
+                width="130px"
+                label="Acesso"
+                list="access"
+              />
 
               <datalist id="access">
                 <option value="SSH">SSH</option>
@@ -148,18 +194,44 @@ export function UpdateEquipament({
 
           <section>
             <span style={{ width: '100%' }}>
-              <Input name="user" label="Usuário" />
+              <Input
+                disabled={!permissions.includes('NOC.BACKUP.EDITAR')}
+                name="user"
+                label="Usuário"
+              />
             </span>
             <span style={{ width: '100%' }}>
-              <Input name="password" label="Senha" />
+              <Input
+                disabled={!permissions.includes('NOC.BACKUP.EDITAR')}
+                name="password"
+                password
+                label="Senha"
+              />
             </span>
 
             <span>
-              <Input width="120px" name="port" label="Porta" />
+              <Input
+                disabled={!permissions.includes('NOC.BACKUP.EDITAR')}
+                width="120px"
+                name="port"
+                label="Porta"
+              />
             </span>
           </section>
         </Wrapper>
-        <Button type="submit">Salvar alterações</Button>
+        {permissions.includes('NOC.BACKUP.DELETAR') && (
+          <Button
+            className="deleteButton"
+            type="button"
+            onClick={() => setDisplayModal('modalDeleteEquipment')}
+          >
+            Excluir
+          </Button>
+        )}
+
+        {permissions.includes('NOC.BACKUP.EDITAR') && (
+          <Button type="submit">Salvar alterações</Button>
+        )}
       </Container>
     </GlobalModal>
   )

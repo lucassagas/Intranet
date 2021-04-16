@@ -1,28 +1,33 @@
 import { Form } from '@unform/web'
-import React, { useCallback, useEffect, useState } from 'react'
-import { AiOutlineSearch } from '../../../../styles/icons'
 import { Input } from '../../../Input'
+import { Table } from '../../../Tables/Table'
+import { Button } from '../../../Button'
+import { apiDev } from '../../../../services/apiDev'
 
+import { CreateEquipment } from '../../../Modal/EquipmentBackup/CreateEquipment'
+import { UpdateEquipment } from '../../../Modal/EquipmentBackup/UpdateEquipment'
+import { DeleteEquipment } from '../../../Modal/EquipmentBackup/DeleteEquipment'
+
+import { useCallback, useEffect, useState } from 'react'
+import { useModal } from '../../../../hooks/modal'
+import { useToast } from '../../../../hooks/toast'
+import { useAuth } from '../../../../hooks/auth'
+import { useRouter } from 'next/router'
+
+import { AiOutlineSearch } from '../../../../styles/icons'
 import {
   Scroll,
   WrapperFilter,
   ButtonFilter
-} from '../../../../styles/components/Pages/Noc/Backup/Equipaments'
-import { Table } from '../../../Tables/Table'
-import { Button } from '../../../Button'
-import { useModal } from '../../../../hooks/modal'
-import { CreateEquipament } from '../../../Modal/EquipamentBackup/CreateEquipament'
-import { apiDev } from '../../../../services/apiDev'
-import { useToast } from '../../../../hooks/toast'
-import { UpdateEquipament } from '../../../Modal/EquipamentBackup/UpdateEquipament'
+} from '../../../../styles/components/Pages/Noc/Backup/Equipments'
 
-export interface EquipamentsProps {
+export interface EquipmentsProps {
   id: number
   name: string
   status: string
   city: string
   ip: string
-  equipament: string
+  equipment: string
   manufactory: string
   access: string
   user: string
@@ -30,20 +35,22 @@ export interface EquipamentsProps {
   port: number
 }
 
-export function Equipaments() {
+export function Equipments() {
   const [isActiveFilter, setIsActiveFilter] = useState('name')
-  const [selectedEquipment, setSelectedEquipment] = useState<EquipamentsProps>()
-  const [equipaments, setEquipaments] = useState<EquipamentsProps[]>([])
+  const [selectedEquipment, setSelectedEquipment] = useState<EquipmentsProps>()
+  const [equipments, setEquipments] = useState<EquipmentsProps[]>([])
 
   const { setDisplayModal } = useModal()
   const { addToast } = useToast()
+  const { permissions } = useAuth()
+  const router = useRouter()
 
   const handleSearch = useCallback(data => {}, [])
 
-  const handleLoadEquipaments = useCallback(async () => {
+  const handleLoadEquipments = useCallback(async () => {
     try {
-      const response = await apiDev.get('equipament')
-      setEquipaments(response.data)
+      const response = await apiDev.get('equipment')
+      setEquipments(response.data)
     } catch (err) {
       addToast({
         type: 'error',
@@ -54,10 +61,13 @@ export function Equipaments() {
   }, [])
 
   useEffect(() => {
-    handleLoadEquipaments()
+    if (!permissions.includes('NOC.BACKUP.VISUALIZAR')) {
+      router.replace('/')
+    }
+    handleLoadEquipments()
   }, [])
 
-  const handleSelectEquipament = useCallback((equipment: EquipamentsProps) => {
+  const handleSelectEquipment = useCallback((equipment: EquipmentsProps) => {
     setDisplayModal('modalUpdateEquipment')
     setSelectedEquipment(equipment)
   }, [])
@@ -68,13 +78,13 @@ export function Equipaments() {
         isEditable
         ths={['Nome', 'Cidade', 'IP', 'Equipamento', 'Fabricante']}
       >
-        {equipaments.map(equip => {
+        {equipments.map(equip => {
           return (
-            <tr onClick={() => handleSelectEquipament(equip)} key={equip.id}>
+            <tr onClick={() => handleSelectEquipment(equip)} key={equip.id}>
               <td>{equip.name}</td>
               <td>{equip.city}</td>
               <td>{equip.ip}</td>
-              <td>{equip.equipament}</td>
+              <td>{equip.equipment}</td>
               <td>{equip.manufactory}</td>
             </tr>
           )
@@ -124,24 +134,38 @@ export function Equipaments() {
           <span>Fabricante</span>
         </ButtonFilter>
 
-        <Button
-          type="button"
-          onClick={() => setDisplayModal('modalCreateEquipament')}
-        >
-          Cadastar
-        </Button>
+        {permissions.includes('NOC.BACKUP.CRIAR') && (
+          <Button
+            type="button"
+            onClick={() => setDisplayModal('modalCreateEquipament')}
+          >
+            Cadastar
+          </Button>
+        )}
       </WrapperFilter>
 
-      <CreateEquipament
-        handleLoadEquipaments={handleLoadEquipaments}
-        id="modalCreateEquipament"
-      />
+      {permissions.includes('NOC.BACKUP.CRIAR') && (
+        <CreateEquipment
+          handleLoadEquipments={handleLoadEquipments}
+          id="modalCreateEquipament"
+        />
+      )}
 
-      <UpdateEquipament
-        handleLoadEquipaments={handleLoadEquipaments}
-        id="modalUpdateEquipment"
-        selectedEquipment={selectedEquipment}
-      />
+      {permissions.includes('NOC.BACKUP.VISUALIZAR') && (
+        <UpdateEquipment
+          handleLoadEquipments={handleLoadEquipments}
+          id="modalUpdateEquipment"
+          selectedEquipment={selectedEquipment}
+        />
+      )}
+
+      {permissions.includes('NOC.BACKUP.DELETAR') && (
+        <DeleteEquipment
+          handleLoadEquipments={handleLoadEquipments}
+          id="modalDeleteEquipment"
+          selectedEquipment={selectedEquipment}
+        />
+      )}
     </Scroll>
   )
 }
