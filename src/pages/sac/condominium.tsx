@@ -10,6 +10,7 @@ import { Button } from '../../components/Button'
 import { api } from '../../services/api'
 import { Table } from '../../components/Tables/Table'
 import { Paginate } from '../../components/Paginate'
+import { ResultNotFound } from '../../components/Messages/ResultNotFound'
 
 import { CreateCondominium } from '../../components/Modal/Condominuims/CreateCondominium'
 import { UpdateCondominium } from '../../components/Modal/Condominuims/UpdateCondominium'
@@ -17,6 +18,7 @@ import { DeleteCondominium } from '../../components/Modal/Condominuims/DeleteCon
 
 import { useModal } from '../../hooks/modal'
 import { useAuth } from '../../hooks/auth'
+import { useToast } from '../../hooks/toast'
 
 import { AiOutlineSearch } from '../../styles/icons'
 import {
@@ -26,8 +28,6 @@ import {
   WrapperFilter,
   ButtonFilter
 } from '../../styles/pages/sac/condominium'
-import { useToast } from '../../hooks/toast'
-import { ResultNotFound } from '../../components/Messages/ResultNotFound'
 
 export interface CondominiumProps {
   cond_id: number

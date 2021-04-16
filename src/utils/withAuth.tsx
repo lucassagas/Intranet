@@ -10,16 +10,16 @@ export default function withAuth(WrappedComponent: ElementType) {
     const { addToast } = useToast()
 
     useEffect(() => {
-      const token = Cookie.get('intranet-token')
-      if (!token) {
-        router.replace('/signin')
-        addToast({
-          type: 'info',
-          title: 'Sessão expirada',
-          description:
-            'Sua sessão foi expirada, por favor faça o login novamente.'
-        })
-      }
+      // const token = Cookie.get('intranet-token')
+      // if (!token) {
+      //   router.replace('/signin')
+      //   addToast({
+      //     type: 'info',
+      //     title: 'Sessão expirada',
+      //     description:
+      //       'Sua sessão foi expirada, por favor faça o login novamente.'
+      //   })
+      // }
     }, [])
 
     return <WrappedComponent {...props} />

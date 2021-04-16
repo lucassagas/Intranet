@@ -4,7 +4,8 @@ export {
   BiCheck,
   BiGroup,
   BiGlobe,
-  BiBuildings
+  BiBuildings,
+  BiCoin
 } from 'react-icons/bi'
 
 export {
@@ -25,7 +26,8 @@ export {
   FiXCircle,
   FiClipboard,
   FiPhone,
-  FiSmartphone
+  FiSmartphone,
+  FiBox
 } from 'react-icons/fi'
 
 export {
@@ -48,7 +50,11 @@ export {
   RiLogoutCircleLine,
   RiEyeCloseLine,
   RiFirstAidKitLine,
-  RiDatabase2Line
+  RiDatabase2Line,
+  RiStore3Line,
+  RiCustomerService2Line,
+  RiMoneyDollarCircleLine,
+  RiFileCopy2Line
 } from 'react-icons/ri'
 
 export { GrMoney } from 'react-icons/gr'

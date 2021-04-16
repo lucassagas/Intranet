@@ -29,7 +29,9 @@ import {
   AiOutlineTag,
   BiBuildings,
   AiOutlineLaptop,
-  AiOutlineDatabase
+  AiOutlineDatabase,
+  SiWikipedia,
+  FiBox
 } from '../styles/icons'
 
 export function SideMenu() {
@@ -187,6 +189,34 @@ export function SideMenu() {
                         </SubMenuOption>
                       </Link>
                     )}
+                  </SubMenu>
+                )}
+              </AnimatePresence>
+            </MenuOption>
+          </Li>
+
+          <Li isCategory={router.pathname.includes('/wiki/')}>
+            <MenuOption
+              isActive={displaySubMenu === 'Wiki'}
+              onClick={() => toggleMenu('Wiki')}
+            >
+              <SiWikipedia size={20} />
+              Wiki
+              <IoIosArrowDown size={18} />
+              <AnimatePresence exitBeforeEnter>
+                {displaySubMenu === 'Wiki' && (
+                  <SubMenu
+                    key="wiki/estoque"
+                    initial={{ y: -25, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <Link href="/wiki/estoque">
+                      <SubMenuOption>
+                        <FiBox size={20} />
+                        Estoque
+                      </SubMenuOption>
+                    </Link>
                   </SubMenu>
                 )}
               </AnimatePresence>

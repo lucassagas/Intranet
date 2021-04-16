@@ -357,5 +357,13 @@
       "manufactory": "HUAWEI",
       "id": 6
     }
+  ],
+  "faqestoque": [
+    {
+      "subject": "FAQ TESTE 2",
+      "name": "ASDASD",
+      "archive": "C:\\fakepath\\pngwing.com.png",
+      "id": 7
+    }
   ]
 }
