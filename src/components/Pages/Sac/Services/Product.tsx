@@ -42,7 +42,6 @@ export function Products() {
       .get('api/service?type=product')
       .then(response => {
         setProducts(response.data)
-        console.log(response.data)
       })
       .catch(err => {
         addToast({
@@ -63,7 +62,7 @@ export function Products() {
   const handleSelectProduct = useCallback((product: ProductsProps) => {
     if (permissions.includes('SAC.SERVICOS.EDITAR')) {
       setSelectedProduct(product)
-      setDisplayModal('modalUpdateProduct')
+      setDisplayModal(['modalUpdateProduct'])
     }
   }, [])
 
@@ -116,7 +115,7 @@ export function Products() {
       {permissions.includes('SAC.SERVICOS.CRIAR') && (
         <Wrapper>
           <Button
-            onClick={() => setDisplayModal('modalCreateProduct')}
+            onClick={() => setDisplayModal(['modalCreateProduct'])}
             type="button"
           >
             Cadastrar Produtos

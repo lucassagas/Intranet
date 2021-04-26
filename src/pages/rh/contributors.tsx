@@ -58,7 +58,7 @@ function Contributors(contributorsProps: ContributorsStateProps) {
   const handleUpdateContributor = useCallback(
     (contributor: ContributorsProps) => {
       if (permissions && permissions.includes('RH.COLABORADORES.EDITAR')) {
-        setDisplayModal('modalUpdateContributor')
+        setDisplayModal(['modalUpdateContributor'])
         setSelectedContributor(contributor)
       }
     },
@@ -136,7 +136,9 @@ function Contributors(contributorsProps: ContributorsStateProps) {
           </ButtonFilter>
 
           {permissions && permissions.includes('RH.COLABORADORES.CRIAR') && (
-            <Button onClick={() => setDisplayModal('modalCreateContributors')}>
+            <Button
+              onClick={() => setDisplayModal(['modalCreateContributors'])}
+            >
               Cadastar
             </Button>
           )}

@@ -152,12 +152,12 @@ export function Internet() {
   )
 
   const handleSelectPlan = useCallback((plan: PlansProps) => {
-    setDisplayModal('modalUpdateInternetPlan')
+    setDisplayModal(['modalUpdateInternetPlan'])
     setSelectedPlan(plan)
   }, [])
 
   const handleDeleteInternetPlan = useCallback((plan: PlansProps) => {
-    setDisplayModal('modalDeleteInternetPlan')
+    setDisplayModal(['modalDeleteInternetPlan'])
     setSelectedPlan(plan)
   }, [])
 
@@ -324,7 +324,7 @@ export function Internet() {
           />
           <Button type="submit">Inserir Observações</Button>
           <Button
-            onClick={() => setDisplayModal('modalCreateInternetPlan')}
+            onClick={() => setDisplayModal(['modalCreateInternetPlan'])}
             type="button"
           >
             Cadastrar Planos

@@ -71,7 +71,7 @@ export function CreateUser({ id, reloadFunction }: CreateUserProps) {
         description: response.data.message
       })
       reloadFunction()
-      setDisplayModal('')
+      setDisplayModal([])
       reset()
     } catch (err) {
       if (err instanceof Yup.ValidationError) {

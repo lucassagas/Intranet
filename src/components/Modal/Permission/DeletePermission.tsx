@@ -37,7 +37,7 @@ export function DeletePermission({
           description: response.data.message
         })
         reloadFunction()
-        setDisplayModal('')
+        setDisplayModal([])
       })
       .catch(() => {
         addToast({

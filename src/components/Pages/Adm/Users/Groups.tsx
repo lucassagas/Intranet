@@ -46,7 +46,7 @@ export interface GroupsProps {
 
 export function Groups() {
   const [groups, setGroups] = useState<GroupsProps[]>([])
-  const [selectedItem, setSelectedItem] = useState<number>()
+  const [selectedItem, setSelectedItem] = useState<any>()
   const [isActiveFilter, setIsActiveFilter] = useState('name')
 
   const { setDisplayModal } = useModal()
@@ -56,7 +56,7 @@ export function Groups() {
     handleLoadGroups()
   }, [])
 
-  const handleSelectGroup = useCallback((group_id: number) => {
+  const handleSelectGroup = useCallback((group_id: any) => {
     setSelectedItem(group_id)
     setDisplayModal(group_id)
   }, [])
@@ -149,7 +149,7 @@ export function Groups() {
           <span>Data adicionado</span>
         </ButtonFilter>
 
-        <Button onClick={() => setDisplayModal('modalCreateGroup')}>
+        <Button onClick={() => setDisplayModal(['modalCreateGroup'])}>
           Cadastar
         </Button>
       </WrapperFilter>

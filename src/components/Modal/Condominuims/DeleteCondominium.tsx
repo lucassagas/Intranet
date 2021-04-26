@@ -29,7 +29,7 @@ export function DeleteCondominium({
         cond => cond.cond_id !== selectedCondominium.cond_id
       )
       setCondominiums(remainingCondominiums)
-      setDisplayModal('')
+      setDisplayModal([])
 
       addToast({
         type: 'success',

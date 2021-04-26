@@ -49,7 +49,7 @@ export function CreateProduct({ id, handleLoadProducts }: CreateProductsProps) {
       await api.post('api/service', formattedData)
 
       handleLoadProducts()
-      setDisplayModal('')
+      setDisplayModal([])
       reset()
       addToast({
         type: 'success',

@@ -75,3 +75,45 @@ export const WrapperFilter = styled.div`
     }
   }
 `
+
+interface ButtonFilterProps {
+  isActive: boolean
+}
+
+export const ButtonFilter = styled.button<ButtonFilterProps>`
+  border: 0;
+
+  padding: 0.4rem;
+
+  border: 0;
+  background: transparent;
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  > div {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+
+    margin-right: 10px;
+
+    transition: all 0.3s;
+
+    ${props =>
+      props.isActive
+        ? css`
+            background: var(--orange);
+            border: 0;
+          `
+        : css`
+            background: transparent;
+            border: 1px solid var(--gray);
+          `}
+
+    &:first-child {
+      margin-right: 10px;
+    }
+  }
+`

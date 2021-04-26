@@ -30,7 +30,7 @@ export function DeleteCftvPlan({
       .delete(`api/plan/${selectedCftvPlan.plan_id}`)
       .then(response => {
         loadCftvPlans()
-        setDisplayModal('')
+        setDisplayModal([])
         addToast({
           type: 'success',
           title: 'Sucesso!',

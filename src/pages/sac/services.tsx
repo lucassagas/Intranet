@@ -14,7 +14,6 @@ import {
   Content,
   Scroll
 } from '../../styles/pages/sac/services'
-import { Paginate } from '../../components/Paginate'
 
 function ServicesPage() {
   const [activeCategory, setActiveCategory] = useState('products')

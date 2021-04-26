@@ -105,7 +105,7 @@ export function EditGroup({ id }: EditGroupProps) {
           description: response.data.message
         })
 
-        setDisplayModal('')
+        setDisplayModal([])
       })
       .catch(err => {
         addToast({

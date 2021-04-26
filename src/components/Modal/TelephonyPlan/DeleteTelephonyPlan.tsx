@@ -24,7 +24,7 @@ export function DeleteTelephonyPlan({
     api
       .delete(`api/plan/${selectedPlan?.plan_id}`)
       .then(() => {
-        setDisplayModal('')
+        setDisplayModal([])
         handleLoadPlans()
         addToast({
           type: 'success',

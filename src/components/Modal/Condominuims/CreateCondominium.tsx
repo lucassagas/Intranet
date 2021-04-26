@@ -91,7 +91,7 @@ export function CreateCondominium({
           description: `Condomínio ${data.name} cadastrado com sucesso!`
         })
 
-        setDisplayModal('')
+        setDisplayModal([])
         setCep(null)
         reset()
       } catch (err) {

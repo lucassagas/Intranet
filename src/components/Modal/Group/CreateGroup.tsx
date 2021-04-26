@@ -41,7 +41,7 @@ export function CreateGroup({ id, setGroups, groups }: CreateGroupsProps) {
 
         const response = await api.post('api/group', data)
 
-        setDisplayModal('')
+        setDisplayModal([])
         reset()
         setGroups([...groups, response.data.group])
 

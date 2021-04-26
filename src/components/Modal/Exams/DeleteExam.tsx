@@ -27,7 +27,7 @@ export function DeleteExam({
     api
       .delete(`api/exam/${selectedExam.exam_id}`)
       .then(() => {
-        setDisplayModal('')
+        setDisplayModal([])
         const remainingExams = exams.filter(
           exam => exam.exam_id !== selectedExam.exam_id
         )

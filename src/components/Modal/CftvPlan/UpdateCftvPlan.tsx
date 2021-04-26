@@ -56,7 +56,7 @@ export function UpdateCftvPlan({
 
         await api.put(`api/plan/${selectedCftvPlan.plan_id}`, formattedData)
         reset()
-        setDisplayModal('')
+        setDisplayModal([])
         loadCftvPlans()
         addToast({
           type: 'success',
@@ -109,7 +109,7 @@ export function UpdateCftvPlan({
         </div>
         {permissions.includes('SAC.PLANOS.DELETAR') && (
           <Button
-            onClick={() => setDisplayModal('modalDeleteCftvPlan')}
+            onClick={() => setDisplayModal(['modalDeleteCftvPlan'])}
             className="deleteButton"
             type="button"
           >

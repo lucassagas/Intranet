@@ -43,7 +43,7 @@ export function CreateBranch({ id, branches, setBranches }: CreateBranchProps) {
         const response = await api.post('api/branch', data)
 
         setBranches([response.data.branch, ...branches])
-        setDisplayModal('')
+        setDisplayModal([])
         reset()
         addToast({
           type: 'success',

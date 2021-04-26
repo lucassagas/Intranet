@@ -65,7 +65,7 @@ export function CreateWikiEstoque({
         setFaqs([response.data, ...faqs])
 
         reset()
-        setDisplayModal('')
+        setDisplayModal([])
         addToast({
           type: 'success',
           title: 'Sucesso!',
@@ -93,7 +93,7 @@ export function CreateWikiEstoque({
   )
 
   return (
-    <GlobalModal size={600} title="Cadastrar Wiki Estoque" id={id}>
+    <GlobalModal size={600} title="Cadastrar FAQ Estoque" id={id}>
       <Container ref={formRef} onSubmit={handleSubmit}>
         <Wrapper>
           <span>

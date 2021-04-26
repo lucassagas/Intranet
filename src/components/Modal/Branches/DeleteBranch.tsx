@@ -29,7 +29,7 @@ export function DeleteBranch({
           branch => branch.bran_id !== selectedBranch.bran_id
         )
         setBranches(remainingExtensions)
-        setDisplayModal('')
+        setDisplayModal([])
 
         addToast({
           type: 'success',

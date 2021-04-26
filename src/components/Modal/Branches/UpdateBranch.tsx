@@ -59,7 +59,7 @@ export function UpdateBranch({
         )
 
         setBranches([response.data.branch, ...remainingExtensions])
-        setDisplayModal('')
+        setDisplayModal([])
         reset()
         addToast({
           type: 'success',
@@ -110,7 +110,7 @@ export function UpdateBranch({
           <Button
             type="button"
             className="deleteButton"
-            onClick={() => setDisplayModal('modalDeleteBranch')}
+            onClick={() => setDisplayModal(['modalDeleteBranch'])}
           >
             Excluir
           </Button>

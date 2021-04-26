@@ -54,7 +54,7 @@ export function CreateContributors({
 
         const response = await api.post(`api/contributor`, data)
 
-        setDisplayModal('')
+        setDisplayModal([])
 
         const contributorsProps = [
           response.data.contributor,

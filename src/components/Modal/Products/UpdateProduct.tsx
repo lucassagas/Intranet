@@ -59,7 +59,7 @@ export function UpdateeProduct({
 
         handleLoadProducts()
 
-        setDisplayModal('')
+        setDisplayModal([])
         reset()
         addToast({
           type: 'success',
@@ -162,7 +162,7 @@ export function UpdateeProduct({
         </div>
         {permissions.includes('SAC.SERVICOS.DELETAR') && (
           <Button
-            onClick={() => setDisplayModal('modalDeleteProduct')}
+            onClick={() => setDisplayModal(['modalDeleteProduct'])}
             className="deleteButton"
             type="button"
           >

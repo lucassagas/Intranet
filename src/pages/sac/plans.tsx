@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { Header } from '../../components/Header'
-import withAuth from '../../utils/withAuth'
 
+import withAuth from '../../utils/withAuth'
 import { CgScreen, BiGlobe, FiPhone } from '../../styles/icons'
 
 import {
@@ -10,6 +10,7 @@ import {
   Scroll,
   CategoryButton
 } from '../../styles/pages/sac/plans'
+
 import { useState } from 'react'
 import { Internet } from '../../components/Pages/Sac/Plans/Internet'
 import { Telephony } from '../../components/Pages/Sac/Plans/Telephony'

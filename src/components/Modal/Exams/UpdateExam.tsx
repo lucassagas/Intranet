@@ -93,7 +93,7 @@ export function UpdateExams({
           )
         }
 
-        setDisplayModal('')
+        setDisplayModal([])
         reset()
         setExams([formattedExamDate, ...formattedExams])
 
@@ -220,7 +220,7 @@ export function UpdateExams({
 
         {permissions?.includes('RH.EXAMES.DELETAR') && (
           <Button
-            onClick={() => setDisplayModal('modalDeleteExam')}
+            onClick={() => setDisplayModal(['modalDeleteExam'])}
             className="deleteButton"
             type="button"
           >

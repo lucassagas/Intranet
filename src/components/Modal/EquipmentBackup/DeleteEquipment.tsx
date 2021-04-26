@@ -1,7 +1,7 @@
 import { GlobalModal } from '../GlobalModal'
 import { Button } from '../../Button'
 import { UpdateEquipamentProps } from './UpdateEquipment'
-import { apiDev } from '../../../services/apiDev'
+import { api } from '../../../services/api'
 
 import { useCallback } from 'react'
 import { useModal } from '../../../hooks/modal'
@@ -25,15 +25,15 @@ export function DeleteEquipment({
   const handleDeleteEquipment = useCallback(async () => {
     setLoadingScreen(true)
     try {
-      await apiDev.delete(`equipment/${selectedEquipment.id}`)
+      await api.delete(`api/bkp_equipment/${selectedEquipment.bkp_equi_id}`)
 
       handleLoadEquipments()
 
-      setDisplayModal('')
+      setDisplayModal([])
       addToast({
         type: 'success',
         title: 'Sucesso!',
-        description: `Equipamento ${selectedEquipment.name} foi exluido com sucesso!`
+        description: `Equipamento ${selectedEquipment.bkp_equi_name} foi exluido com sucesso!`
       })
     } catch (err) {
       addToast({
@@ -52,12 +52,12 @@ export function DeleteEquipment({
         <Wrapper>
           <span>
             <strong>Equipamento:</strong>
-            <p>{selectedEquipment?.name}</p>
+            <p>{selectedEquipment?.bkp_equi_name}</p>
           </span>
 
           <span>
             <strong>IP:</strong>
-            <p>{selectedEquipment?.ip}</p>
+            <p>{selectedEquipment?.bkp_equi_ip}</p>
           </span>
         </Wrapper>
         <Button onClick={handleDeleteEquipment} type="button">

@@ -79,12 +79,10 @@ export function UpdateInternetPlan({
           ...data
         }
 
-        const response = await api.put(
-          `api/plan/${selectedPlan.plan_id}`,
-          formattedData
-        )
+        await api.put(`api/plan/${selectedPlan.plan_id}`, formattedData)
+
         handleLoadPlans()
-        setDisplayModal('')
+        setDisplayModal([])
         reset()
         addToast({
           type: 'success',

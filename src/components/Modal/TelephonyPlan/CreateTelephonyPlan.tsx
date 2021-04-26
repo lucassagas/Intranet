@@ -69,7 +69,7 @@ export function CreateTelephonyPlan({
         await api.post('api/plan', formattedData)
 
         handleLoadPlans()
-        setDisplayModal('')
+        setDisplayModal([])
         reset()
         addToast({
           type: 'success',

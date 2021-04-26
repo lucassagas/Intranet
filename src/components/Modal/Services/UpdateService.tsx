@@ -57,7 +57,7 @@ export function UpdateService({
         await api.put(`api/service/${selectedService.serv_id}`, formattedData)
 
         handleLoadPlans()
-        setDisplayModal('')
+        setDisplayModal([])
         reset()
         addToast({
           type: 'success',
@@ -137,7 +137,7 @@ export function UpdateService({
 
         {permissions.includes('SAC.SERVICOS.DELETAR') && (
           <Button
-            onClick={() => setDisplayModal('modalDeleteService')}
+            onClick={() => setDisplayModal(['modalDeleteService'])}
             className="deleteButton"
             type="button"
           >

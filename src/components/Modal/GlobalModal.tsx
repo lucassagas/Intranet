@@ -1,5 +1,5 @@
 import { AnimatePresence } from 'framer-motion'
-import { ReactNode, useEffect } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { useModal } from '../../hooks/modal'
 
 import { Overlay, Modalbox } from '../../styles/components/Modal/GlobalModal'
@@ -16,25 +16,27 @@ interface GlobalModalProps {
 export function GlobalModal({ title, children, size, id }: GlobalModalProps) {
   const { displayModal, setDisplayModal } = useModal()
 
+  console.log(id)
+
+  const closeModal = useCallback(() => {
+    setDisplayModal(displayModal.filter(modal => modal !== id))
+  }, [displayModal])
+
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        setDisplayModal('')
+        closeModal()
       }
     }
-    window.addEventListener('keydown', listener)
 
+    window.addEventListener('keydown', listener)
     return () => window.removeEventListener('keydown', listener)
   }, [])
 
   return (
     <AnimatePresence exitBeforeEnter>
-      {displayModal && displayModal === id && (
-        <Overlay
-          id={id}
-          onClick={() => setDisplayModal('')}
-          exit={{ opacity: 0 }}
-        >
+      {displayModal && displayModal.includes(id) && (
+        <Overlay id={id} onClick={closeModal} exit={{ opacity: 0 }}>
           <Modalbox
             initial={{ y: -600, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -44,7 +46,7 @@ export function GlobalModal({ title, children, size, id }: GlobalModalProps) {
           >
             <header>
               <strong>{title}</strong>
-              <MdClose size={22} onClick={() => setDisplayModal('')} />
+              <MdClose size={22} onClick={closeModal} />
             </header>
             {children}
           </Modalbox>

@@ -68,7 +68,7 @@ export function CreateExams({ id, exams, setExams }: CreateExamsProps) {
 
         const response = await api.post('api/exam', data)
 
-        setDisplayModal('')
+        setDisplayModal([])
         reset()
         setExams([response.data.exam, ...exams])
 

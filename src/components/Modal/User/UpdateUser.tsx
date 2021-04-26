@@ -80,7 +80,7 @@ export function EditUser({ id, reloadFunction, user }: EditUserProps) {
         const response = await api.put(`api/user/${user.user_id}`, formData)
 
         await reloadFunction()
-        setDisplayModal('')
+        setDisplayModal([])
         reset()
         addToast({
           type: 'success',

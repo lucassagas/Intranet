@@ -50,7 +50,7 @@ export function CreateService({ id, handleLoadPlans }: CreateServiceProps) {
 
       handleLoadPlans()
 
-      setDisplayModal('')
+      setDisplayModal([])
       reset()
       addToast({
         type: 'success',

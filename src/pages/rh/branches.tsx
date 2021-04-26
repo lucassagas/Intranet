@@ -42,7 +42,7 @@ function Branches({ branchesProps }: BranchesServerSideProps) {
 
   const handleSelectBranch = useCallback((branch: BranchesProps) => {
     if (permissions?.includes('RH.RAMAIS.EDITAR')) {
-      setDisplayModal('modalUpdateBranch')
+      setDisplayModal(['modalUpdateBranch'])
       setSelectedBranch(branch)
     }
   }, [])
@@ -82,7 +82,7 @@ function Branches({ branchesProps }: BranchesServerSideProps) {
           </Form>
 
           {permissions && permissions.includes('RH.RAMAIS.CRIAR') && (
-            <Button onClick={() => setDisplayModal('modalCreateBranch')}>
+            <Button onClick={() => setDisplayModal(['modalCreateBranch'])}>
               Cadastar
             </Button>
           )}

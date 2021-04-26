@@ -41,7 +41,7 @@ export function CreatePermission({
       const response = await api.post('api/permission', data)
 
       reloadFunction()
-      setDisplayModal('')
+      setDisplayModal([])
       reset()
 
       addToast({

@@ -51,7 +51,7 @@ function Exams({ examsProps }: ExamsServerSideProps) {
 
   const handleSelectExam = useCallback((data: ExamsProps) => {
     if (permissions && permissions.includes('RH.EXAMES.EDITAR')) {
-      setDisplayModal('modalUpdateExam')
+      setDisplayModal(['modalUpdateExam'])
       setSelectedExam(data)
 
       return
@@ -112,7 +112,7 @@ function Exams({ examsProps }: ExamsServerSideProps) {
           </ButtonFilter>
 
           {permissions && permissions.includes('RH.EXAMES.CRIAR') && (
-            <Button onClick={() => setDisplayModal('modalCreateExam')}>
+            <Button onClick={() => setDisplayModal(['modalCreateExam'])}>
               Cadastar
             </Button>
           )}

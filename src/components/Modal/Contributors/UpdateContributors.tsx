@@ -66,7 +66,7 @@ export function UpdateContributors({
           data
         )
 
-        setDisplayModal('')
+        setDisplayModal([])
 
         const remainingContributors = contributors.contributorsProps.filter(
           contributor => contributor.contri_id !== selectedContributor.contri_id
@@ -175,7 +175,7 @@ export function UpdateContributors({
 
               {permissions && permissions.includes('RH.COLABORADORES.DELETAR') && (
                 <Button
-                  onClick={() => setDisplayModal('modalDeleteContributor')}
+                  onClick={() => setDisplayModal(['modalDeleteContributor'])}
                   type="button"
                 >
                   Excluir

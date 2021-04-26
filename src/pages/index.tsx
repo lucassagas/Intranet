@@ -12,7 +12,7 @@ function Home() {
   return (
     <Container>
       <Head>
-        <title>Intranet - Dashboard</title>
+        <title>Intranet | Dashboard</title>
       </Head>
 
       <Header category="Home" route="Dashboard" />

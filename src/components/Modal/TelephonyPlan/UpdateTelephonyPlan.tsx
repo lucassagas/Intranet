@@ -82,7 +82,7 @@ export function UpdateTelephonyPlan({
         await api.put(`api/plan/${selectedPlan.plan_id}`, formattedData)
 
         handleLoadPlans()
-        setDisplayModal('')
+        setDisplayModal([])
         reset()
         addToast({
           type: 'success',

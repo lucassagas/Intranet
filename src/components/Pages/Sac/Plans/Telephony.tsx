@@ -133,12 +133,12 @@ export function Telephony() {
   )
 
   const handleSelectPlan = useCallback((plan: PlansProps) => {
-    setDisplayModal('modalUpdateTelephonyPlan')
+    setDisplayModal(['modalUpdateTelephonyPlan'])
     setSelectedPlan(plan)
   }, [])
 
   const handleDeleteTelephonyPlan = useCallback((plan: PlansProps) => {
-    setDisplayModal('modalDeleteTelephonyPlan')
+    setDisplayModal(['modalDeleteTelephonyPlan'])
     setSelectedPlan(plan)
   }, [])
 
@@ -323,7 +323,7 @@ export function Telephony() {
           />
           <Button type="submit">Inserir Observações</Button>
           <Button
-            onClick={() => setDisplayModal('modalCreateTelephonyPlan')}
+            onClick={() => setDisplayModal(['modalCreateTelephonyPlan'])}
             type="button"
           >
             Cadastrar Planos

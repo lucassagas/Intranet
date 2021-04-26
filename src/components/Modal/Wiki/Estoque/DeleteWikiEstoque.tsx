@@ -38,7 +38,7 @@ export function DeleteWikiEstoque({
       const remainingFaqs = faqs.filter(faq => faq.id !== selectedFaq.id)
 
       setFaqs(remainingFaqs)
-      setDisplayModal('')
+      setDisplayModal([])
       addToast({
         type: 'success',
         title: 'Sucesso!',
@@ -67,7 +67,7 @@ export function DeleteWikiEstoque({
           <p>{selectedFaq?.subject}</p>
         </Wrapper>
         <Wrapper>
-          <p>Tem certeza de que quer excluir esta WIKI ?</p>
+          <p>Tem certeza de que quer excluir esta FAQ ?</p>
         </Wrapper>
         <Button onClick={handleDeleteFaq} type="button">
           Excluir

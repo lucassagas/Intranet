@@ -5,7 +5,7 @@ import { GlobalModal } from '../GlobalModal'
 import { Button } from '../../Button'
 import { FormHandles } from '@unform/core'
 import { getValidationErrors } from '../../../utils/getValidationErrors'
-import { apiDev } from '../../../services/apiDev'
+import { api } from '../../../services/api'
 
 import { useCallback, useRef } from 'react'
 import { useModal } from '../../../hooks/modal'
@@ -43,18 +43,23 @@ export function CreateEquipment({
         status: Yup.string().required('Campo obrigatório'),
         city: Yup.string().required('Campo obrigatório'),
         ip: Yup.string().required('Campo obrigatório'),
-        equipment: Yup.string().required('Campo obrigatório'),
-        manufactory: Yup.string().required('Campo obrigatório')
+        type: Yup.string().required('Campo obrigatório'),
+        manu: Yup.string().required('Campo obrigatório')
       })
 
       await schema.validate(data, {
         abortEarly: false
       })
 
-      await apiDev.post('equipment', data)
+      const formattedData = {
+        ...data,
+        status: data.status === 'ATIVO' ? true : false
+      }
+
+      await api.post('api/bkp_equipment', formattedData)
 
       handleLoadEquipments()
-      setDisplayModal('')
+      setDisplayModal([])
       reset()
       addToast({
         type: 'success',
@@ -110,16 +115,16 @@ export function CreateEquipment({
 
           <section>
             <span>
-              <Input name="equipment" label="Equipamento" list="equipment" />
+              <Input name="type" label="Equipamento" list="equipment" />
               <datalist id="equipment">
                 <option value="OLT">OLT</option>
-                <option value="RB">RB</option>
+                <option value="ROUTERBOARD">ROUTERBOARD</option>
                 <option value="HUAWEI">HUAWEI</option>
               </datalist>
             </span>
 
             <span>
-              <Input name="manufactory" label="Fabricante" list="manufactory" />
+              <Input name="manu" label="Fabricante" list="manufactory" />
               <datalist id="manufactory">
                 <option value="HUAWEI">HUAWEI</option>
                 <option value="DATACOM">DATACOM</option>

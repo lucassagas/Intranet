@@ -28,7 +28,7 @@ export function DeleteProduct({
       .delete(`api/service/${selectedProduct.serv_id}`)
       .then(() => {
         handleLoadProducts()
-        setDisplayModal('')
+        setDisplayModal([])
         addToast({
           type: 'success',
           title: 'Sucesso!',

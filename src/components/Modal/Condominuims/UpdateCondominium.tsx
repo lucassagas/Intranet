@@ -79,7 +79,7 @@ export function UpdateCondominium({
           description: `Condomínio ${data.name} editado com sucesso!`
         })
 
-        setDisplayModal('')
+        setDisplayModal([])
         reset()
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -199,7 +199,7 @@ export function UpdateCondominium({
         </Wrapper>
         {permissions.includes('SAC.CONDOMINIOS.DELETAR') && (
           <Button
-            onClick={() => setDisplayModal('modalDeleteCondominium')}
+            onClick={() => setDisplayModal(['modalDeleteCondominium'])}
             className="deleteButton"
             type="button"
           >

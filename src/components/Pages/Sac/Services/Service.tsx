@@ -62,7 +62,7 @@ export function Services() {
   const handleSelectService = useCallback((product: ServiceProps) => {
     if (permissions.includes('SAC.SERVICOS.EDITAR')) {
       setSelectedService(product)
-      setDisplayModal('modalUpdateService')
+      setDisplayModal(['modalUpdateService'])
     }
   }, [])
 
@@ -108,7 +108,7 @@ export function Services() {
       {permissions.includes('SAC.SERVICOS.CRIAR') && (
         <Wrapper>
           <Button
-            onClick={() => setDisplayModal('modalCreateService')}
+            onClick={() => setDisplayModal(['modalCreateService'])}
             type="button"
           >
             Cadastrar Serviços

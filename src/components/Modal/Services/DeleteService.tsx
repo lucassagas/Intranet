@@ -27,7 +27,7 @@ export function DeleteService({
     api
       .delete(`api/service/${selectedService.serv_id}`)
       .then(() => {
-        setDisplayModal('')
+        setDisplayModal([])
         handleLoadPlans()
         addToast({
           type: 'success',

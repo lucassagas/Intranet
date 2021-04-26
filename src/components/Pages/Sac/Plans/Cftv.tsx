@@ -118,7 +118,7 @@ export function Cftv() {
 
   const handleSelectCftvPlan = useCallback((cftvPlan: CftvProps) => {
     if (permissions.includes('SAC.PLANOS.EDITAR')) {
-      setDisplayModal('modalUpdateCftvPlan')
+      setDisplayModal(['modalUpdateCftvPlan'])
       setSelectedCftvPlan(cftvPlan)
     }
   }, [])
@@ -243,7 +243,7 @@ export function Cftv() {
           />
           <Button type="submit">Inserir Observações</Button>
           <Button
-            onClick={() => setDisplayModal('modalCreateCftvPlan')}
+            onClick={() => setDisplayModal(['modalCreateCftvPlan'])}
             type="button"
           >
             Cadastrar Planos

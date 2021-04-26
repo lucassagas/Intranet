@@ -47,7 +47,7 @@ export function CreateCftvPlan({ id, loadCftvPlans }: CreateCftvProps) {
       await api.post('api/plan', formattedData)
 
       reset()
-      setDisplayModal('')
+      setDisplayModal([])
       loadCftvPlans()
       addToast({
         type: 'success',

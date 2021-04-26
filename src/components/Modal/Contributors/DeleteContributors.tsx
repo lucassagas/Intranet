@@ -32,7 +32,7 @@ export function DeleteContributors({
           contributor => contributor.contri_id !== selectedContributor.contri_id
         )
 
-        setDisplayModal('')
+        setDisplayModal([])
 
         setContributors({ contributorsProps: [...removedContributors] })
 

@@ -2,7 +2,7 @@ import { Form } from '@unform/web'
 import { Input } from '../../../Input'
 import { Table } from '../../../Tables/Table'
 import { Button } from '../../../Button'
-import { apiDev } from '../../../../services/apiDev'
+import { api } from '../../../../services/api'
 
 import { CreateEquipment } from '../../../Modal/EquipmentBackup/CreateEquipment'
 import { UpdateEquipment } from '../../../Modal/EquipmentBackup/UpdateEquipment'
@@ -22,17 +22,17 @@ import {
 } from '../../../../styles/components/Pages/Noc/Backup/Equipments'
 
 export interface EquipmentsProps {
-  id: number
-  name: string
-  status: string
-  city: string
-  ip: string
-  equipment: string
-  manufactory: string
-  access: string
-  user: string
-  password: string
-  port: number
+  bkp_equi_id: number
+  bkp_equi_name: string
+  bkp_equi_status: boolean
+  city_name: string
+  bkp_equi_ip: string
+  bkp_equi_type: string
+  manu_name: string
+  bkp_equi_access: string
+  bkp_equi_username: string
+  bkp_equi_password: string
+  bkp_equi_port: number
 }
 
 export function Equipments() {
@@ -49,7 +49,7 @@ export function Equipments() {
 
   const handleLoadEquipments = useCallback(async () => {
     try {
-      const response = await apiDev.get('equipment')
+      const response = await api.get('api/bkp_equipment')
       setEquipments(response.data)
     } catch (err) {
       addToast({
@@ -68,7 +68,7 @@ export function Equipments() {
   }, [])
 
   const handleSelectEquipment = useCallback((equipment: EquipmentsProps) => {
-    setDisplayModal('modalUpdateEquipment')
+    setDisplayModal(['modalUpdateEquipment'])
     setSelectedEquipment(equipment)
   }, [])
 
@@ -80,12 +80,15 @@ export function Equipments() {
       >
         {equipments.map(equip => {
           return (
-            <tr onClick={() => handleSelectEquipment(equip)} key={equip.id}>
-              <td>{equip.name}</td>
-              <td>{equip.city}</td>
-              <td>{equip.ip}</td>
-              <td>{equip.equipment}</td>
-              <td>{equip.manufactory}</td>
+            <tr
+              onClick={() => handleSelectEquipment(equip)}
+              key={equip.bkp_equi_id}
+            >
+              <td>{equip.bkp_equi_name}</td>
+              <td>{equip.city_name}</td>
+              <td>{equip.bkp_equi_ip}</td>
+              <td>{equip.bkp_equi_type}</td>
+              <td>{equip.manu_name}</td>
             </tr>
           )
         })}
@@ -137,7 +140,7 @@ export function Equipments() {
         {permissions.includes('NOC.BACKUP.CRIAR') && (
           <Button
             type="button"
-            onClick={() => setDisplayModal('modalCreateEquipament')}
+            onClick={() => setDisplayModal(['modalCreateEquipament'])}
           >
             Cadastar
           </Button>
