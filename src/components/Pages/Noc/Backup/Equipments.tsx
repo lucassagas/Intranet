@@ -11,8 +11,8 @@ import { DeleteEquipment } from '../../../Modal/EquipmentBackup/DeleteEquipment'
 import { useCallback, useEffect, useState } from 'react'
 import { useModal } from '../../../../hooks/modal'
 import { useToast } from '../../../../hooks/toast'
-import { useAuth } from '../../../../hooks/auth'
 import { useRouter } from 'next/router'
+import { useAuth } from '../../../../hooks/auth'
 
 import { AiOutlineSearch } from '../../../../styles/icons'
 import {
@@ -42,8 +42,8 @@ export function Equipments() {
 
   const { setDisplayModal } = useModal()
   const { addToast } = useToast()
-  const { permissions } = useAuth()
   const router = useRouter()
+  const { permissions } = useAuth()
 
   const handleSearch = useCallback(data => {}, [])
 
@@ -61,11 +61,13 @@ export function Equipments() {
   }, [])
 
   useEffect(() => {
-    if (!permissions.includes('NOC.BACKUP.VISUALIZAR')) {
+    if (!permissions?.includes('NOC.BACKUP.VISUALIZAR')) {
       router.replace('/')
+
+      return
     }
     handleLoadEquipments()
-  }, [])
+  }, [permissions])
 
   const handleSelectEquipment = useCallback((equipment: EquipmentsProps) => {
     setDisplayModal(['modalUpdateEquipment'])
@@ -137,7 +139,7 @@ export function Equipments() {
           <span>Fabricante</span>
         </ButtonFilter>
 
-        {permissions.includes('NOC.BACKUP.CRIAR') && (
+        {permissions?.includes('NOC.BACKUP.CRIAR') && (
           <Button
             type="button"
             onClick={() => setDisplayModal(['modalCreateEquipament'])}
@@ -147,14 +149,14 @@ export function Equipments() {
         )}
       </WrapperFilter>
 
-      {permissions.includes('NOC.BACKUP.CRIAR') && (
+      {permissions?.includes('NOC.BACKUP.CRIAR') && (
         <CreateEquipment
           handleLoadEquipments={handleLoadEquipments}
           id="modalCreateEquipament"
         />
       )}
 
-      {permissions.includes('NOC.BACKUP.VISUALIZAR') && (
+      {permissions?.includes('NOC.BACKUP.VISUALIZAR') && (
         <UpdateEquipment
           handleLoadEquipments={handleLoadEquipments}
           id="modalUpdateEquipment"
@@ -162,7 +164,7 @@ export function Equipments() {
         />
       )}
 
-      {permissions.includes('NOC.BACKUP.DELETAR') && (
+      {permissions?.includes('NOC.BACKUP.DELETAR') && (
         <DeleteEquipment
           handleLoadEquipments={handleLoadEquipments}
           id="modalDeleteEquipment"

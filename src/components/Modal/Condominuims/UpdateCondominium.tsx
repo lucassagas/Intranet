@@ -163,7 +163,7 @@ export function UpdateCondominium({
               width="100px"
               label="Conexão"
               list="connections"
-              disabled={!permissions.includes('SAC.CONDOMINIOS.EDITAR')}
+              disabled={!permissions?.includes('SAC.CONDOMINIOS.EDITAR')}
             />
 
             <datalist id="connections">
@@ -180,7 +180,7 @@ export function UpdateCondominium({
 
           <span>
             <Input
-              disabled={!permissions.includes('SAC.CONDOMINIOS.EDITAR')}
+              disabled={!permissions?.includes('SAC.CONDOMINIOS.EDITAR')}
               name="price"
               label="Valor da Instalação"
             />
@@ -190,14 +190,14 @@ export function UpdateCondominium({
         <Wrapper>
           <span style={{ width: '100%' }}>
             <Textarea
-              disabled={!permissions.includes('SAC.CONDOMINIOS.EDITAR')}
+              disabled={!permissions?.includes('SAC.CONDOMINIOS.EDITAR')}
               name="obs"
               label="Observações"
               rows={5}
             />
           </span>
         </Wrapper>
-        {permissions.includes('SAC.CONDOMINIOS.DELETAR') && (
+        {permissions?.includes('SAC.CONDOMINIOS.DELETAR') && (
           <Button
             onClick={() => setDisplayModal(['modalDeleteCondominium'])}
             className="deleteButton"
@@ -207,7 +207,7 @@ export function UpdateCondominium({
           </Button>
         )}
 
-        {permissions.includes('SAC.CONDOMINIOS.EDITAR') && (
+        {permissions?.includes('SAC.CONDOMINIOS.EDITAR') && (
           <Button type="submit">Salvar alterações</Button>
         )}
       </Container>

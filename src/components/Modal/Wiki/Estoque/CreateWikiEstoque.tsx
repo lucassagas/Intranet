@@ -5,8 +5,9 @@ import { Input } from '../../../Input'
 import { Button } from '../../../Button'
 import { FormHandles } from '@unform/core'
 import { getValidationErrors } from '../../../../utils/getValidationErrors'
-import { apiDev } from '../../../../services/apiDev'
+import { api } from '../../../../services/api'
 import { WikiEstoqueProps } from '../../../../pages/wiki/estoque'
+import { FileInput } from '../../../FileInput'
 
 import { useCallback, useRef } from 'react'
 import { useToast } from '../../../../hooks/toast'
@@ -43,33 +44,31 @@ export function CreateWikiEstoque({
         formRef.current.setErrors({})
 
         const schema = Yup.object().shape({
-          name: Yup.string().required('Campo obrigatório'),
-          subject: Yup.string().required('Campo obrigatório'),
-          archive: Yup.string().required('Campo obrigatório').label('file')
+          title: Yup.string().required('Campo obrigatório'),
+          wiki_file: Yup.string().required('Campo obrigatório').label('file')
         })
 
         await schema.validate(data, {
           abortEarly: false
         })
 
+        const type = 'estoque'
         const formData = new FormData()
 
-        const { name, archive, subject } = data
+        formData.append('wiki_file', data.wiki_file)
+        formData.append('title', data.title)
+        formData.append('type', type)
 
-        formData.append('name', name)
-        formData.append('subject', subject)
-        formData.append('archive', archive)
+        const response = await api.post('api/wiki', formData)
 
-        const response = await apiDev.post('faqestoque', data)
-
-        setFaqs([response.data, ...faqs])
+        setFaqs([response.data.wiki, ...faqs])
 
         reset()
         setDisplayModal([])
         addToast({
           type: 'success',
           title: 'Sucesso!',
-          description: `FAQ ${data.name} criada com sucesso!`
+          description: `FAQ ${data.title} criada com sucesso!`
         })
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -96,18 +95,18 @@ export function CreateWikiEstoque({
     <GlobalModal size={600} title="Cadastrar FAQ Estoque" id={id}>
       <Container ref={formRef} onSubmit={handleSubmit}>
         <Wrapper>
-          <span>
-            <Input width="200px" name="subject" label="Assunto" />
-          </span>
-
           <span style={{ width: '100%' }}>
-            <Input name="name" label="Nome da FAQ" />
+            <Input name="title" label="Nome da FAQ" />
           </span>
         </Wrapper>
 
         <Wrapper>
           <span>
-            <Input name="archive" label="Arquivo(Somente PDF)" type="file" />
+            <FileInput
+              name="wiki_file"
+              label="Arquivo(Somente PDF)"
+              type="file"
+            />
           </span>
         </Wrapper>
 

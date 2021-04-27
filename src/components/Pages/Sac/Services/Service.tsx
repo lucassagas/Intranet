@@ -53,14 +53,14 @@ export function Services() {
   }, [])
 
   useEffect(() => {
-    if (!permissions.includes('SAC.SERVICOS.VISUALIZAR')) {
+    if (!permissions?.includes('SAC.SERVICOS.VISUALIZAR')) {
       router.push('/')
     }
     handleLoadPlans()
   }, [])
 
   const handleSelectService = useCallback((product: ServiceProps) => {
-    if (permissions.includes('SAC.SERVICOS.EDITAR')) {
+    if (permissions?.includes('SAC.SERVICOS.EDITAR')) {
       setSelectedService(product)
       setDisplayModal(['modalUpdateService'])
     }
@@ -75,7 +75,7 @@ export function Services() {
     <Container>
       <PriceTable
         ths={['Serviço', 'Valor', 'Tipo de Pagamento', 'Prazo de Pagamento']}
-        isEditable={permissions.includes('SAC.SERVICOS.EDITAR')}
+        isEditable={permissions?.includes('SAC.SERVICOS.EDITAR')}
       >
         {services.map(service => {
           const price = service.products.find(
@@ -105,7 +105,7 @@ export function Services() {
           )
         })}
       </PriceTable>
-      {permissions.includes('SAC.SERVICOS.CRIAR') && (
+      {permissions?.includes('SAC.SERVICOS.CRIAR') && (
         <Wrapper>
           <Button
             onClick={() => setDisplayModal(['modalCreateService'])}
@@ -116,14 +116,14 @@ export function Services() {
         </Wrapper>
       )}
 
-      {permissions.includes('SAC.SERVICOS.CRIAR') && (
+      {permissions?.includes('SAC.SERVICOS.CRIAR') && (
         <CreateService
           id="modalCreateService"
           handleLoadPlans={handleLoadPlans}
         />
       )}
 
-      {permissions.includes('SAC.SERVICOS.EDITAR') && (
+      {permissions?.includes('SAC.SERVICOS.EDITAR') && (
         <UpdateService
           id="modalUpdateService"
           handleLoadPlans={handleLoadPlans}
@@ -131,7 +131,7 @@ export function Services() {
         />
       )}
 
-      {permissions.includes('SAC.SERVICOS.DELETAR') && (
+      {permissions?.includes('SAC.SERVICOS.DELETAR') && (
         <DeleteService
           id="modalDeleteService"
           handleLoadPlans={handleLoadPlans}

@@ -72,7 +72,7 @@ export function Internet() {
   }, [])
 
   useEffect(() => {
-    if (!permissions.includes('SAC.PLANOS.VISUALIZAR')) {
+    if (!permissions?.includes('SAC.PLANOS.VISUALIZAR')) {
       router.push('/')
     }
     handleLoadPlans()
@@ -236,11 +236,11 @@ export function Internet() {
       actions.push(
         <td>
           <Actions>
-            {permissions.includes('SAC.PLANOS.EDITAR') && (
+            {permissions?.includes('SAC.PLANOS.EDITAR') && (
               <button onClick={() => handleSelectPlan(plan)}>Editar</button>
             )}
 
-            {permissions.includes('SAC.PLANOS.DELETAR') && (
+            {permissions?.includes('SAC.PLANOS.DELETAR') && (
               <button onClick={() => handleDeleteInternetPlan(plan)}>
                 Excluir
               </button>
@@ -307,14 +307,14 @@ export function Internet() {
           <td>Telefonia</td>
           {formattedPlan.telefonia}
         </tr>
-        {permissions.includes('SAC.PLANOS.EDITAR' || 'SAC.PLANOS.EXCLUIR') && (
+        {permissions?.includes('SAC.PLANOS.EDITAR' || 'SAC.PLANOS.EXCLUIR') && (
           <tr>
             <td>Ações</td>
             {formattedPlan.actions}
           </tr>
         )}
       </PriceTable>
-      {permissions.includes('SAC.PLANOS.CRIAR') && (
+      {permissions?.includes('SAC.PLANOS.CRIAR') && (
         <Wrapper ref={formRef} onSubmit={handleSubmit}>
           <Input
             width="100%"
@@ -338,7 +338,7 @@ export function Internet() {
           return (
             <div key={obs.obs_id}>
               <p>{obs.obs_content}</p>
-              {permissions.includes('SAC.PLANOS.DELETAR') && (
+              {permissions?.includes('SAC.PLANOS.DELETAR') && (
                 <button
                   onClick={() => handleDeleteObservations(obs.obs_id)}
                   type="button"

@@ -74,7 +74,7 @@ function Condominium({
   const handleSelectCondominium = useCallback(
     (condominium: CondominiumProps) => {
       setSelectedCondominium(condominium)
-      setDisplayModal('modalUpdateCondominium')
+      setDisplayModal(['modalUpdateCondominium'])
     },
     []
   )
@@ -176,15 +176,17 @@ function Condominium({
               <span>Cidade</span>
             </ButtonFilter>
 
-            {permissions.includes('SAC.CONDOMINIOS.CRIAR') && (
-              <Button onClick={() => setDisplayModal('modalCreateCondominuim')}>
+            {permissions?.includes('SAC.CONDOMINIOS.CRIAR') && (
+              <Button
+                onClick={() => setDisplayModal(['modalCreateCondominuim'])}
+              >
                 Cadastar
               </Button>
             )}
           </WrapperFilter>
         </Scroll>
 
-        {permissions.includes('SAC.CONDOMINIOS.CRIAR') && (
+        {permissions?.includes('SAC.CONDOMINIOS.CRIAR') && (
           <CreateCondominium
             condominiums={condominiums}
             setCondominiums={setCondominiums}
@@ -199,7 +201,7 @@ function Condominium({
           selectedCondominium={selectedCondominium}
         />
 
-        {permissions.includes('SAC.CONDOMINIOS.DELETAR') && (
+        {permissions?.includes('SAC.CONDOMINIOS.DELETAR') && (
           <DeleteCondominium
             condominiums={condominiums}
             setCondominiums={setCondominiums}

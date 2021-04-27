@@ -1,12 +1,12 @@
-import { AnimatePresence } from 'framer-motion'
-import { AppProps } from 'next/app'
 import styled from 'styled-components'
-import { SideMenu } from '../components/SideMenu'
-import { AppProvider } from '../hooks'
-
 import GlobalStyles from '../styles/GlobalStyles'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+
+import { AnimatePresence } from 'framer-motion'
+import { AppProps } from 'next/app'
+import { SideMenu } from '../components/SideMenu'
+import { AppProvider } from '../hooks'
 import { Router } from 'next/router'
 
 const Container = styled.div`

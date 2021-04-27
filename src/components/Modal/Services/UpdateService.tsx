@@ -135,7 +135,7 @@ export function UpdateService({
           </span>
         </div>
 
-        {permissions.includes('SAC.SERVICOS.DELETAR') && (
+        {permissions?.includes('SAC.SERVICOS.DELETAR') && (
           <Button
             onClick={() => setDisplayModal(['modalDeleteService'])}
             className="deleteButton"

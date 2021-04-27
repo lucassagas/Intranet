@@ -160,7 +160,7 @@ export function UpdateeProduct({
             </datalist>
           </span>
         </div>
-        {permissions.includes('SAC.SERVICOS.DELETAR') && (
+        {permissions?.includes('SAC.SERVICOS.DELETAR') && (
           <Button
             onClick={() => setDisplayModal(['modalDeleteProduct'])}
             className="deleteButton"

@@ -107,7 +107,7 @@ export function UpdateCftvPlan({
           />
           <Input name="name" label="Dias de Gravação" type="number" />
         </div>
-        {permissions.includes('SAC.PLANOS.DELETAR') && (
+        {permissions?.includes('SAC.PLANOS.DELETAR') && (
           <Button
             onClick={() => setDisplayModal(['modalDeleteCftvPlan'])}
             className="deleteButton"

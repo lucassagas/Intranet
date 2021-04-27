@@ -1,34 +1,33 @@
+import { useCallback, useState } from 'react'
+import { useModal } from '../../hooks/modal'
+import { useAuth } from '../../hooks/auth'
+
 import Head from 'next/head'
 import withAuth from '../../utils/withAuth'
 
 import { Header } from '../../components/Header'
 import { GetServerSideProps } from 'next'
-import { apiDev } from '../../services/apiDev'
+import { api } from '../../services/api'
 import { Table } from '../../components/Tables/Table'
-import { Form } from '@unform/web'
-import { Input } from '../../components/Input'
 import { Button } from '../../components/Button'
 
-import { useModal } from '../../hooks/modal'
-
 import { CreateWikiEstoque } from '../../components/Modal/Wiki/Estoque/CreateWikiEstoque'
+import { UpdateWikiEstoque } from '../../components/Modal/Wiki/Estoque/UpdateWikiEstoque'
 import { DeleteWikiEstoque } from '../../components/Modal/Wiki/Estoque/DeleteWikiEstoque'
-import { useCallback, useState } from 'react'
 
-import { AiOutlineSearch } from '../../styles/icons'
 import {
   Container,
   Content,
   Scroll,
-  WrapperFilter,
-  ButtonFilter
+  WrapperFilter
 } from '../../styles/pages/wiki/estoque'
 
 export interface WikiEstoqueProps {
-  id: number
-  name: string
-  subject: string
-  archive: string
+  wiki_id: number
+  wiki_title: string
+  wiki_type: string
+  wiki_file: string
+  url_file: string
 }
 
 interface ServerSideProps {
@@ -36,18 +35,16 @@ interface ServerSideProps {
 }
 
 function WikiEstoque({ faqProps }: ServerSideProps) {
-  const [isActiveFilter, setIsActiveFilter] = useState('name')
   const [selectedFaq, setSelectedFaq] = useState<WikiEstoqueProps>()
   const [faqs, setFaqs] = useState<WikiEstoqueProps[]>(faqProps)
 
   const { setDisplayModal } = useModal()
+  const { permissions } = useAuth()
 
   const handleSelectFaq = useCallback((faq: WikiEstoqueProps) => {
-    setDisplayModal('modalDeleteWikiEstoque')
+    setDisplayModal(['modalUpdateWikiEstoque'])
     setSelectedFaq(faq)
   }, [])
-
-  const handleSearch = useCallback(async data => {}, [])
 
   return (
     <Container>
@@ -59,68 +56,78 @@ function WikiEstoque({ faqProps }: ServerSideProps) {
 
       <Content>
         <Scroll>
-          <Table isEditable ths={['Assunto', 'Nome da FAQ', 'Ações']}>
+          <Table isEditable ths={['Tipo', 'Nome da FAQ']}>
             {faqs.map(faq => {
               return (
-                <tr key={faq.id}>
-                  <td>{faq.subject}</td>
-                  <td>{faq.name}</td>
-                  <td style={{ textAlign: 'center' }}>
-                    <button onClick={() => handleSelectFaq(faq)} type="button">
-                      Excluir
-                    </button>
-                  </td>
+                <tr onClick={() => handleSelectFaq(faq)} key={faq.wiki_id}>
+                  <td>{faq.wiki_type}</td>
+                  <td style={{ textAlign: 'center' }}>{faq.wiki_title}</td>
                 </tr>
               )
             })}
           </Table>
           <WrapperFilter>
-            <Form onSubmit={handleSearch}>
-              <Input name="filter" placeholder="Buscar" />
-              <button type="submit">
-                <AiOutlineSearch size={20} />
-              </button>
-            </Form>
-
-            <ButtonFilter
-              onClick={() => setIsActiveFilter('name')}
-              isActive={isActiveFilter === 'name'}
-            >
-              <div />
-              <span>Nome da FAQ</span>
-            </ButtonFilter>
-
-            <Button onClick={() => setDisplayModal('modalCreateWikiEstoque')}>
-              Cadastar
-            </Button>
+            {permissions?.includes('WIKI.TIPOS.CRIAR') && (
+              <Button
+                onClick={() => setDisplayModal(['modalCreateWikiEstoque'])}
+              >
+                Cadastar
+              </Button>
+            )}
           </WrapperFilter>
         </Scroll>
       </Content>
 
-      <CreateWikiEstoque
-        faqs={faqs}
-        setFaqs={setFaqs}
-        id="modalCreateWikiEstoque"
-      />
+      {permissions?.includes('WIKI.TIPOS.CRIAR') && (
+        <CreateWikiEstoque
+          faqs={faqs}
+          setFaqs={setFaqs}
+          id="modalCreateWikiEstoque"
+        />
+      )}
 
-      <DeleteWikiEstoque
-        id="modalDeleteWikiEstoque"
-        selectedFaq={selectedFaq}
-        faqs={faqs}
-        setFaqs={setFaqs}
-      />
+      {permissions?.includes('WIKI.TIPOS.VISUALIZAR') && (
+        <UpdateWikiEstoque
+          faqs={faqs}
+          setFaqs={setFaqs}
+          selectedFaq={selectedFaq}
+          id="modalUpdateWikiEstoque"
+        />
+      )}
+
+      {permissions?.includes('WIKI.TIPOS.DELETAR') && (
+        <DeleteWikiEstoque
+          id="modalDeleteWikiEstoque"
+          selectedFaq={selectedFaq}
+          faqs={faqs}
+          setFaqs={setFaqs}
+        />
+      )}
     </Container>
   )
 }
 
 export default withAuth(WikiEstoque)
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const response = await apiDev.get('faqestoque')
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  try {
+    const response = await api.get('api/wiki?type=estoque', {
+      headers: {
+        tokenaccess: req.cookies['intranet-token']
+      }
+    })
 
-  const faqProps = response.data
+    const faqProps = response.data
 
-  return {
-    props: { faqProps }
+    return {
+      props: { faqProps }
+    }
+  } catch (err) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false
+      }
+    }
   }
 }

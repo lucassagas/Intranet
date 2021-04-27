@@ -53,14 +53,14 @@ export function Products() {
   }, [])
 
   useEffect(() => {
-    if (!permissions.includes('SAC.SERVICOS.VISUALIZAR')) {
+    if (!permissions?.includes('SAC.SERVICOS.VISUALIZAR')) {
       router.push('/')
     }
     handleLoadProducts()
   }, [])
 
   const handleSelectProduct = useCallback((product: ProductsProps) => {
-    if (permissions.includes('SAC.SERVICOS.EDITAR')) {
+    if (permissions?.includes('SAC.SERVICOS.EDITAR')) {
       setSelectedProduct(product)
       setDisplayModal(['modalUpdateProduct'])
     }
@@ -81,7 +81,7 @@ export function Products() {
           'Prazo de Pagamento',
           'Comodato'
         ]}
-        isEditable={permissions.includes('SAC.SERVICOS.EDITAR')}
+        isEditable={permissions?.includes('SAC.SERVICOS.EDITAR')}
       >
         {products?.map(product => {
           const price = product.products.find(
@@ -112,7 +112,7 @@ export function Products() {
           )
         })}
       </PriceTable>
-      {permissions.includes('SAC.SERVICOS.CRIAR') && (
+      {permissions?.includes('SAC.SERVICOS.CRIAR') && (
         <Wrapper>
           <Button
             onClick={() => setDisplayModal(['modalCreateProduct'])}
@@ -123,14 +123,14 @@ export function Products() {
         </Wrapper>
       )}
 
-      {permissions.includes('SAC.SERVICOS.CRIAR') && (
+      {permissions?.includes('SAC.SERVICOS.CRIAR') && (
         <CreateProduct
           id="modalCreateProduct"
           handleLoadProducts={handleLoadProducts}
         />
       )}
 
-      {permissions.includes('SAC.SERVICOS.EDITAR') && (
+      {permissions?.includes('SAC.SERVICOS.EDITAR') && (
         <UpdateeProduct
           id="modalUpdateProduct"
           handleLoadProducts={handleLoadProducts}
@@ -138,7 +138,7 @@ export function Products() {
         />
       )}
 
-      {permissions.includes('SAC.SERVICOS.DELETAR') && (
+      {permissions?.includes('SAC.SERVICOS.DELETAR') && (
         <DeleteProduct
           id="modalDeleteProduct"
           selectedProduct={selectedProduct}

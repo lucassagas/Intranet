@@ -58,7 +58,7 @@ export function Groups() {
 
   const handleSelectGroup = useCallback((group_id: any) => {
     setSelectedItem(group_id)
-    setDisplayModal(group_id)
+    setDisplayModal([group_id])
   }, [])
 
   const handleSearch = useCallback(data => {}, [])

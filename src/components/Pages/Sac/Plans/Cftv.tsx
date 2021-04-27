@@ -93,7 +93,7 @@ export function Cftv() {
   )
 
   useEffect(() => {
-    if (!permissions.includes('SAC.PLANOS.VISUALIZAR')) {
+    if (!permissions?.includes('SAC.PLANOS.VISUALIZAR')) {
       router.push('/')
     }
 
@@ -117,7 +117,7 @@ export function Cftv() {
   )
 
   const handleSelectCftvPlan = useCallback((cftvPlan: CftvProps) => {
-    if (permissions.includes('SAC.PLANOS.EDITAR')) {
+    if (permissions?.includes('SAC.PLANOS.EDITAR')) {
       setDisplayModal(['modalUpdateCftvPlan'])
       setSelectedCftvPlan(cftvPlan)
     }
@@ -174,7 +174,7 @@ export function Cftv() {
   return (
     <Container>
       <PriceTable
-        isEditable={permissions.includes('SAC.PLANOS.EDITAR')}
+        isEditable={permissions?.includes('SAC.PLANOS.EDITAR')}
         ths={['Fidelidade', ...PlansTitle, 'Preço por camera']}
       >
         <tr>
@@ -233,7 +233,7 @@ export function Cftv() {
         </section>
       </WrapperBenefit>
 
-      {permissions.includes('SAC.PLANOS.CRIAR') && (
+      {permissions?.includes('SAC.PLANOS.CRIAR') && (
         <Wrapper ref={formRef} onSubmit={handleSubmit}>
           <Input
             width="100%"
@@ -257,7 +257,7 @@ export function Cftv() {
           return (
             <div key={obs.obs_id}>
               <p>{obs.obs_content}</p>
-              {permissions.includes('SAC.PLANOS.DELETAR') && (
+              {permissions?.includes('SAC.PLANOS.DELETAR') && (
                 <button
                   onClick={() => handleDeleteObservations(obs.obs_id)}
                   type="button"

@@ -1,6 +1,6 @@
 import { Button } from '../../../Button'
 import { GlobalModal } from '../../GlobalModal'
-import { apiDev } from '../../../../services/apiDev'
+import { api } from '../../../../services/api'
 import { WikiEstoqueProps } from '../../../../pages/wiki/estoque'
 
 import { useCallback } from 'react'
@@ -33,16 +33,18 @@ export function DeleteWikiEstoque({
   const handleDeleteFaq = useCallback(async () => {
     setLoadingScreen(true)
     try {
-      await apiDev.delete(`faqestoque/${selectedFaq.id}`)
+      await api.delete(`api/wiki/${selectedFaq.wiki_id}`)
 
-      const remainingFaqs = faqs.filter(faq => faq.id !== selectedFaq.id)
+      const remainingFaqs = faqs.filter(
+        faq => faq.wiki_id !== selectedFaq.wiki_id
+      )
 
       setFaqs(remainingFaqs)
       setDisplayModal([])
       addToast({
         type: 'success',
         title: 'Sucesso!',
-        description: `Faq ${selectedFaq.name} excluida com sucesso!`
+        description: `Faq ${selectedFaq.wiki_title} excluida com sucesso!`
       })
     } catch (err) {
       addToast({
@@ -60,11 +62,11 @@ export function DeleteWikiEstoque({
       <Container>
         <Wrapper>
           <strong>Nome:</strong>
-          <p>{selectedFaq?.name}</p>
+          <p>{selectedFaq?.wiki_title}</p>
         </Wrapper>
         <Wrapper>
-          <strong>Assunto:</strong>
-          <p>{selectedFaq?.subject}</p>
+          <strong>Tipo:</strong>
+          <p>{selectedFaq?.wiki_type}</p>
         </Wrapper>
         <Wrapper>
           <p>Tem certeza de que quer excluir esta FAQ ?</p>

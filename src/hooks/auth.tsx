@@ -6,11 +6,13 @@ import {
   useEffect,
   useState
 } from 'react'
+
+import Cookie from 'js-cookie'
 import { api } from '../services/api'
 import { useToast } from './toast'
-import Cookie from 'js-cookie'
 import { useRouter } from 'next/router'
 import { useLoading } from './loading'
+import { LoadingScreen } from '../components/Loadings/LoadingScreen'
 
 interface SignInProps {
   email: string
@@ -26,7 +28,8 @@ interface AuthContextData {
   handleSignIn: (Credentials: SignInProps) => void
   handleSignOut: () => void
   user: UserProps
-  permissions: any
+  permissions: string[]
+  setPermissions: (data: string[]) => void
 }
 
 interface AuthProviderData {
@@ -115,7 +118,7 @@ function AuthProvider({ children }: AuthProviderData) {
 
   return (
     <AuthContext.Provider
-      value={{ handleSignIn, handleSignOut, user, permissions }}
+      value={{ handleSignIn, handleSignOut, user, permissions, setPermissions }}
     >
       {children}
     </AuthContext.Provider>

@@ -125,8 +125,6 @@ export function EditGroup({ id }: EditGroupProps) {
         return
       }
 
-      console.log(group)
-
       setPermissionsId([...permissionsId, group])
       setIsActiveGroup([...isActiveGroup, group])
     },

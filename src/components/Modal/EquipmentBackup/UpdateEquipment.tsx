@@ -104,7 +104,7 @@ export function UpdateEquipment({
   const handleStartBackup = useCallback(async () => {
     try {
       setLoadingScreen(true)
-      const response = await api.get(
+      const response = await api.post(
         `api/bkp_equipment/${selectedEquipment.bkp_equi_id}/run_backup`
       )
 
@@ -118,8 +118,6 @@ export function UpdateEquipment({
         title: 'Sucesso!',
         description: `Backup do equipamento ${selectedEquipment.bkp_equi_name} realizado com sucesso!`
       })
-
-      console.log(response)
     } catch (err) {
       addToast({
         type: 'error',
@@ -197,7 +195,7 @@ export function UpdateEquipment({
         onSubmit={handleSubmit}
       >
         <Wrapper>
-          {permissions.includes('NOC.BACKUP.EDITAR') && (
+          {permissions?.includes('NOC.BACKUP.EDITAR') && (
             <section>
               <ButtonStartBackup
                 className="StaticBG"
@@ -228,7 +226,7 @@ export function UpdateEquipment({
           <section>
             <span style={{ width: '100%' }}>
               <Input
-                disabled={!permissions.includes('NOC.BACKUP.EDITAR')}
+                disabled={!permissions?.includes('NOC.BACKUP.EDITAR')}
                 name="name"
                 label="Nome"
               />
@@ -236,7 +234,7 @@ export function UpdateEquipment({
 
             <span>
               <Input
-                disabled={!permissions.includes('NOC.BACKUP.EDITAR')}
+                disabled={!permissions?.includes('NOC.BACKUP.EDITAR')}
                 name="status"
                 label="Status"
                 list="status"
@@ -252,14 +250,14 @@ export function UpdateEquipment({
           <section>
             <span style={{ width: '100%' }}>
               <Input
-                disabled={!permissions.includes('NOC.BACKUP.EDITAR')}
+                disabled={!permissions?.includes('NOC.BACKUP.EDITAR')}
                 name="city"
                 label="Cidade"
               />
             </span>
             <span>
               <Input
-                disabled={!permissions.includes('NOC.BACKUP.EDITAR')}
+                disabled={!permissions?.includes('NOC.BACKUP.EDITAR')}
                 width="200px"
                 name="ip"
                 label="IP"
@@ -270,7 +268,7 @@ export function UpdateEquipment({
           <section>
             <span style={{ width: '100%' }}>
               <Input
-                disabled={!permissions.includes('NOC.BACKUP.EDITAR')}
+                disabled={!permissions?.includes('NOC.BACKUP.EDITAR')}
                 name="type"
                 label="Equipamento"
                 list="equipment"
@@ -284,7 +282,7 @@ export function UpdateEquipment({
 
             <span>
               <Input
-                disabled={!permissions.includes('NOC.BACKUP.EDITAR')}
+                disabled={!permissions?.includes('NOC.BACKUP.EDITAR')}
                 width="150px"
                 name="manu"
                 label="Fabricante"
@@ -300,7 +298,7 @@ export function UpdateEquipment({
 
             <span>
               <Input
-                disabled={!permissions.includes('NOC.BACKUP.EDITAR')}
+                disabled={!permissions?.includes('NOC.BACKUP.EDITAR')}
                 name="access"
                 width="130px"
                 label="Acesso"
@@ -317,14 +315,14 @@ export function UpdateEquipment({
           <section>
             <span style={{ width: '100%' }}>
               <Input
-                disabled={!permissions.includes('NOC.BACKUP.EDITAR')}
+                disabled={!permissions?.includes('NOC.BACKUP.EDITAR')}
                 name="username"
                 label="Usuário"
               />
             </span>
             <span style={{ width: '100%' }}>
               <Input
-                disabled={!permissions.includes('NOC.BACKUP.EDITAR')}
+                disabled={!permissions?.includes('NOC.BACKUP.EDITAR')}
                 name="password"
                 password
                 label="Senha"
@@ -333,7 +331,7 @@ export function UpdateEquipment({
 
             <span>
               <Input
-                disabled={!permissions.includes('NOC.BACKUP.EDITAR')}
+                disabled={!permissions?.includes('NOC.BACKUP.EDITAR')}
                 width="120px"
                 name="port"
                 label="Porta"
@@ -341,7 +339,7 @@ export function UpdateEquipment({
             </span>
           </section>
         </Wrapper>
-        {permissions.includes('NOC.BACKUP.DELETAR') && (
+        {permissions?.includes('NOC.BACKUP.DELETAR') && (
           <Button
             className="deleteButton"
             type="button"
@@ -353,7 +351,7 @@ export function UpdateEquipment({
           </Button>
         )}
 
-        {permissions.includes('NOC.BACKUP.EDITAR') && (
+        {permissions?.includes('NOC.BACKUP.EDITAR') && (
           <Button type="submit">Salvar alterações</Button>
         )}
       </Container>

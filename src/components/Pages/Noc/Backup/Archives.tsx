@@ -53,7 +53,7 @@ export function Archives() {
   )
 
   useEffect(() => {
-    if (!permissions.includes('NOC.BACKUP.VISUALIZAR')) {
+    if (!permissions?.includes('NOC.BACKUP.VISUALIZAR')) {
       router.replace('/')
     }
 
@@ -74,7 +74,7 @@ export function Archives() {
   }, [isActiveFilter])
 
   const handleDownloadArchive = useCallback((url: string) => {
-    window.open(`${process.env.NEXT_PUBLIC_ENV_API_ARCHIVE_URL}${url}`)
+    window.open(`${process.env.NEXT_PUBLIC_ENV_API_ARCHIVE_URL + url}`)
   }, [])
 
   return (

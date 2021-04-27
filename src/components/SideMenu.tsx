@@ -28,10 +28,15 @@ import {
   FaListUl,
   AiOutlineTag,
   BiBuildings,
-  AiOutlineLaptop,
   AiOutlineDatabase,
   SiWikipedia,
-  FiBox
+  FiBox,
+  BiCoin,
+  RiStore3Line,
+  RiCustomerService2Line,
+  RiFileCopy2Line,
+  RiMoneyDollarCircleLine,
+  AiOutlineLaptop
 } from '../styles/icons'
 
 export function SideMenu() {
@@ -67,6 +72,90 @@ export function SideMenu() {
             </Link>
           </Li>
 
+          <Li isCategory={router.pathname.includes('/wiki/')}>
+            <MenuOption
+              isActive={displaySubMenu === 'Wiki'}
+              onClick={() => toggleMenu('Wiki')}
+            >
+              <SiWikipedia size={20} />
+              Wiki
+              <IoIosArrowDown size={18} />
+              <AnimatePresence exitBeforeEnter>
+                {displaySubMenu === 'Wiki' && (
+                  <SubMenu
+                    key="wiki/estoque"
+                    initial={{ y: -25, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    {permissions?.includes('WIKI.TIPOS.VISUALIZAR') && (
+                      <Link href="/wiki/estoque">
+                        <SubMenuOption>
+                          <FiBox size={20} />
+                          Estoque
+                        </SubMenuOption>
+                      </Link>
+                    )}
+
+                    {permissions?.includes('WIKI.TIPOS.VISUALIZAR') && (
+                      <Link href="/wiki/financeiro">
+                        <SubMenuOption>
+                          <BiCoin size={20} />
+                          Financeiro
+                        </SubMenuOption>
+                      </Link>
+                    )}
+
+                    {permissions?.includes('WIKI.TIPOS.VISUALIZAR') && (
+                      <Link href="/wiki/recepcao">
+                        <SubMenuOption>
+                          <RiStore3Line size={20} />
+                          Recepção
+                        </SubMenuOption>
+                      </Link>
+                    )}
+
+                    {permissions?.includes('WIKI.TIPOS.VISUALIZAR') && (
+                      <Link href="/wiki/suporte">
+                        <SubMenuOption>
+                          <RiCustomerService2Line size={20} />
+                          Suporte
+                        </SubMenuOption>
+                      </Link>
+                    )}
+
+                    {permissions?.includes('WIKI.TIPOS.VISUALIZAR') && (
+                      <Link href="/wiki/relatorio">
+                        <SubMenuOption>
+                          <RiFileCopy2Line size={20} />
+                          Relatórios
+                        </SubMenuOption>
+                      </Link>
+                    )}
+
+                    {permissions?.includes('WIKI.TIPOS.VISUALIZAR') && (
+                      <Link href="/wiki/vendas">
+                        <SubMenuOption>
+                          <RiMoneyDollarCircleLine size={20} />
+                          Vendas
+                        </SubMenuOption>
+                      </Link>
+                    )}
+
+                    {permissions?.includes('WIKI.TIPOS.VISUALIZAR') && (
+                      <Link href="/wiki/noc">
+                        <SubMenuOption>
+                          <AiOutlineLaptop size={20} />
+                          NOC
+                        </SubMenuOption>
+                      </Link>
+                    )}
+                  </SubMenu>
+                )}
+              </AnimatePresence>
+            </MenuOption>
+          </Li>
+
           <Li isCategory={router.pathname.includes('/rh/')}>
             <MenuOption
               isActive={displaySubMenu === 'Rh'}
@@ -84,7 +173,7 @@ export function SideMenu() {
                       animate={{ y: 0, opacity: 1 }}
                       exit={{ opacity: 0 }}
                     >
-                      {permissions.includes('RH.COLABORADORES.VISUALIZAR') && (
+                      {permissions?.includes('RH.COLABORADORES.VISUALIZAR') && (
                         <Link href="/rh/contributors">
                           <SubMenuOption>
                             <BiGroup size={22} />
@@ -93,7 +182,7 @@ export function SideMenu() {
                         </Link>
                       )}
 
-                      {permissions.includes('RH.EXAMES.VISUALIZAR') && (
+                      {permissions?.includes('RH.EXAMES.VISUALIZAR') && (
                         <Link href="/rh/exams">
                           <SubMenuOption>
                             <RiFirstAidKitLine size={20} />
@@ -102,7 +191,7 @@ export function SideMenu() {
                         </Link>
                       )}
 
-                      {permissions.includes('RH.RAMAIS.VISUALIZAR') && (
+                      {permissions?.includes('RH.RAMAIS.VISUALIZAR') && (
                         <Link href="/rh/branches">
                           <SubMenuOption>
                             <FiPhone size={20} />
@@ -133,7 +222,7 @@ export function SideMenu() {
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ opacity: 0 }}
                   >
-                    {permissions.includes('SAC.CONDOMINIOS.VISUALIZAR') && (
+                    {permissions?.includes('SAC.CONDOMINIOS.VISUALIZAR') && (
                       <Link href="/sac/condominium">
                         <SubMenuOption>
                           <BiBuildings size={20} />
@@ -142,7 +231,7 @@ export function SideMenu() {
                       </Link>
                     )}
 
-                    {permissions.includes('SAC.PLANOS.VISUALIZAR') && (
+                    {permissions?.includes('SAC.PLANOS.VISUALIZAR') && (
                       <Link href="/sac/plans">
                         <SubMenuOption>
                           <FaListUl size={20} />
@@ -151,7 +240,7 @@ export function SideMenu() {
                       </Link>
                     )}
 
-                    {permissions.includes('SAC.SERVICOS.VISUALIZAR') && (
+                    {permissions?.includes('SAC.SERVICOS.VISUALIZAR') && (
                       <Link href="/sac/services">
                         <SubMenuOption>
                           <AiOutlineTag size={20} />
@@ -181,7 +270,7 @@ export function SideMenu() {
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ opacity: 0 }}
                   >
-                    {permissions.includes('NOC.BACKUP.VISUALIZAR') && (
+                    {permissions?.includes('NOC.BACKUP.VISUALIZAR') && (
                       <Link href="/noc/backup">
                         <SubMenuOption>
                           <AiOutlineDatabase size={20} />
@@ -189,34 +278,6 @@ export function SideMenu() {
                         </SubMenuOption>
                       </Link>
                     )}
-                  </SubMenu>
-                )}
-              </AnimatePresence>
-            </MenuOption>
-          </Li>
-
-          <Li isCategory={router.pathname.includes('/wiki/')}>
-            <MenuOption
-              isActive={displaySubMenu === 'Wiki'}
-              onClick={() => toggleMenu('Wiki')}
-            >
-              <SiWikipedia size={20} />
-              Wiki
-              <IoIosArrowDown size={18} />
-              <AnimatePresence exitBeforeEnter>
-                {displaySubMenu === 'Wiki' && (
-                  <SubMenu
-                    key="wiki/estoque"
-                    initial={{ y: -25, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <Link href="/wiki/estoque">
-                      <SubMenuOption>
-                        <FiBox size={20} />
-                        Estoque
-                      </SubMenuOption>
-                    </Link>
                   </SubMenu>
                 )}
               </AnimatePresence>

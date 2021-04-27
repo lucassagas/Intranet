@@ -73,7 +73,7 @@ export function Telephony() {
   }, [])
 
   useEffect(() => {
-    if (!permissions.includes('SAC.PLANOS.VISUALIZAR')) {
+    if (!permissions?.includes('SAC.PLANOS.VISUALIZAR')) {
       router.push('/')
     }
 
@@ -235,11 +235,11 @@ export function Telephony() {
       actions.push(
         <td>
           <Actions>
-            {permissions.includes('SAC.PLANOS.EDITAR') && (
+            {permissions?.includes('SAC.PLANOS.EDITAR') && (
               <button onClick={() => handleSelectPlan(plan)}>Editar</button>
             )}
 
-            {permissions.includes('SAC.PLANOS.DELETAR') && (
+            {permissions?.includes('SAC.PLANOS.DELETAR') && (
               <button onClick={() => handleDeleteTelephonyPlan(plan)}>
                 Excluir
               </button>
@@ -305,7 +305,7 @@ export function Telephony() {
           {formattedPlan.internacionais}
         </tr>
 
-        {permissions.includes('SAC.PLANOS.EDITAR' || 'SAC.PLANOS.DELETAR') && (
+        {permissions?.includes('SAC.PLANOS.EDITAR' || 'SAC.PLANOS.DELETAR') && (
           <tr>
             <td>Ações</td>
             {formattedPlan.actions}
@@ -313,7 +313,7 @@ export function Telephony() {
         )}
       </PriceTable>
 
-      {permissions.includes('SAC.PLANOS.CRIAR') && (
+      {permissions?.includes('SAC.PLANOS.CRIAR') && (
         <Wrapper ref={formRef} onSubmit={handleSubmit}>
           <Input
             width="100%"
@@ -336,7 +336,7 @@ export function Telephony() {
           return (
             <div key={obs.obs_id}>
               <p>{obs.obs_content}</p>
-              {permissions.includes('SAC.PLANOS.DELETAR') && (
+              {permissions?.includes('SAC.PLANOS.DELETAR') && (
                 <button
                   onClick={() => handleDeleteObservations(obs.obs_id)}
                   type="button"

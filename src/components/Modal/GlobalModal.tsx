@@ -16,8 +16,6 @@ interface GlobalModalProps {
 export function GlobalModal({ title, children, size, id }: GlobalModalProps) {
   const { displayModal, setDisplayModal } = useModal()
 
-  console.log(id)
-
   const closeModal = useCallback(() => {
     setDisplayModal(displayModal.filter(modal => modal !== id))
   }, [displayModal])
