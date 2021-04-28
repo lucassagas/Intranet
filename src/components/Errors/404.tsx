@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router'
 import React from 'react'
 
-import { Button } from '../components/Button'
+import { Button } from '../Button'
 
-import { Container } from '../styles/pages/errors/400'
+import { Container } from '../../styles/components/Errors/404'
 
-export default function NotFoundPage() {
+export function NotFoundPage() {
   const router = useRouter()
 
   return (

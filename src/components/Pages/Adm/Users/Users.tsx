@@ -70,7 +70,7 @@ export function Users() {
               return (
                 <tr
                   onClick={() => {
-                    setDisplayModal('modalEditUser')
+                    setDisplayModal(['modalEditUser'])
                     setSelectedUser(user)
                   }}
                   key={user.user_id}
@@ -120,7 +120,7 @@ export function Users() {
           <span>Grupo</span>
         </ButtonFilter>
 
-        <Button onClick={() => setDisplayModal('modalCreateUser')}>
+        <Button onClick={() => setDisplayModal(['modalCreateUser'])}>
           Cadastar
         </Button>
       </WrapperFilter>

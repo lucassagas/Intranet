@@ -17,6 +17,8 @@ import { GetServerSideProps } from 'next'
 import { api } from '../../services/api'
 import { DeleteContributors } from '../../components/Modal/Contributors/DeleteContributors'
 import { useAuth } from '../../hooks/auth'
+import { ResultNotFound } from '../../components/Messages/ResultNotFound'
+import { useToast } from '../../hooks/toast'
 
 import {
   Container,
@@ -39,21 +41,39 @@ export interface ContributorsStateProps {
   contributorsProps: ContributorsProps[]
 }
 
-function Contributors(contributorsProps: ContributorsStateProps) {
+function Contributors({ contributorsProps }: ContributorsStateProps) {
   const [isActiveFilter, setIsActiveFilter] = useState('name')
   const [
     selectedContributor,
     setSelectedContributor
   ] = useState<ContributorsProps>()
 
-  const [contributors, setContributors] = useState<ContributorsStateProps>(
+  const [contributors, setContributors] = useState<ContributorsProps[]>(
     contributorsProps
   )
 
   const { permissions } = useAuth()
   const { setDisplayModal } = useModal()
+  const { addToast } = useToast()
 
-  const handleSearch = useCallback(data => {}, [])
+  const handleSearch = useCallback(
+    async data => {
+      try {
+        const response = await api.get(
+          `api/contributor/search?${isActiveFilter}=${data.filter}`
+        )
+
+        setContributors(response.data)
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Error',
+          description: err.response ? err.response.data.message : err.message
+        })
+      }
+    },
+    [isActiveFilter]
+  )
 
   const handleUpdateContributor = useCallback(
     (contributor: ContributorsProps) => {
@@ -81,30 +101,30 @@ function Contributors(contributorsProps: ContributorsStateProps) {
               permissions && permissions.includes('RH.COLABORADORES.EDITAR')
             }
           >
-            {contributors &&
-              contributors.contributorsProps.map(contributor => {
-                return (
-                  <tr
-                    onClick={() => {
-                      handleUpdateContributor(contributor)
-                    }}
-                    key={contributor.contri_id}
-                  >
-                    <td>{contributor.contri_name}</td>
-                    <td>{contributor.contri_type_document}</td>
-                    <td>{contributor.contri_document}</td>
-                    <td style={{ textAlign: 'center' }}>
-                      {contributor.contri_date_expiration
-                        ? format(
-                            new Date(contributor.contri_date_expiration),
-                            'dd/MM/yyyy'
-                          )
-                        : null}
-                    </td>
-                  </tr>
-                )
-              })}
+            {contributors?.map(contributor => {
+              return (
+                <tr
+                  onClick={() => {
+                    handleUpdateContributor(contributor)
+                  }}
+                  key={contributor.contri_id}
+                >
+                  <td>{contributor.contri_name}</td>
+                  <td>{contributor.contri_type_document}</td>
+                  <td>{contributor.contri_document}</td>
+                  <td style={{ textAlign: 'center' }}>
+                    {contributor.contri_date_expiration
+                      ? format(
+                          new Date(contributor.contri_date_expiration),
+                          'dd/MM/yyyy'
+                        )
+                      : null}
+                  </td>
+                </tr>
+              )
+            })}
           </Table>
+          {!contributors[0] && <ResultNotFound />}
         </Scroll>
 
         <WrapperFilter>
@@ -121,15 +141,15 @@ function Contributors(contributorsProps: ContributorsStateProps) {
             <span>Nome</span>
           </ButtonFilter>
           <ButtonFilter
-            onClick={() => setIsActiveFilter('number')}
-            isActive={isActiveFilter === 'number'}
+            onClick={() => setIsActiveFilter('document')}
+            isActive={isActiveFilter === 'document'}
           >
             <div />
             <span>Número DOC</span>
           </ButtonFilter>
           <ButtonFilter
-            onClick={() => setIsActiveFilter('date')}
-            isActive={isActiveFilter === 'date'}
+            onClick={() => setIsActiveFilter('date_expiration')}
+            isActive={isActiveFilter === 'date_expiration'}
           >
             <div />
             <span>Data de Vencimento</span>
@@ -184,11 +204,20 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
       props: { contributorsProps }
     }
   } catch (err) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false
+    if (
+      err.response &&
+      err.response.data.message === 'usuario nao tem permissao'
+    ) {
+      return {
+        redirect: {
+          destination: '/',
+          permanent: false
+        }
       }
+    }
+
+    return {
+      props: {}
     }
   }
 }

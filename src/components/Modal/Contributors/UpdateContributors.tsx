@@ -12,23 +12,22 @@ import { getValidationErrors } from '../../../utils/getValidationErrors'
 import { useToast } from '../../../hooks/toast'
 import { api } from '../../../services/api'
 import { useModal } from '../../../hooks/modal'
+import { useAuth } from '../../../hooks/auth'
 
 import {
   ContributorsStateProps,
   ContributorsProps
 } from '../../../pages/rh/contributors'
-import { format } from 'date-fns'
 
 import {
   Container,
   WrapperInput
 } from '../../../styles/components/Modal/Contributors/UpdateContributors'
-import { useAuth } from '../../../hooks/auth'
 
 export interface UpdateContributorsProps {
   id: string
-  contributors: ContributorsStateProps
-  setContributors: (data: ContributorsStateProps) => void
+  contributors: ContributorsProps[]
+  setContributors: (data: ContributorsProps[]) => void
   selectedContributor: ContributorsProps
 }
 
@@ -68,7 +67,7 @@ export function UpdateContributors({
 
         setDisplayModal([])
 
-        const remainingContributors = contributors.contributorsProps.filter(
+        const remainingContributors = contributors.filter(
           contributor => contributor.contri_id !== selectedContributor.contri_id
         )
 
@@ -77,7 +76,7 @@ export function UpdateContributors({
           ...remainingContributors
         ]
 
-        setContributors({ contributorsProps })
+        setContributors(contributorsProps)
 
         addToast({
           type: 'success',

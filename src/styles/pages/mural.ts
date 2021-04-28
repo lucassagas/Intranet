@@ -5,29 +5,28 @@ export const Container = styled.div`
 
   width: 100%;
 `
-
 export const Content = styled.div`
   margin-right: 20px;
   max-height: calc(100vh - 90px);
   height: 100%;
 
   border-radius: 1rem;
-
-  padding: 1rem;
+  overflow: hidden;
 
   background: var(--darkgray);
 
   position: relative;
 `
 
-export const Scroll = styled.div`
-  max-height: calc(100% - 40px);
+interface ScrollProps {
+  permission: boolean
+}
+
+export const Scroll = styled.div<ScrollProps>`
+  max-height: ${props => (props.permission ? 'calc(100% - 50px)' : '100%')};
   overflow: auto;
   background: var(--darkgray);
-
-  > table thead tr th:last-child {
-    text-align: center;
-  }
+  padding: 1rem;
 
   ::-webkit-scrollbar {
     width: 5px;
@@ -39,14 +38,15 @@ export const Scroll = styled.div`
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--background);
+    background: var(--black);
     border-radius: 6px;
   }
 `
 
 export const WrapperFilter = styled.div`
   position: absolute;
-  bottom: 10px;
+  bottom: 0px;
+  padding-bottom: 0.8rem;
 
   display: flex;
 
@@ -64,5 +64,34 @@ export const WrapperFilter = styled.div`
     height: 30px;
     margin-top: -1px;
     margin-left: auto;
+  }
+`
+
+export const Message = styled.div`
+  width: 100%;
+
+  border-bottom: solid 2px var(--orange);
+  padding: 1rem 0;
+
+  > header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    > a {
+      text-decoration: none;
+      color: #fff;
+      font-size: 1.4rem;
+    }
+
+    > button {
+      background: none;
+      border: 0;
+    }
+  }
+
+  > p {
+    margin-top: 1rem;
   }
 `

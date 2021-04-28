@@ -8,15 +8,20 @@ import {
   Container,
   Wrapper
 } from '../../../styles/components/Pages/Dashboard/Mural'
+import { useRouter } from 'next/router'
 
 export function Mural() {
+  const router = useRouter()
+
   return (
     <Container>
       <header>
         <span>
           <FiClipboard size={18} />
           <strong>Mural</strong>
-          <button type="button">Ver mais</button>
+          <button type="button" onClick={() => router.push('/mural')}>
+            Ver mais
+          </button>
         </span>
         <span>
           <button type="button">

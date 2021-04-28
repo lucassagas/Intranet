@@ -239,11 +239,20 @@ export const getServerSideProps: GetServerSideProps = async ({
       props: { condominiumProps, page, totalPagesProps }
     }
   } catch (err) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false
+    if (
+      err.response &&
+      err.response.data.message === 'usuario nao tem permissao'
+    ) {
+      return {
+        redirect: {
+          destination: '/',
+          permanent: false
+        }
       }
+    }
+
+    return {
+      props: {}
     }
   }
 }

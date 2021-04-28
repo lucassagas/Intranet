@@ -7,6 +7,7 @@ export const Container = styled.div`
   bottom: 0;
   left: 1.2rem;
   right: 0;
+  z-index: 2;
 
   display: flex;
   align-items: flex-start;

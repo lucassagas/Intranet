@@ -16,13 +16,16 @@ import { useToast } from '../../../hooks/toast'
 import { api } from '../../../services/api'
 import { useModal } from '../../../hooks/modal'
 
-import { ContributorsStateProps } from '../../../pages/rh/contributors'
+import {
+  ContributorsStateProps,
+  ContributorsProps
+} from '../../../pages/rh/contributors'
 import { InputMask } from '../../InputMask'
 
 interface CreateContributorsProps {
   id: string
-  contributors: ContributorsStateProps
-  setContributors: (data: ContributorsStateProps) => void
+  contributors: ContributorsProps[]
+  setContributors: (data: ContributorsProps[]) => void
 }
 
 export function CreateContributors({
@@ -56,12 +59,9 @@ export function CreateContributors({
 
         setDisplayModal([])
 
-        const contributorsProps = [
-          response.data.contributor,
-          ...contributors.contributorsProps
-        ]
+        const contributorsProps = [response.data.contributor, ...contributors]
 
-        setContributors({ contributorsProps })
+        setContributors(contributorsProps)
 
         addToast({
           type: 'success',

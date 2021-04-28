@@ -27,7 +27,7 @@ export function Toast({ message, style }: ToastProps) {
   useEffect(() => {
     const timer = setTimeout(() => {
       removeToast(message.id)
-    }, 3000)
+    }, 7500)
 
     return () => {
       clearTimeout(timer)

@@ -76,11 +76,6 @@ function Branches({ branchesProps }: BranchesServerSideProps) {
         </Scroll>
 
         <WrapperFilter>
-          <Form onSubmit={handleSearch}>
-            <Input name="filter" placeholder="Buscar" />
-            <AiOutlineSearch size={20} />
-          </Form>
-
           {permissions && permissions.includes('RH.RAMAIS.CRIAR') && (
             <Button onClick={() => setDisplayModal(['modalCreateBranch'])}>
               Cadastar
@@ -128,11 +123,20 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
       props: { branchesProps }
     }
   } catch (err) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false
+    if (
+      err.response &&
+      err.response.data.message === 'usuario nao tem permissao'
+    ) {
+      return {
+        redirect: {
+          destination: '/',
+          permanent: false
+        }
       }
+    }
+
+    return {
+      props: {}
     }
   }
 }

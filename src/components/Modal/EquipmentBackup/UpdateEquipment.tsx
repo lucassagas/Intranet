@@ -177,6 +177,26 @@ export function UpdateEquipment({
     }
   }, [selectedEquipment, addToast, resultRef])
 
+  const handleCleanKeysSSH = useCallback(async () => {
+    try {
+      setLoadingScreen(true)
+      await api.post('api/bkp_equipment/delete/ssh_file')
+      addToast({
+        type: 'success',
+        title: 'Success',
+        description: 'Chaves removidas com sucesso!'
+      })
+    } catch (err) {
+      addToast({
+        type: 'error',
+        title: 'Error',
+        description: err.response ? err.response.data.message : err.message
+      })
+    } finally {
+      setLoadingScreen(false)
+    }
+  }, [])
+
   return (
     <GlobalModal id={id} size={600} title="Editar Equipamento">
       <Container
@@ -220,6 +240,14 @@ export function UpdateEquipment({
                 onClick={handlePing}
               >
                 Ping
+              </ButtonStartBackup>
+
+              <ButtonStartBackup
+                className="StaticBG"
+                type="button"
+                onClick={handleCleanKeysSSH}
+              >
+                Limpar chaves SSH
               </ButtonStartBackup>
             </section>
           )}

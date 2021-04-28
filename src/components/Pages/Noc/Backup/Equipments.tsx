@@ -45,7 +45,24 @@ export function Equipments() {
   const router = useRouter()
   const { permissions } = useAuth()
 
-  const handleSearch = useCallback(data => {}, [])
+  const handleSearch = useCallback(
+    async data => {
+      try {
+        const response = await api.get(
+          `api/bkp_equipment/search?${isActiveFilter}=${data.filter}`
+        )
+
+        setEquipments(response.data)
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Error',
+          description: err.response ? err.response.data.message : err.message
+        })
+      }
+    },
+    [isActiveFilter]
+  )
 
   const handleLoadEquipments = useCallback(async () => {
     try {
@@ -125,15 +142,15 @@ export function Equipments() {
           <span>IP</span>
         </ButtonFilter>
         <ButtonFilter
-          onClick={() => setIsActiveFilter('equipment')}
-          isActive={isActiveFilter === 'equipment'}
+          onClick={() => setIsActiveFilter('type')}
+          isActive={isActiveFilter === 'type'}
         >
           <div />
-          <span>Equipamento</span>
+          <span>Tipo</span>
         </ButtonFilter>
         <ButtonFilter
-          onClick={() => setIsActiveFilter('manufactory')}
-          isActive={isActiveFilter === 'manufactory'}
+          onClick={() => setIsActiveFilter('manufacturer')}
+          isActive={isActiveFilter === 'manufacturer'}
         >
           <div />
           <span>Fabricante</span>

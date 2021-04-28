@@ -14,9 +14,11 @@ import { CreateExams } from '../../components/Modal/Exams/CreateExam'
 import { UpdateExams } from '../../components/Modal/Exams/UpdateExam'
 import { DeleteExam } from '../../components/Modal/Exams/DeleteExam'
 import { api } from '../../services/api'
+import { ResultNotFound } from '../../components/Messages/ResultNotFound'
 
 import { useAuth } from '../../hooks/auth'
 import { useModal } from '../../hooks/modal'
+import { useToast } from '../../hooks/toast'
 
 import {
   Container,
@@ -46,8 +48,26 @@ function Exams({ examsProps }: ExamsServerSideProps) {
 
   const { setDisplayModal } = useModal()
   const { permissions } = useAuth()
+  const { addToast } = useToast()
 
-  const handleSearch = useCallback(data => {}, [])
+  const handleSearch = useCallback(
+    async data => {
+      try {
+        const response = await api.get(
+          `api/exam/search?${isActiveFilter}=${data.filter}`
+        )
+
+        setExams(response.data)
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Error',
+          description: err.message ? err.response.data.message : err.message
+        })
+      }
+    },
+    [isActiveFilter]
+  )
 
   const handleSelectExam = useCallback((data: ExamsProps) => {
     if (permissions && permissions.includes('RH.EXAMES.EDITAR')) {
@@ -88,6 +108,8 @@ function Exams({ examsProps }: ExamsServerSideProps) {
               )
             })}
           </Table>
+
+          {!exams[0] && <ResultNotFound />}
         </Scroll>
 
         <WrapperFilter>
@@ -104,11 +126,11 @@ function Exams({ examsProps }: ExamsServerSideProps) {
             <span>Nome</span>
           </ButtonFilter>
           <ButtonFilter
-            onClick={() => setIsActiveFilter('exam')}
-            isActive={isActiveFilter === 'exam'}
+            onClick={() => setIsActiveFilter('date_expiration')}
+            isActive={isActiveFilter === 'date_expiration'}
           >
             <div />
-            <span>Exame</span>
+            <span>Data</span>
           </ButtonFilter>
 
           {permissions && permissions.includes('RH.EXAMES.CRIAR') && (
@@ -154,11 +176,20 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
       props: { examsProps }
     }
   } catch (err) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false
+    if (
+      err.response &&
+      err.response.data.message === 'usuario nao tem permissao'
+    ) {
+      return {
+        redirect: {
+          destination: '/',
+          permanent: false
+        }
       }
+    }
+
+    return {
+      props: {}
     }
   }
 }

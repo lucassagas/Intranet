@@ -28,13 +28,13 @@ export function DeleteContributors({
     api
       .delete(`api/contributor/${selectedContributor.contri_id}`)
       .then(() => {
-        const removedContributors = contributors.contributorsProps.filter(
+        const removedContributors = contributors.filter(
           contributor => contributor.contri_id !== selectedContributor.contri_id
         )
 
         setDisplayModal([])
 
-        setContributors({ contributorsProps: [...removedContributors] })
+        setContributors([...removedContributors])
 
         addToast({
           type: 'success',

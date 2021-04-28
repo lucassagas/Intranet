@@ -144,7 +144,7 @@ export function Permissions() {
 
                             <button
                               onClick={() => {
-                                setDisplayModal('modalDeletePermission')
+                                setDisplayModal(['modalDeletePermission'])
                                 setSelectedPermissionName({
                                   permissionName: permission.perm_name,
                                   id: permission.perm_id
@@ -166,7 +166,7 @@ export function Permissions() {
         </CategoryList>
       </Wrapper>
       <WrapperFilter>
-        <Button onClick={() => setDisplayModal('modalCreatePermission')}>
+        <Button onClick={() => setDisplayModal(['modalCreatePermission'])}>
           Cadastar
         </Button>
       </WrapperFilter>
