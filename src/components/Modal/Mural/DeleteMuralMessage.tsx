@@ -6,7 +6,7 @@ import { useToast } from '../../../hooks/toast'
 import { Button } from '../../Button'
 import { GlobalModal } from '../GlobalModal'
 import { MessagesProps } from '../../../pages/mural'
-import { apiDev } from '../../../services/apiDev'
+import { api } from '../../../services/api'
 
 import {
   Container,
@@ -30,13 +30,15 @@ export function DeleteMuralMessage({
   const { setDisplayModal } = useModal()
   const { addToast } = useToast()
 
+  console.log(selectedMessage)
+
   const handleDeleteMessage = useCallback(async () => {
     setLoadingScreen(true)
     try {
-      await apiDev.delete(`mural/${selectedMessage.id}`)
+      await api.delete(`api/mural/${selectedMessage.mural_id}`)
 
       const remainingMessages = messages.filter(
-        message => message.id !== selectedMessage.id
+        message => message.mural_id !== selectedMessage.mural_id
       )
 
       setMessages(remainingMessages)
@@ -45,7 +47,7 @@ export function DeleteMuralMessage({
       addToast({
         type: 'success',
         title: 'Sucesso!',
-        description: `Mensagem ${selectedMessage.title} excluida com sucesso!`
+        description: `Mensagem ${selectedMessage.mural_title} excluida com sucesso!`
       })
     } catch (err) {
       addToast({
@@ -62,7 +64,7 @@ export function DeleteMuralMessage({
       <Container>
         <Wrapper>
           <strong>Titulo</strong>
-          <p>{selectedMessage?.title}</p>
+          <p>{selectedMessage?.mural_title}</p>
         </Wrapper>
         <Button onClick={handleDeleteMessage} type="button">
           Excluir

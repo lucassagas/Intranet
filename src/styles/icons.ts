@@ -59,7 +59,7 @@ export {
 
 export { GrMoney } from 'react-icons/gr'
 
-export { FaRegUser, FaListUl } from 'react-icons/fa'
+export { FaRegUser, FaListUl, FaUserCircle } from 'react-icons/fa'
 
 export { HiOutlineUsers, HiOutlineUserGroup } from 'react-icons/hi'
 

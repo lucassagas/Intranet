@@ -8,7 +8,7 @@ import { useAuth } from '../hooks/auth'
 import { Header } from '../components/Header'
 import { Button } from '../components/Button'
 import { GetServerSideProps } from 'next'
-import { apiDev } from '../services/apiDev'
+import { api } from '../services/api'
 
 import { CreateMuralMessage } from '../components/Modal/Mural/CreateMuralMessage'
 import { DeleteMuralMessage } from '../components/Modal/Mural/DeleteMuralMessage'
@@ -23,11 +23,11 @@ import {
 } from '../styles/pages/mural'
 
 export interface MessagesProps {
-  id: number
-  title: string
-  priority: number
-  message: string
-  link: string
+  mural_id: number
+  mural_title: string
+  mural_priority: number
+  mural_content: string
+  mural_link: string
 }
 
 interface ServerSideProps {
@@ -57,10 +57,10 @@ function Mural({ messagesssr }: ServerSideProps) {
         <Scroll permission={!!permissions?.includes('DASHBOARD.MURAL.CRIAR')}>
           {messages?.map(message => {
             return (
-              <Message key={message.id}>
+              <Message key={message.mural_id}>
                 <header>
-                  <a href={message.link} target="_blank">
-                    {message.title}
+                  <a href={message.mural_link} target="_blank">
+                    {message.mural_title}
                   </a>
                   {permissions?.includes('DASHBOARD.MURAL.DELETAR') && (
                     <button
@@ -72,7 +72,7 @@ function Mural({ messagesssr }: ServerSideProps) {
                   )}
                 </header>
 
-                <p>{message.message}</p>
+                <p>{message.mural_content}</p>
               </Message>
             )
           })}
@@ -113,7 +113,7 @@ export default withAuth(Mural)
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   try {
-    const response = await apiDev.get('mural', {
+    const response = await api.get('api/mural', {
       headers: {
         tokenaccess: req.cookies['intranet-token']
       }

@@ -11,7 +11,7 @@ import { GlobalModal } from '../GlobalModal'
 import { Input } from '../../Input'
 import { FormHandles } from '@unform/core'
 import { getValidationErrors } from '../../../utils/getValidationErrors'
-import { apiDev } from '../../../services/apiDev'
+import { api } from '../../../services/api'
 import { MessagesProps } from '../../../pages/mural'
 
 import {
@@ -57,7 +57,7 @@ export function CreateMuralMessage({
         const schema = Yup.object().shape({
           title: Yup.string().required('Campo obrigatório'),
           link: Yup.string().required('Campo obrigatório'),
-          message: Yup.string().required('Campo obrigatório')
+          content: Yup.string().required('Campo obrigatório')
         })
 
         await schema.validate(data, {
@@ -69,9 +69,9 @@ export function CreateMuralMessage({
           priority
         }
 
-        const response = await apiDev.post('mural', formData)
+        const response = await api.post('api/mural', formData)
 
-        setMessages([...messages, response.data])
+        setMessages([...messages, response.data.mural])
 
         reset()
         setDisplayModal([])
@@ -101,8 +101,6 @@ export function CreateMuralMessage({
     [priority, addToast, messages]
   )
 
-  console.log(priority)
-
   return (
     <GlobalModal size={700} id={id} title="Inserir Mensagem no Mural">
       <Container ref={formRef} onSubmit={handleSubmit}>
@@ -112,7 +110,7 @@ export function CreateMuralMessage({
           <Input width="100%" name="link" placeholder="Link" />
         </Wrapper>
 
-        <Textarea name="message" placeholder="Mensagem" rows={5} />
+        <Textarea name="content" placeholder="Mensagem" rows={5} />
 
         <Wrapper>
           <CustomSelect

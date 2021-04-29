@@ -36,7 +36,8 @@ import {
   RiCustomerService2Line,
   RiFileCopy2Line,
   RiMoneyDollarCircleLine,
-  AiOutlineLaptop
+  AiOutlineLaptop,
+  FaUserCircle
 } from '../styles/icons'
 
 export function SideMenu() {
@@ -54,10 +55,7 @@ export function SideMenu() {
   return (
     <Container>
       <header>
-        <img
-          src="https://avatars.githubusercontent.com/u/41124763?v=4"
-          alt="Profile"
-        />
+        <FaUserCircle size={70} />
         <strong>{user && user.user_name.toLowerCase()}</strong>
       </header>
 
