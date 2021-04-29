@@ -60,7 +60,7 @@ function AuthProvider({ children }: AuthProviderData) {
 
         api.get(`api/permission/user?id_user=${user_id}`).then(response => {
           response.data.map(permission => {
-            permissions.push(permission.perm_name)
+            permissions.push(permission.perm_nme)
           })
         })
 
