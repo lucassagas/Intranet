@@ -7,6 +7,7 @@ export default createGlobalStyle`
   outline: 0;
   box-sizing: border-box;
 }
+
 #nprogress .peg {
   display: none !important;
 }

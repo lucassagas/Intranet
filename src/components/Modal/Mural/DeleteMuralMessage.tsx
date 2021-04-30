@@ -30,8 +30,6 @@ export function DeleteMuralMessage({
   const { setDisplayModal } = useModal()
   const { addToast } = useToast()
 
-  console.log(selectedMessage)
-
   const handleDeleteMessage = useCallback(async () => {
     setLoadingScreen(true)
     try {

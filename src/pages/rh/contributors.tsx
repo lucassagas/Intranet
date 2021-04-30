@@ -165,17 +165,17 @@ function Contributors({ contributorsProps }: ContributorsStateProps) {
         </WrapperFilter>
       </Content>
 
+      <CreateContributors
+        id="modalCreateContributors"
+        contributors={contributors}
+        setContributors={setContributors}
+      />
+
       <UpdateContributors
         contributors={contributors}
         setContributors={setContributors}
         selectedContributor={selectedContributor}
         id="modalUpdateContributor"
-      />
-
-      <CreateContributors
-        id="modalCreateContributors"
-        contributors={contributors}
-        setContributors={setContributors}
       />
 
       <DeleteContributors

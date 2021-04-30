@@ -1,6 +1,7 @@
 import { Form } from '@unform/web'
 import { Input } from '../../../Input'
 import { Table } from '../../../Tables/Table'
+import { ResultNotFound } from '../../../Messages/ResultNotFound'
 import { Button } from '../../../Button'
 import { api } from '../../../../services/api'
 
@@ -112,6 +113,7 @@ export function Equipments() {
           )
         })}
       </Table>
+      {!equipments[0] && <ResultNotFound />}
       <WrapperFilter>
         <Form onSubmit={handleSearch}>
           <Input name="filter" placeholder="Buscar" />

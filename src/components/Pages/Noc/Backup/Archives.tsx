@@ -8,6 +8,7 @@ import { Form } from '@unform/web'
 import { Input } from '../../../Input'
 import { Table } from '../../../Tables/Table'
 import { api } from '../../../../services/api'
+import { ResultNotFound } from '../../../Messages/ResultNotFound'
 
 import { AiOutlineSearch, AiOutlineDownload } from '../../../../styles/icons'
 import {
@@ -93,6 +94,7 @@ export function Archives() {
           )
         })}
       </Table>
+      {!archives[0] && <ResultNotFound />}
       <WrapperFilter>
         <Form onSubmit={handleSearch}>
           <Input name="filter" placeholder="Buscar" />

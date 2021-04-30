@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { Button } from '../../Button'
 import { GlobalModal } from '../GlobalModal'
 import { UpdateBranchProps } from './UpdateBranch'
-import { apiDev } from '../../../services/apiDev'
+import { api } from '../../../services/api'
 import { useModal } from '../../../hooks/modal'
 import { useLoading } from '../../../hooks/loading'
 import { useToast } from '../../../hooks/toast'
@@ -22,8 +22,8 @@ export function DeleteBranch({
   const handleDeleteBranch = useCallback(() => {
     setLoadingScreen(true)
 
-    apiDev
-      .delete(`branches/${selectedBranch.bran_id}`)
+    api
+      .delete(`api/branch/${selectedBranch.bran_id}`)
       .then(() => {
         const remainingExtensions = branches.filter(
           branch => branch.bran_id !== selectedBranch.bran_id

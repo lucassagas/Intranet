@@ -6,6 +6,8 @@ import { Table } from '../../../Tables/Table'
 import { Form } from '@unform/web'
 import { Input } from '../../../Input'
 import { Button } from '../../../Button'
+import { CreateUser } from '../../../Modal/User/CreateUser'
+import { EditUser } from '../../../Modal/User/UpdateUser'
 
 import { AiOutlineSearch } from '../../../../styles/icons'
 
@@ -15,8 +17,8 @@ import {
   WrapperFilter,
   ButtonFilter
 } from '../../../../styles/components/Pages/Adm/Users/Users'
-import { CreateUser } from '../../../Modal/User/CreateUser'
-import { EditUser } from '../../../Modal/User/UpdateUser'
+import { useToast } from '../../../../hooks/toast'
+import { ResultNotFound } from '../../../Messages/ResultNotFound'
 
 interface userProps {
   user_id: number
@@ -42,6 +44,7 @@ export function Users() {
   const [users, setUsers] = useState<userProps[]>([])
 
   const { setDisplayModal } = useModal()
+  const { addToast } = useToast()
 
   useEffect(() => {
     handleLoadUsers()
@@ -54,7 +57,23 @@ export function Users() {
     })
   }, [])
 
-  const handleSearch = useCallback(data => {}, [])
+  const handleSearch = useCallback(
+    async data => {
+      try {
+        const response = await api.get(
+          `api/user/search?${isActiveFilter}=${data.filter}`
+        )
+        setUsers(response.data)
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: 'Error',
+          description: err.response ? err.response.data.message : err.message
+        })
+      }
+    },
+    [isActiveFilter]
+  )
 
   return (
     <Content>
@@ -83,6 +102,7 @@ export function Users() {
               )
             })}
         </Table>
+        {!users[0] && <ResultNotFound />}
       </Wrapper>
       <WrapperFilter>
         <Form onSubmit={handleSearch}>
@@ -103,21 +123,6 @@ export function Users() {
         >
           <div />
           <span>E-mail</span>
-        </ButtonFilter>
-        <ButtonFilter
-          onClick={() => setIsActiveFilter('date')}
-          isActive={isActiveFilter === 'date'}
-        >
-          <div />
-          <span>Data adicionado</span>
-        </ButtonFilter>
-
-        <ButtonFilter
-          onClick={() => setIsActiveFilter('group')}
-          isActive={isActiveFilter === 'group'}
-        >
-          <div />
-          <span>Grupo</span>
         </ButtonFilter>
 
         <Button onClick={() => setDisplayModal(['modalCreateUser'])}>
