@@ -92,6 +92,7 @@ export const Container = styled.div<ContainerProps>`
   > span {
     margin-right: -13px;
     margin-top: 5px;
+    cursor: pointer;
   }
 `
 export const Error = styled(Tooltip)`
