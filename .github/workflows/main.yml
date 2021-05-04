@@ -18,7 +18,7 @@ jobs:
 
       - name: Echo .env secrets
         run: |
-          echo NEXT_PUBLIC_ENV_API_ARCHIVE_URL=${{ secrets.API_URL }} >> .env
+          echo NEXT_PUBLIC_ENV_API_ARCHIVE_URL=${{ secrets.API_URL_ARCHIVE }} >> .env
           echo NEXT_PUBLIC_ENV_API_URL=${{ secrets.API_URL }} >> .env
 
       - name: Move Certificate
