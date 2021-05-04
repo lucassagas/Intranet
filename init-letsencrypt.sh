@@ -42,6 +42,10 @@ echo "### Starting nginx ..."
 docker-compose up --force-recreate -d nginx
 echo
 
+echo "### Starting nextjs ..."
+docker-compose up --force-recreate -d nextjs
+echo
+
 echo "### Deleting dummy certificate for $domains ..."
 docker-compose run --rm --entrypoint "\
   rm -Rf /etc/letsencrypt/live/$domains && \
