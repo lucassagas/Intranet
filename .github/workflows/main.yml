@@ -50,4 +50,5 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             mv /var/www/certbot /var/www/Intranet/data
+            cd /var/www/Intranet
             docker-compose up --build -d
