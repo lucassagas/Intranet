@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.4
+        with:
+          node-version: 12.x
+
+      - name: Echo .env secrets
+        run: |
+          echo NEXT_PUBLIC_ENV_API_ARCHIVE_URL=${{ secrets.API_URL }} >> .env
+          echo NEXT_PUBLIC_ENV_API_URL=${{ secrets.API_URL }} >> .env
+
+      - name: Move Certificate
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            mv /var/www/Intranet/data/certbot /var/www
+
+      - name: Copy files to Intranet server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          source: '., !node_modules'
+          target: '/var/www/Intranet'
+
+      - name: Execute yarn on Intranet
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            mv /var/www/certbot /var/www/Intranet/data
+            docker-compose up --build -d
