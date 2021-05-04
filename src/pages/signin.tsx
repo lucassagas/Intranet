@@ -63,7 +63,7 @@ function SignIn() {
             placeholder="Password"
             password
           />
-          <Button type="submit">Teste deploy</Button>
+          <Button type="submit">Entrar</Button>
         </Form>
 
         <DevelopedWrapper>
