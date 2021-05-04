@@ -5,7 +5,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=(alintra.neorede.com.br www.alintra.neorede.com.br)
+domains=(alintra.neorede.com.br)
 rsa_key_size=4096
 data_path="./data/certbot"
 email="lucassaagas@gmail.com"

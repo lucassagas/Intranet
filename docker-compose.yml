@@ -1,10 +1,5 @@
 version: '3'
 services:
-  nextjs:
-    container_name: nextjs
-    build:
-      context: ./
-      dockerfile: Dockerfile
   nginx:
     container_name: nginx
     image: nginx:1.15-alpine
@@ -13,10 +8,17 @@ services:
       - ./data/nginx:/etc/nginx/conf.d
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
+    volumes_from:
+      - nextjs
     ports:
       - '80:80'
       - '443:443'
     command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+  nextjs:
+    container_name: nextjs
+    build:
+      context: ./
+      dockerfile: Dockerfile
   certbot:
     container_name: certbot
     image: certbot/certbot
