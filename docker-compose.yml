@@ -1,5 +1,10 @@
 version: '3'
 services:
+  nextjs:
+    container_name: nextjs
+    build:
+      context: ./
+      dockerfile: Dockerfile
   nginx:
     container_name: nginx
     image: nginx:1.15-alpine
@@ -14,11 +19,6 @@ services:
       - '80:80'
       - '443:443'
     command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
-  nextjs:
-    container_name: nextjs
-    build:
-      context: ./
-      dockerfile: Dockerfile
   certbot:
     container_name: certbot
     image: certbot/certbot
